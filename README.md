@@ -1,11 +1,11 @@
 # frontend
 ## 설치 및 실행 방법
 
-1. **레포지토리 클론**
-   vscode 터미널에
+1. 레포지토리 클론
+   vscode 터미널에서 :
    **git clone https://github.com/01-2025-2nd-project/frontend.git**
 
-2. **Clone 후 작업**
+2. Clone 후 작업
   클론한 디렉토리로 이동:
   **cd frontend**
 
