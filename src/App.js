@@ -1,5 +1,11 @@
+import NavBar from "./components/common/NavBar";
+
 function App() {
-  return <div>초기 세팅</div>;
+  return (
+    <div>
+      <NavBar />
+    </div>
+  );
 }
 
 export default App;
