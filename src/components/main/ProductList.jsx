@@ -72,7 +72,7 @@ export default function ProductList() {
         <button onClick={() => setPage((prev) => Math.max(prev - 1, 1))}>
           &lt;&lt;
         </button>
-        <span style={{ margin: "0 10px" }}>Page {page}</span>
+        <span style={{ margin: "0 10px" }}>{page}</span>
         <button onClick={() => setPage((prev) => prev + 1)}> &gt;&gt;</button>
       </div>
     </>
