@@ -56,7 +56,7 @@ export default function LoginPage() {
     <>
       <Form name="loginForm">
         <SocialButton type="button">카카오톡으로 로그인하기</SocialButton>
-        <Divider />
+
         <InputContainer>
           <Label>이메일</Label>
           <InputBox
