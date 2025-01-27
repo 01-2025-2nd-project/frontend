@@ -16,10 +16,10 @@ export default function useSignup(onSuccess) {
 
   const [errors, setErrors] = useState({});
 
-  function handleInputChange(e) {
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-  }
+  };
 
   // 유효성 검사 로직
   const validationForm = () => {
