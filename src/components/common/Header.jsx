@@ -1,6 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import { FiSearch } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
+
 const StyledHeader = styled.header`
   display: flex;
   justify-content: space-between;
@@ -11,6 +13,7 @@ const StyledHeader = styled.header`
 const Logo = styled.div`
   display: flex;
   align-items: center;
+  cursor: pointer;
 
   img {
     height: 200px;
@@ -70,9 +73,14 @@ const SearchIcon = styled(FiSearch)`
   cursor: pointer;
 `;
 const Header = () => {
+  const navigate = useNavigate();
+  const handleLogoClick = () => {
+    navigate("/");
+  };
+
   return (
     <StyledHeader>
-      <Logo>
+      <Logo onClick={handleLogoClick}>
         <img src="/Farmplus_logo.png" alt="FarmPlus Logo" />
       </Logo>
       <SearchBarContainer>

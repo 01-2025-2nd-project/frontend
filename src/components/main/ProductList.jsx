@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import mockData from "../../data/mockData";
 
 const ItemGrid = styled.div`
   display: grid;
@@ -15,6 +17,7 @@ const Item = styled.div`
   text-align: center;
   background-color: #fff;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
 
   img {
     max-width: 100%;
@@ -32,17 +35,11 @@ const ItemPrice = styled.div`
   font-weight: bold;
 `;
 
-const mockData = Array.from({ length: 20 }, (v, i) => ({
-  id: i + 1,
-  title: `Item ${i + 1}`,
-  price: `₩${(i + 1) * 1000}`,
-  image: `https://picsum.photos/200?random=${i + 1}`,
-}));
-
 export default function ProductList() {
   const [items, setItems] = useState([]);
   const [page, setPage] = useState(1);
   const itemsPerPage = 8;
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Simulate fetching data with mock data
@@ -53,16 +50,20 @@ export default function ProductList() {
     setItems(paginatedData);
   }, [page]);
 
+  const handleItemClick = (product_id) => {
+    navigate(`/product/${product_id}`);
+  };
+
   return (
     <>
       <ItemGrid>
         {items.map((item) => (
-          <Item key={item.id}>
+          <Item key={item.id} onClick={() => handleItemClick(item.product_id)}>
             <img
               src={item.image || "https://via.placeholder.com/200"}
               alt={item.title}
             />
-            <ItemTitle>상품 : {item.title}</ItemTitle>
+            <ItemTitle>상품 : {item.product_name}</ItemTitle>
             <ItemPrice>가격 : {item.price}</ItemPrice>
           </Item>
         ))}
