@@ -8,11 +8,13 @@ import styled from "styled-components";
 const Wrapper = styled.div`
   display: flex;
   align-items: center;
+  height: 100vh;
 `;
 
 const Content = styled.div`
   width: 100%;
   display: flex;
+  flex-direction: column;
   background: "#f4f4f4";
   height: 100vh; // 콘텐츠 영역의 높이를 화면 전체로 설정
   overflow: auto; // 스크롤 추가
@@ -38,7 +40,6 @@ export default function MyPage() {
   return (
     <Wrapper>
       <SideBar onTabChange={(tab) => setActiveTab(tab)} />
-
       <Content> {renderContent()}</Content>
     </Wrapper>
   );

@@ -1,11 +1,15 @@
 import { useState } from "react";
 import styled from "styled-components";
+import { FiMenu } from "react-icons/fi";
 
 const Wrapper = styled.div`
   display: flex;
 `;
 
 const Content = styled.div`
+  position: fixed; /* 화면에 고정 */
+  left: 0;
+  top: 0;
   width: ${(props) => (props.onOff ? "300px" : "0px")};
   height: 100vh;
   background: #000000;
@@ -14,6 +18,18 @@ const Content = styled.div`
   opacity: ${(props) => (props.onOff ? "1" : "0")}; /* 내용 숨기기 */
   display: flex;
   justify-content: center;
+  z-index: 1000; /* 다른 콘텐츠 위에 표시 */
+`;
+
+const FiMenuIcon = styled(FiMenu)`
+  position: fixed; /* 버튼도 고정 */
+  left: 10px;
+  top: 10px;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  z-index: 1100; /* 사이드바보다 위에 배치 */
+  color: white;
 `;
 
 const OnOffButton = styled.button`
@@ -45,16 +61,18 @@ export default function SideBar({ onTabChange }) {
   };
 
   return (
-    <Wrapper>
-      <Content onOff={onOff}>
-        <MenuContainer>
-          <Menus>홈</Menus>
-          <Menus onClick={() => onTabChange("my-info")}>회원정보</Menus>
-          <Menus onClick={() => onTabChange("my-party")}>나의 팟</Menus>
-          <Menus onClick={() => onTabChange("my-order")}>구매목록</Menus>
-        </MenuContainer>
-      </Content>
-      <OnOffButton onClick={handleOnOff}>{onOff ? "닫기" : "열기"}</OnOffButton>
-    </Wrapper>
+    <>
+      <Wrapper>
+        <Content onOff={onOff}>
+          <MenuContainer>
+            <Menus>홈</Menus>
+            <Menus onClick={() => onTabChange("my-info")}>회원정보</Menus>
+            <Menus onClick={() => onTabChange("my-party")}>나의 팟</Menus>
+            <Menus onClick={() => onTabChange("my-order")}>구매목록</Menus>
+          </MenuContainer>
+        </Content>
+        <FiMenuIcon onClick={handleOnOff} />
+      </Wrapper>
+    </>
   );
 }
