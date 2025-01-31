@@ -2,10 +2,10 @@ import React from "react";
 import styled from "styled-components";
 import { FiSearch } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
+import CategoryMenu from "../main/CategoryMenu";
 
 const StyledHeader = styled.header`
   display: flex;
-  justify-content: space-between;
   align-items: center;
   padding: 10px 30px;
 `;
@@ -19,28 +19,23 @@ const Logo = styled.div`
     height: 200px;
     margin-right: 10px;
   }
-
-  h1 {
-    font-size: 24px;
-    margin: 0;
-  }
 `;
 
-const NavLinks = styled.nav`
+const HeaderBarContainer = styled.div`
   display: flex;
-  gap: 20px;
-  font-size: 18px;
-  font-weight: bold;
+  flex-direction: column;
+  width: 80%;
+`;
 
-  a {
-    color: #6bae45;
-    text-decoration: none;
-  }
+const SearchBarWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
 `;
 
 const SearchBarContainer = styled.div`
   position: relative;
-  width: 40%;
+  width: 60%;
 `;
 
 const SearchBar = styled.div`
@@ -72,7 +67,21 @@ const SearchIcon = styled(FiSearch)`
   font-size: 1.2rem;
   cursor: pointer;
 `;
-const Header = () => {
+
+const NavLinks = styled.nav`
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-size: 18px;
+  font-weight: bold;
+
+  a {
+    color: #6bae45;
+    text-decoration: none;
+  }
+`;
+
+export default function Header() {
   const navigate = useNavigate();
   const handleLogoClick = () => {
     navigate("/");
@@ -83,18 +92,22 @@ const Header = () => {
       <Logo onClick={handleLogoClick}>
         <img src="/Farmplus_logo.png" alt="FarmPlus Logo" />
       </Logo>
-      <SearchBarContainer>
-        <SearchBar>
-          <input type="text" placeholder="상품 검색..." />
-        </SearchBar>
-        <SearchIcon a href="#" />
-      </SearchBarContainer>
-      <NavLinks>
-        <a href="#">로그인</a>
-        <a href="#">회원가입</a>
-      </NavLinks>
+
+      <HeaderBarContainer>
+        <SearchBarWrapper>
+          <SearchBarContainer>
+            <SearchBar>
+              <input type="text" placeholder="상품 검색..." />
+            </SearchBar>
+            <SearchIcon a href="#" />
+          </SearchBarContainer>
+          <NavLinks>
+            <a href="#">로그인</a>
+            <a href="#">회원가입</a>
+          </NavLinks>
+        </SearchBarWrapper>
+        <CategoryMenu />
+      </HeaderBarContainer>
     </StyledHeader>
   );
-};
-
-export default Header;
+}

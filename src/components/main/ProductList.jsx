@@ -31,18 +31,74 @@ const ItemTitle = styled.div`
 `;
 
 const ItemPrice = styled.div`
-  color: #6a1b9a;
+  color: #54451a;
   font-weight: bold;
 `;
+
+const PageContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 0;
+`;
+
+const PaginationButton = styled.button`
+  background-color: ${(props) => (props.active ? " #6bae45" : "#f5f5f5")};
+  color: ${(props) => (props.active ? "white" : "black")};
+  border: none;
+  border-radius: 4px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: ${(props) => (props.disabled ? "0.5" : "1")};
+  transition: background-color 0.3s, color 0.3s;
+
+  &:hover {
+    background-color: ${(props) =>
+      props.disabled || props.active ? null : "#e0e0e0"};
+  }
+`;
+
+const Pagination = ({ totalPages, currentPage, onPageChange }) => {
+  return (
+    <PageContainer>
+      <PaginationButton
+        onClick={() => onPageChange(currentPage - 1)}
+        disabled={currentPage === 1}
+      >
+        &lt;
+      </PaginationButton>
+      {Array.from({ length: totalPages }, (_, index) => (
+        <PaginationButton
+          key={index + 1}
+          active={currentPage === index + 1}
+          onClick={() => onPageChange(index + 1)}
+        >
+          {index + 1}
+        </PaginationButton>
+      ))}
+      <PaginationButton
+        onClick={() => onPageChange(currentPage + 1)}
+        disabled={currentPage === totalPages}
+      >
+        &gt;
+      </PaginationButton>
+    </PageContainer>
+  );
+};
 
 export default function ProductList() {
   const [items, setItems] = useState([]);
   const [page, setPage] = useState(1);
   const itemsPerPage = 8;
+  const totalPages = Math.ceil(mockData.length / itemsPerPage);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Simulate fetching data with mock data
     const paginatedData = mockData.slice(
       (page - 1) * itemsPerPage,
       page * itemsPerPage
@@ -54,6 +110,10 @@ export default function ProductList() {
     navigate(`/product/${product_id}`);
   };
 
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+  };
+
   return (
     <>
       <ItemGrid>
@@ -63,19 +123,17 @@ export default function ProductList() {
               src={item.image || "https://via.placeholder.com/200"}
               alt={item.title}
             />
-            <ItemTitle>상품 : {item.product_name}</ItemTitle>
-            <ItemPrice>가격 : {item.price}</ItemPrice>
+            <ItemTitle>{item.product_name}</ItemTitle>
+            <ItemPrice>{item.price}</ItemPrice>
           </Item>
         ))}
       </ItemGrid>
 
-      <div style={{ textAlign: "center", margin: "20px 0" }}>
-        <button onClick={() => setPage((prev) => Math.max(prev - 1, 1))}>
-          &lt;&lt;
-        </button>
-        <span style={{ margin: "0 10px" }}>{page}</span>
-        <button onClick={() => setPage((prev) => prev + 1)}> &gt;&gt;</button>
-      </div>
+      <Pagination
+        totalPages={totalPages}
+        currentPage={page}
+        onPageChange={handlePageChange}
+      />
     </>
   );
 }

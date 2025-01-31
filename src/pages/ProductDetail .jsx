@@ -1,29 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
+import mockData from "../data/mockData";
 
-// Mock Data
-const mockData = Array.from({ length: 20 }, (v, i) => ({
-  product_id: i + 1,
-  name: `Item ${i + 1}`,
-  price: `₩${(i + 1) * 1000}`,
-  image: `https://picsum.photos/200?random=${i + 1}`,
-  description: `This is the description for Item ${i + 1}.`,
-}));
-
-// Styled Components
-const Container = styled.div`
-  max-width: 800px;
-  margin: 20px auto;
+const ProductContainer = styled.div`
+  max-width: 400px;
+  margin: 20px 0px 20px 50px;
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 
 const ProductImage = styled.img`
-  max-width: 100%;
+  width: 80%;
   border-radius: 8px;
 `;
 
@@ -35,7 +28,7 @@ const ProductTitle = styled.h2`
 
 const ProductPrice = styled.div`
   font-size: 20px;
-  color: #6a1b9a;
+  color: #54451a;
   font-weight: bold;
 `;
 
@@ -67,15 +60,11 @@ const ProductDetail = () => {
   }
 
   return (
-    <Container>
-      <ProductImage
-        src={product.image || "https://via.placeholder.com/200"}
-        alt={product.name}
-      />
-      <ProductTitle>{product.name}</ProductTitle>
-      <ProductPrice>가격: {product.price}</ProductPrice>
-      <p>{product.description}</p>
-    </Container>
+    <ProductContainer>
+      <ProductImage src={product.image} alt={product.product_name} />
+      <ProductTitle>{product.product_name}</ProductTitle>
+      <ProductPrice>{product.price}</ProductPrice>
+    </ProductContainer>
   );
 };
 
