@@ -13,12 +13,12 @@ const Wrapper = styled.div`
 `;
 
 const Content = styled.div`
-  width: 100%;
+  width: 100%
   display: flex;
   flex-direction: column;
   background: "#f4f4f4";
-  height: 100vh; // 콘텐츠 영역의 높이를 화면 전체로 설정
-  overflow: auto; // 스크롤 추가
+  height: 100vh;
+  overflow: auto;
 `;
 
 export default function MyPage() {
@@ -27,24 +27,34 @@ export default function MyPage() {
   const [orders, setOrders] = useState(null);
   const [parties, setParties] = useState(null);
 
+  const [onOff, setOnOff] = useState(true);
+
+  const handleOnOff = () => {
+    setOnOff((prev) => !prev);
+  };
+
   const renderContent = () => {
     switch (activeTab) {
       case "my-info":
-        return <MyInfo />;
+        return <MyInfo handleOnOff={handleOnOff} onOff={onOff} />;
       case "my-order":
-        return <MyOrder />;
+        return <MyOrder handleOnOff={handleOnOff} onOff={onOff} />;
       case "my-party":
-        return <MyParty />;
+        return <MyParty handleOnOff={handleOnOff} onOff={onOff} />;
 
       default:
-        return <MyInfo />;
+        return <MyInfo handleOnOff={handleOnOff} onOff={onOff} />;
     }
   };
 
   return (
     <Wrapper>
-      <SideBar onTabChange={(tab) => setActiveTab(tab)} />
-      <Content> {renderContent()}</Content>
+      <SideBar
+        onOff={onOff}
+        handleOnOff={handleOnOff}
+        onTabChange={(tab) => setActiveTab(tab)}
+      />
+      <Content onOff={onOff}> {renderContent()}</Content>
     </Wrapper>
   );
 }
