@@ -1,0 +1,25 @@
+.pagination {
+  display: flex;
+  list-style: none;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination li {
+  margin: 0 5px;
+  padding: 5px 10px;
+  border: none;
+  background-color: #efeeee;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.pagination li:hover {
+  color: white;
+  background-color: gray;
+}
+.pagination li a {
+  color: black; /* 기본 글자 색 */
+  text-decoration: none;
+  border-radius: 5px;
+}

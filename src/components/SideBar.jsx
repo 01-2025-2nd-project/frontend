@@ -10,12 +10,12 @@ const Content = styled.div`
   position: fixed; /* 화면에 고정 */
   left: 0;
   top: 0;
-  width: ${(props) => (props.onOff ? "300px" : "0px")};
+  width: ${(props) => (props.onOff ? "0px" : "300px")};
   height: 100vh;
   background: #000000;
   transition: width 0.1s ease-out, opacity 0.1s ease-out;
   overflow: hidden; /* 내용이 넘치지 않도록 설정 */
-  opacity: ${(props) => (props.onOff ? "1" : "0")}; /* 내용 숨기기 */
+  opacity: ${(props) => (props.onOff ? "0" : "1")}; /* 내용 숨기기 */
   display: flex;
   justify-content: center;
   z-index: 1000; /* 다른 콘텐츠 위에 표시 */
@@ -29,7 +29,7 @@ const FiMenuIcon = styled(FiMenu)`
   height: 30px;
   cursor: pointer;
   z-index: 1100; /* 사이드바보다 위에 배치 */
-  color: white;
+  color: ${(props) => (props.onOff ? "black" : "white")};
 `;
 
 const OnOffButton = styled.button`
@@ -71,7 +71,7 @@ export default function SideBar({ onTabChange }) {
             <Menus onClick={() => onTabChange("my-order")}>구매목록</Menus>
           </MenuContainer>
         </Content>
-        <FiMenuIcon onClick={handleOnOff} />
+        <FiMenuIcon onOff={onOff} onClick={handleOnOff} />
       </Wrapper>
     </>
   );
