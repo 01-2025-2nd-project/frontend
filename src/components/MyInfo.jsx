@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 const Wrapper = styled.div`
-  background: yellow;
   height: 100vh;
   padding-left: 50px;
 `;
@@ -48,6 +47,8 @@ const Divider = styled.hr`
 `;
 
 export default function MyInfo() {
+  const token = localStorage.getItem("token");
+
   const [formData, setFormData] = useState({
     name: "",
     nickname: "",

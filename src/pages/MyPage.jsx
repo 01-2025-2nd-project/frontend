@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SideBar from "../components/SideBar";
 import MyInfo from "../components/MyInfo";
 import MyOrder from "../components/MyOrder";
 import MyParty from "../components/MyParty";
 import styled from "styled-components";
+import axios from "axios";
 
 const Wrapper = styled.div`
   display: flex;
@@ -21,7 +22,10 @@ const Content = styled.div`
 `;
 
 export default function MyPage() {
-  const [activeTab, setActiveTab] = useState("");
+  const [activeTab, setActiveTab] = useState("my-info");
+  const [userInfo, setUserInfo] = useState(null);
+  const [orders, setOrders] = useState(null);
+  const [parties, setParties] = useState(null);
 
   const renderContent = () => {
     switch (activeTab) {
