@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { SHA256 } from "crypto-js";
 
 export default function useSignup(onSuccess) {
   const navigate = useNavigate();
@@ -89,21 +90,26 @@ export default function useSignup(onSuccess) {
 
     const { email, nickname, name, password, address, phoneNumber } = formData;
 
+    const sha256Password = SHA256(password).toString();
+
+    const userData = {
+      name,
+      nickname,
+      email,
+      password: sha256Password,
+      phoneNumber,
+      address,
+    };
+    console.log("암호화된 비밀번호 : ", userData.password);
+
     await axios
-      .post("/auth/sign-up", {
-        name: name,
-        nickname: nickname,
-        email: email,
-        password: password,
-        phoneNumber: phoneNumber,
-        address: address,
-      })
+      .post("/auth/sign-up", userData)
       .then((res) => {
         alert("회원가입 성공!");
-        navigate("/");
+        navigate("/login");
       })
-      .catch((res) => {
-        alert("회원가입 실패");
+      .catch((error) => {
+        alert(error.response?.data?.message || "회원가입 실패");
       });
   };
 

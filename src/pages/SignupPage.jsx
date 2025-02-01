@@ -51,7 +51,7 @@ export default function SignupPage() {
 
   return (
     <FormContainer>
-      <Form name="loginForm">
+      <Form name="signupForm">
         <Title>FARM</Title>
         <InputContainer>
           <Label>이메일</Label>
