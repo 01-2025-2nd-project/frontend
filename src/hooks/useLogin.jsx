@@ -1,7 +1,11 @@
 import axios from "axios";
+import { SHA256 } from "crypto-js";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function useLogin() {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -34,7 +38,8 @@ export default function useLogin() {
       password &&
       !/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%&*]).{8,12}$/.test(password)
     ) {
-      newErrors.password = "비밀번호를 다시 확인해주세요.";
+      newErrors.password =
+        "비밀번호를 다시 확인해주세요. 비밀번호는 대문자, 소문자, 숫자, 그리고 특수문자(!@#$%&*)를 포함한 8~12자 입니다.";
     }
 
     setErrors(newErrors);
@@ -52,10 +57,29 @@ export default function useLogin() {
 
     const { email, password } = formData;
 
-    await axios.post("auth/login", {
-      email: email,
-      password: password,
-    });
+    const sha256Password = SHA256(password).toString();
+
+    const userData = {
+      email,
+      password: sha256Password,
+    };
+
+    console.log("암호화된 비밀번호 : ", userData.password);
+
+    await axios
+      .post("/auth/login", userData)
+      .then((res) => {
+        const token = res.headers.authorization?.split("")[1];
+
+        if (token) {
+          // 로컬 스토리지에 액세스 토큰 저장
+          localStorage.setItem("token", token);
+        }
+        navigate("/");
+      })
+      .catch((error) => {
+        alert(error.response?.data?.message || "로그인 실패");
+      });
   };
 
   return {
