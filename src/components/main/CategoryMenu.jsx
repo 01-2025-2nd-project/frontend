@@ -71,12 +71,12 @@ export default function CategoryMenu() {
 
   const handleSortChange = (sortOption) => {
     setSelectedSort(sortOption);
-    setDropdownOpen(false); // Close dropdown after selecting
+    setDropdownOpen(false);
   };
 
   const categories = ["과일", "채소", "곡물", "견과류", "향신료"];
 
-  const sortOptions = ["최신순", "인기순", "남은시간"];
+  const sortOptions = ["인기순", "높은 가격순", "낮은 가격순"];
   return (
     <Container>
       <CategoryBar>

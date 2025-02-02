@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { FiSearch } from "react-icons/fi";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CategoryMenu from "../main/CategoryMenu";
 
 const StyledHeader = styled.header`
@@ -76,7 +76,7 @@ const NavLinks = styled.nav`
   font-weight: bold;
 
   a {
-    color: #6bae45;
+    color: var(--main);
     text-decoration: none;
   }
 `;
@@ -102,8 +102,8 @@ export default function Header() {
             <SearchIcon a href="#" />
           </SearchBarContainer>
           <NavLinks>
-            <a href="#">로그인</a>
-            <a href="#">회원가입</a>
+            <Link to="/login">로그인</Link>
+            <Link to="/signup">회원가입</Link>
           </NavLinks>
         </SearchBarWrapper>
         <CategoryMenu />

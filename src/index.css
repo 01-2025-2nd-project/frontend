@@ -1,5 +1,10 @@
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
 
+:root {
+  --main: #6bae45;
+  --sub-main: #54451a;
+}
+
 body {
   margin: 0;
   font-family: "Pretendard Variable", Pretendard, -apple-system,
