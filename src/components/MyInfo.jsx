@@ -1,14 +1,38 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import { FiMenu } from "react-icons/fi";
 
 const Wrapper = styled.div`
+  width: 100vw
   height: 100vh;
-  padding-left: 50px;
+  display: flex;
+  padding: 10px;
+  justify-content: center;
+`;
+
+const ContentContainer = styled.div`
+  width: 100vw;
+  margin: 0px 20px 0px 20px;
+`;
+
+const MenuContainer = styled.div`
+  height: 100vh;
+  margin-right: 20px;
+  margin-left: 10px;
+`;
+
+const FiMenuIcon = styled(FiMenu)`
+  left: 10px;
+  top: 10px;
+  width: 35px;
+  height: 35px;
+  cursor: pointer;
+  color: black;
 `;
 
 const Title = styled.h1`
-  margin-top: 50px;
+  margin: 0px;
 `;
 
 const Label = styled.label`
@@ -17,36 +41,55 @@ const Label = styled.label`
 
 const Input = styled.input`
   border: white;
-  border-bottom: 1px solid black;
-  width: 400px;
+  border-bottom: 1px solid #d9d9d7;
+  width: 1000px;
   height: 20px;
   outline: none;
 `;
 
+const InputBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
 const InputContainer = styled.div`
+  margin-top: 20px;
   margin-bottom: 40px;
 `;
 
+const ButtonContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 5px;
+`;
 const EditButton = styled.button`
   width: 100px;
+  height: 30px;
   background: white-gray;
   border: none;
+  border-radius: 5px;
+  cursor: pointer;
 `;
 
 const CancelButton = styled.button`
   width: 100px;
+  height: 30px;
   background: gray;
   border: none;
+  border-radius: 5px;
+  cursor: pointer;
 `;
 
 const Divider = styled.hr`
   display: flex;
   margin-left: 0;
-  width: 100%;
+  width: 100%
   color: black;
 `;
 
-export default function MyInfo() {
+export default function MyInfo({ handleOnOff, onOff }) {
   const token = localStorage.getItem("token");
 
   const [formData, setFormData] = useState({
@@ -130,54 +173,62 @@ export default function MyInfo() {
   };
 
   return (
-    <Wrapper>
-      <Title>내 정보</Title>
-      <Divider></Divider>
+    <Wrapper onOff={onOff}>
+      <MenuContainer>
+        <FiMenuIcon onClick={handleOnOff} />
+      </MenuContainer>
 
-      <div>
-        <InputContainer>
-          <Label>이름</Label>
-          <br />
-          <Input type="text" name="name" value={formData.name} readOnly />
-        </InputContainer>
+      <ContentContainer>
+        <Title>내 정보</Title>
+        <Divider></Divider>
 
-        <InputContainer>
-          <Label>닉네임</Label>
-          <br />
-          <Input
-            type="text"
-            name="nickname"
-            value={formData.nickname}
-            onChange={handleChange}
-          />
-        </InputContainer>
+        <InputBox>
+          <InputContainer>
+            <Label>이름</Label>
+            <br />
+            <Input type="text" name="name" value={formData.name} readOnly />
+          </InputContainer>
 
-        <InputContainer>
-          <Label>이메일</Label>
-          <br />
-          <Input type="text" name="email" value={formData.email} readOnly />
-        </InputContainer>
+          <InputContainer>
+            <Label>닉네임</Label>
+            <br />
+            <Input
+              type="text"
+              name="nickname"
+              value={formData.nickname}
+              onChange={handleChange}
+            />
+          </InputContainer>
 
-        <InputContainer>
-          <Label>주소</Label>
-          <br />
-          <Input
-            type="text"
-            name="address"
-            value={formData.address}
-            onChange={handleChange}
-          />
-        </InputContainer>
+          <InputContainer>
+            <Label>이메일</Label>
+            <br />
+            <Input type="text" name="email" value={formData.email} readOnly />
+          </InputContainer>
 
-        <InputContainer>
-          <Label>내 포인트</Label>
-          <br />
-          <Input type="text" name="point" value={formData.point} readOnly />
-        </InputContainer>
-      </div>
+          <InputContainer>
+            <Label>주소</Label>
+            <br />
+            <Input
+              type="text"
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+            />
+          </InputContainer>
 
-      <EditButton onClick={handleSave}>수정하기</EditButton>
-      <CancelButton onClick={handleCancel}>취소하기</CancelButton>
+          <InputContainer>
+            <Label>내 포인트</Label>
+            <br />
+            <Input type="text" name="point" value={formData.point} readOnly />
+          </InputContainer>
+        </InputBox>
+
+        <ButtonContainer>
+          <EditButton onClick={handleSave}>수정하기</EditButton>
+          <CancelButton onClick={handleCancel}>취소하기</CancelButton>
+        </ButtonContainer>
+      </ContentContainer>
     </Wrapper>
   );
 }
