@@ -3,7 +3,7 @@ import styled from "styled-components";
 import axios from "axios";
 import PaginationBar from "./PaginationBar";
 import { FiMenu } from "react-icons/fi";
-import { mockData } from "../data/mockData.js";
+import { mockData } from "../data/mockData2.js";
 
 const Wrapper = styled.div`
   width: 100vw
