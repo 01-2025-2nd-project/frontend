@@ -23,10 +23,6 @@ const Content = styled.div`
 
 export default function MyPage() {
   const [activeTab, setActiveTab] = useState("my-info");
-  const [userInfo, setUserInfo] = useState(null);
-  const [orders, setOrders] = useState(null);
-  const [parties, setParties] = useState(null);
-
   const [onOff, setOnOff] = useState(true);
 
   const handleOnOff = () => {
