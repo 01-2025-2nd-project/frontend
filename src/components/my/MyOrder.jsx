@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import styled from "styled-components";
-import PaginationBar from "../PaginationBar";
+import PaginationBar from "../common/PaginationBar.jsx";
 import axios from "axios";
 
 const Wrapper = styled.div`

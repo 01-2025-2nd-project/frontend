@@ -50,12 +50,15 @@ const Divider = styled.hr`
 `;
 
 export default function LoginPage() {
-  const { formData, errors, handleInputChange, handleLogin } = useLogin();
+  const { formData, errors, handleInputChange, handleLogin, handleKakaoLogin } =
+    useLogin();
 
   return (
     <>
       <Form name="loginForm">
-        <SocialButton type="button">카카오톡으로 로그인하기</SocialButton>
+        <SocialButton type="button" onClick={handleKakaoLogin}>
+          카카오톡으로 로그인하기
+        </SocialButton>
         <Divider />
         <InputContainer>
           <Label>이메일</Label>

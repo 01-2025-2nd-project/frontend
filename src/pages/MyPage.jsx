@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import SideBar from "../components/SideBar";
-import MyInfo from "../components/MyInfo";
-import MyOrder from "../components/MyOrder";
-import MyParty from "../components/MyParty";
+import SideBar from "../components/my/SideBar.jsx";
+import MyInfo from "../components/my/MyInfo";
+import MyOrder from "../components/my/MyOrder";
+import MyParty from "../components/my/MyParty";
 import styled from "styled-components";
 import axios from "axios";
 
