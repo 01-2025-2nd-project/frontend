@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { FiSearch } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
-import CategoryMenu from "../main/CategoryMenu";
+import CategoryMenu from "./CategoryMenu";
 
 const StyledHeader = styled.header`
   display: flex;

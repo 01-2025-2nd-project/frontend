@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
-import PaginationBar from "../PaginationBar.jsx";
+import PaginationBar from "../common/PaginationBar";
 import { FiMenu } from "react-icons/fi";
 import { mockData } from "../../data/mockData2.js";
 

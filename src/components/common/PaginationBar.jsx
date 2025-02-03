@@ -1,6 +1,6 @@
 import React from "react";
 import Pagination from "react-js-pagination";
-import "../CSS/Pagination.css";
+import "../../CSS/Pagination.css";
 
 export default function PaginationBar({
   currentPage,
