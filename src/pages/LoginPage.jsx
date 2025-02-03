@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import useLogin from "../hooks/useLogin";
+import kakaoLogin from "../images/kakao_login_medium_wide.png";
 
 const Form = styled.form`
   display: flex;
@@ -10,34 +11,39 @@ const Form = styled.form`
 `;
 
 const Label = styled.p`
-  font-size: 1em;
+  font-size: 15px;
 `;
 
 const InputContainer = styled.div`
-  width: 20rem;
+  width: 300px;
 `;
 
 const InputBox = styled.input`
-  padding: 0.5rem;
-  background: #fafafa;
-  border: 0.05rem solid #d8d8d8;
-  border-radius: 5px;
-  width: 18rem;
+  padding: 2px;
+  border: none;
+  border-bottom: 1px solid #d8d8d8;
+  width: 294px;
+  height: 30px;
+  outline: none;
 `;
 
 const SubmitButton = styled.button`
-  background: #04b404;
+  width: 300px;
+  height: 45px;
+  background: var(--main);
   border: none;
-  border-radius: 10px;
+  border-radius: 6px;
   padding: 0.5rem;
+  font-size: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
 `;
 
 const SocialButton = styled.button`
-  background: #04b404;
-  border: none;
-  border-radius: 10px;
-  padding: 0.5rem;
-  width: 20rem;
+  all: unset; /* 기본 스타일 제거 */
+  cursor: pointer; /* 버튼처럼 보이도록 */
 `;
 
 const Typo = styled.span`
@@ -56,10 +62,6 @@ export default function LoginPage() {
   return (
     <>
       <Form name="loginForm">
-        <SocialButton type="button" onClick={handleKakaoLogin}>
-          카카오톡으로 로그인하기
-        </SocialButton>
-        <Divider />
         <InputContainer>
           <Label>이메일</Label>
           <InputBox
@@ -90,6 +92,10 @@ export default function LoginPage() {
         <SubmitButton type="button" onClick={handleLogin}>
           로그인하기
         </SubmitButton>
+        <Divider />
+        <SocialButton type="button" onClick={handleKakaoLogin}>
+          <img src={kakaoLogin} alt="버튼 이미지" />
+        </SocialButton>
       </Form>
     </>
   );
