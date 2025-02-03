@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 
 // Mock group data
@@ -66,6 +67,12 @@ const JoinButton = styled.button`
 `;
 export default function Parties() {
   const [groups, setGroups] = useState(mockGroupData);
+  const { productId } = useParams();
+  const navigate = useNavigate();
+
+  const handleTotalParties = () => {
+    navigate(`/product/${productId}/party`);
+  };
 
   const handleJoinGroup = (group_id) => {
     alert(`Group ${group_id}에 참여하였습니다.`);
@@ -76,7 +83,9 @@ export default function Parties() {
       <GroupWrapper>
         <TitleWrapper>
           <h3>공동구매 참여하기</h3>
-          <TotalPartyBtn>파티 전체보기</TotalPartyBtn>
+          <TotalPartyBtn onClick={handleTotalParties}>
+            파티 전체보기
+          </TotalPartyBtn>
         </TitleWrapper>
         {groups.map((group) => (
           <GroupItem key={group.group_id}>

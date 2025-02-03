@@ -38,15 +38,15 @@ const ProductPrice = styled.div`
 `;
 
 export default function ProductDetail() {
-  const { product_id } = useParams();
+  const { productId } = useParams();
   const [product, setProduct] = useState(null);
 
   useEffect(() => {
     const productDetail = mockData.find(
-      (item) => item.product_id === parseInt(product_id, 10)
+      (item) => item.productId === parseInt(productId, 10)
     );
     setProduct(productDetail);
-  }, [product_id]);
+  }, [productId]);
 
   if (!product) {
     return <div>Loading...</div>;
@@ -56,8 +56,8 @@ export default function ProductDetail() {
     <DetailContainer>
       <DetailHeader />
       <ProductContainer>
-        <ProductImage src={product.image} alt={product.product_name} />
-        <ProductTitle>{product.product_name}</ProductTitle>
+        <ProductImage src={product.image} alt={product.productName} />
+        <ProductTitle>{product.productName}</ProductTitle>
         <ProductPrice>{product.price}</ProductPrice>
       </ProductContainer>
       <Parties />

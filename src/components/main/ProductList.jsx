@@ -106,8 +106,8 @@ export default function ProductList() {
     setItems(paginatedData);
   }, [page]);
 
-  const handleItemClick = (product_id) => {
-    navigate(`/product/${product_id}`);
+  const handleItemClick = (productId) => {
+    navigate(`/product/${productId}`);
   };
 
   const handlePageChange = (newPage) => {
@@ -118,12 +118,12 @@ export default function ProductList() {
     <>
       <ItemGrid>
         {items.map((item) => (
-          <Item key={item.id} onClick={() => handleItemClick(item.product_id)}>
+          <Item key={item.id} onClick={() => handleItemClick(item.productId)}>
             <img
               src={item.image || "https://via.placeholder.com/200"}
-              alt={item.title}
+              alt={item.productName}
             />
-            <ItemTitle>{item.product_name}</ItemTitle>
+            <ItemTitle>{item.productName}</ItemTitle>
             <ItemPrice>{item.price}</ItemPrice>
           </Item>
         ))}
