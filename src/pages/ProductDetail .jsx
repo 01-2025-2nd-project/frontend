@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import mockData from "../data/mockData";
-import DetailHeader from "../components/productDetail/DetailHeader";
+import Header from "../components/common/Header";
 import Parties from "../components/productDetail/Parties";
 
 const DetailContainer = styled.div`
@@ -54,7 +54,7 @@ export default function ProductDetail() {
 
   return (
     <DetailContainer>
-      <DetailHeader />
+      <Header />
       <ProductContainer>
         <ProductImage src={product.image} alt={product.productName} />
         <ProductTitle>{product.productName}</ProductTitle>

@@ -1,29 +1,15 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
-
-// Mock group data
-const mockGroupData = [
-  {
-    group_id: 1,
-    name: "정*다",
-    members: 1,
-    total: 2,
-    timeLeft: "12:26:21",
-    completed: false,
-  },
-  { group_id: 2, name: "원*득", members: 2, total: 2, completed: true },
-  { group_id: 3, name: "김*석", members: 2, total: 2, completed: true },
-  { group_id: 4, name: "고*름", members: 2, total: 2, completed: true },
-  { group_id: 5, name: "양*식", members: 2, total: 2, completed: true },
-];
+import PartyModal from "./PartyModal";
+import mockData from "../../data/mockData3";
 
 const GroupContainer = styled.div`
   display: flex;
   justify-content: center;
 `;
 const GroupWrapper = styled.div`
-  margin-top: 40px;
+  margin: 40px 0px;
   width: 60%;
 `;
 
@@ -33,7 +19,7 @@ const TitleWrapper = styled.div`
   margin-bottom: 20px;
 `;
 
-const TotalPartyBtn = styled.button``;
+const PartyBtn = styled.button``;
 
 const GroupItem = styled.div`
   display: flex;
@@ -53,7 +39,7 @@ const GroupStatus = styled.div`
 `;
 
 const JoinButton = styled.button`
-  padding: 5px 10px;
+  padding: 10px 10px;
   background-color: var(--main);
   color: white;
   border: none;
@@ -66,7 +52,7 @@ const JoinButton = styled.button`
   }
 `;
 export default function Parties() {
-  const [groups, setGroups] = useState(mockGroupData);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { productId } = useParams();
   const navigate = useNavigate();
 
@@ -83,27 +69,30 @@ export default function Parties() {
       <GroupWrapper>
         <TitleWrapper>
           <h3>공동구매 참여하기</h3>
-          <TotalPartyBtn onClick={handleTotalParties}>
-            파티 전체보기
-          </TotalPartyBtn>
+          <PartyBtn onClick={() => setIsModalOpen(true)}>파티 만들기</PartyBtn>
+          <PartyBtn onClick={handleTotalParties}>파티 전체보기</PartyBtn>
         </TitleWrapper>
-        {groups.map((group) => (
-          <GroupItem key={group.group_id}>
+        {mockData.slice(0, 5).map((item) => (
+          <GroupItem key={item.partyId}>
             <GroupName>
-              {group.name} ({group.members}/{group.total})
+              {item.partyName} ({item.joinCount}/{item.capacity})
             </GroupName>
-            {group.completed ? (
+            {item.joinCount === item.capacity ? (
               <GroupStatus completed>공동구매완료</GroupStatus>
             ) : (
               <>
-                <GroupStatus>남은시간: {group.timeLeft}</GroupStatus>
-                <JoinButton onClick={() => handleJoinGroup(group.group_id)}>
+                <GroupStatus>남은시간</GroupStatus>
+                <JoinButton onClick={() => handleJoinGroup(item.partyId)}>
                   주문참여
                 </JoinButton>
               </>
             )}
           </GroupItem>
         ))}
+        <PartyModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+        />
       </GroupWrapper>
     </GroupContainer>
   );

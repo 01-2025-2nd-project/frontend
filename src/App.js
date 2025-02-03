@@ -15,10 +15,7 @@ function App() {
         <Route path="/signup" element={<SignupPage />}></Route>
         <Route path="/login" element={<LoginPage />}></Route>
         <Route path="/my" element={<MyPage />}></Route>
-        <Route
-          path="/product/:productId/party"
-          element={<TotalParties />}
-        ></Route>
+        <Route path="/product/:productId/party" element={<TotalParties />} />
       </Routes>
     </Router>
   );

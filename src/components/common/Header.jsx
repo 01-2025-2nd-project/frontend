@@ -18,7 +18,7 @@ const Logo = styled.div`
   }
 `;
 
-export default function DeatilHeader() {
+export default function Header() {
   const navigate = useNavigate();
   const handleLogoClick = () => {
     navigate("/");

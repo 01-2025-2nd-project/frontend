@@ -81,7 +81,7 @@ const NavLinks = styled.nav`
   }
 `;
 
-export default function Header() {
+export default function MainHeader() {
   const navigate = useNavigate();
   const handleLogoClick = () => {
     navigate("/");
