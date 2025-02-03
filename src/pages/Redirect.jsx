@@ -3,8 +3,6 @@ import { useEffect } from "react";
 import { Route, useNavigate } from "react-router-dom";
 
 export default function Redirect() {
-  const navigate = useNavigate();
-
   const code = new URL(window.location.href).searchParams.get("code");
   console.log("code:", code);
 
