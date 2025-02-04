@@ -3,7 +3,6 @@ import styled from "styled-components";
 import axios from "axios";
 import PaginationBar from "../common/PaginationBar.jsx";
 import { FiMenu } from "react-icons/fi";
-import { mockData } from "../../data/mockData2.js";
 
 const Wrapper = styled.div`
   width: 100vw
@@ -113,25 +112,25 @@ export default function MyParty({ handleOnOff, onOff }) {
   const itemsPerPage = 10; // 한 페이지당 보여줄 아이템 개수
   const [loading, setLoading] = useState(false);
 
-  // const fetchParties = async (page) => {
-  //   setLoading(true);
-  //   try {
-  //     const response = await axios.get(`/party/list?page=${page}`, {
-  //       headers: {
-  //         Authorization: `Bearer ${token}`, // 인증 헤더 추가
-  //       },
-  //     });
-  //     setParties(response.data.partyList);
-  //     setTotalItems(response.data.totalItems);
-  //   } catch (error) {
-  //     console.error("데이터 불러오기 실패:", error);
-  //   }
-  //   setLoading(false);
-  // };
+  useEffect(() => {
+    const fetchParties = async (page) => {
+      setLoading(true);
+      try {
+        const response = await axios.get(`/party/list?page=${page}`, {
+          headers: {
+            Authorization: `Bearer ${token}`, // 인증 헤더 추가
+          },
+        });
+        setParties(response.data.partyList);
+        setTotalItems(response.data.totalItems);
+      } catch (error) {
+        console.error("데이터 불러오기 실패:", error);
+      }
+      setLoading(false);
+    };
 
-  // useEffect(() => {
-  //   fetchParties(currentPage);
-  // }, [currentPage]);
+    fetchParties(currentPage);
+  }, [currentPage]);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -148,7 +147,7 @@ export default function MyParty({ handleOnOff, onOff }) {
         <Divider></Divider>
 
         <OrderList>
-          {mockData
+          {parties
             .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
             .map((data) => (
               <OrderCard key={data.partyId}>
