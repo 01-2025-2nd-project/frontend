@@ -32,7 +32,20 @@ const TitleWrapper = styled.div`
   margin-bottom: 20px;
 `;
 
-const TotalPartyBtn = styled.button``;
+const BtnWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;
+const PartyBtn = styled.button`
+  height: 70%;
+  margin-left: 15px;
+  padding: 10px 10px;
+  background-color: var(--sub-main);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+`;
 
 const GroupItem = styled.div`
   display: flex;
@@ -75,8 +88,13 @@ export default function Parties() {
     <GroupContainer>
       <GroupWrapper>
         <TitleWrapper>
-          <h3>공동구매 참여하기</h3>
-          <TotalPartyBtn>파티 전체보기</TotalPartyBtn>
+          <h3>공동구매 파티 현황</h3>
+          <BtnWrapper>
+            <PartyBtn onClick={() => setIsModalOpen(true)}>
+              파티 만들기
+            </PartyBtn>
+            <PartyBtn onClick={handleTotalParties}>파티 전체보기</PartyBtn>
+          </BtnWrapper>
         </TitleWrapper>
         {groups.map((group) => (
           <GroupItem key={group.group_id}>

@@ -1,8 +1,9 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 const StyledHeader = styled.header`
   display: flex;
+  justify-content: space-between;
   align-items: center;
   padding: 10px 30px;
 `;
@@ -18,7 +19,20 @@ const Logo = styled.div`
   }
 `;
 
-export default function DeatilHeader() {
+const NavLinks = styled.nav`
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-size: 18px;
+  font-weight: bold;
+
+  a {
+    color: var(--main);
+    text-decoration: none;
+  }
+`;
+
+export default function Header() {
   const navigate = useNavigate();
   const handleLogoClick = () => {
     navigate("/");
@@ -29,6 +43,11 @@ export default function DeatilHeader() {
       <Logo onClick={handleLogoClick}>
         <img src="/Farmplus_logo.png" alt="FarmPlus Logo" />
       </Logo>
+
+      <NavLinks>
+        <Link to="/login">로그인</Link>
+        <Link to="/signup">회원가입</Link>
+      </NavLinks>
     </StyledHeader>
   );
 }
