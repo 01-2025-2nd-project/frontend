@@ -24,7 +24,7 @@ const Logo = styled.div`
 const HeaderBarContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 80%;
+  width: 90%;
 `;
 
 const SearchBarWrapper = styled.div`
@@ -35,7 +35,7 @@ const SearchBarWrapper = styled.div`
 
 const SearchBarContainer = styled.div`
   position: relative;
-  width: 60%;
+  width: 50%;
 `;
 
 const SearchBar = styled.div`
@@ -106,7 +106,6 @@ export default function MainHeader() {
             <Link to="/signup">회원가입</Link>
           </NavLinks>
         </SearchBarWrapper>
-        <CategoryMenu />
       </HeaderBarContainer>
     </StyledHeader>
   );

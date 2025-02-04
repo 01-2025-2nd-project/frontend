@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import axios from "axios";
 import mockData from "../../data/mockData";
+import CategoryMenu from "./CategoryMenu";
 
 const ItemGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 30px;
   padding: 20px;
 `;
 
@@ -94,17 +96,32 @@ const Pagination = ({ totalPages, currentPage, onPageChange }) => {
 export default function ProductList() {
   const [items, setItems] = useState([]);
   const [page, setPage] = useState(1);
-  const itemsPerPage = 8;
-  const totalPages = Math.ceil(mockData.length / itemsPerPage);
+  const [totalPages, setTotalPages] = useState(1);
+  const [sort, setSort] = useState("default");
+  const [category, setCategory] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
-    const paginatedData = mockData.slice(
-      (page - 1) * itemsPerPage,
-      page * itemsPerPage
-    );
-    setItems(paginatedData);
-  }, [page]);
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`http://15.164.139.247:8080/product`, {
+          params: { sort, page, category },
+        });
+        if (response.data.code === 200) {
+          const products = response.data.data.content.map((item, index) => ({
+            ...item,
+            image: mockData[index % mockData.length], // Mock 데이터에서 이미지 할당
+          }));
+          setItems(products);
+          setTotalPages(response.data.data.totalPages);
+          console.log(response.data.data.content);
+        }
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+    fetchData();
+  }, [page, sort, category]);
 
   const handleItemClick = (productId) => {
     navigate(`/product/${productId}`);
@@ -116,15 +133,16 @@ export default function ProductList() {
 
   return (
     <>
+      <CategoryMenu setSort={setSort} />
       <ItemGrid>
         {items.map((item) => (
-          <Item key={item.id} onClick={() => handleItemClick(item.productId)}>
-            <img
-              src={item.image || "https://via.placeholder.com/200"}
-              alt={item.productName}
-            />
+          <Item
+            key={item.productId}
+            onClick={() => handleItemClick(item.productId)}
+          >
+            <img src={item.image} alt={item.productName} />
             <ItemTitle>{item.productName}</ItemTitle>
-            <ItemPrice>{item.price}</ItemPrice>
+            <ItemPrice>{item.price}원</ItemPrice>
           </Item>
         ))}
       </ItemGrid>
