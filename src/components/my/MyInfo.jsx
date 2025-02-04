@@ -112,23 +112,26 @@ export default function MyInfo({ handleOnOff, onOff }) {
     point: "",
   });
 
-  const mockData = [
-    {
-      name: "lee",
-      nickname: "leelee",
-      email: "super@super.com",
-      password: "1234",
-      phoneNumber: "01012345678",
-      address: "seoul",
-      point: 1000000,
-    },
-  ];
-
-  // 임시 데이터 불러오기
+  // useEffect를 사용하여 컴포넌트가 처음 렌더링될 때 GET 요청을 보냄
   useEffect(() => {
-    setFormData(mockData[0]); //
-    setOriginalProfileData(mockData[0]);
-  }, []);
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("http://15.164.139.247:8080/mypage", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        // 응답 데이터 상태에 저장
+        setFormData(response.data);
+        setOriginalProfileData(response.data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchData(); // 함수 호출
+  }, []); // 컴포넌트가 마운트될 때만 실행되도록 빈 배열 전달
 
   // 프로필 입력 필드 변경
   const handleChange = (e) => {
@@ -145,9 +148,12 @@ export default function MyInfo({ handleOnOff, onOff }) {
 
     try {
       // 닉네임 중복 확인 로직 들어가야 함 : 닉네임이 중복되지 않는지 확인하는 API 백엔드에 요청
-      const checkResponse = await axios.post("/mypage", {
-        nickname: formData.nickname,
-      });
+      const checkResponse = await axios.post(
+        "http://15.164.139.247:8080/mypage",
+        {
+          nickname: formData.nickname,
+        }
+      );
 
       if (checkResponse.data.isDuplicate) {
         alert("이미 사용 중인 닉네임입니다.");
@@ -155,7 +161,10 @@ export default function MyInfo({ handleOnOff, onOff }) {
       }
 
       // 중복이 없으면 저장 API 호출
-      const saveResponse = await axios.put("/mypage", formData);
+      const saveResponse = await axios.put(
+        "http://15.164.139.247:8080/mypage",
+        formData
+      );
 
       if (saveResponse.status === 200) {
         alert("프로필이 성공적으로 업데이트되었습니다!");

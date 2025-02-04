@@ -1,5 +1,4 @@
 import axios from "axios";
-import { SHA256 } from "crypto-js";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -63,11 +62,9 @@ export default function useLogin() {
 
     const { email, password } = formData;
 
-    const sha256Password = SHA256(password).toString();
-
     const userData = {
       email,
-      password: sha256Password,
+      password,
     };
 
     console.log("암호화된 비밀번호 : ", userData.password);
