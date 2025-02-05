@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { FiMenu } from "react-icons/fi";
+import DeleteUserButton from "./DeleteUserButton";
 
 const Wrapper = styled.div`
   width: 100vw
@@ -238,6 +239,7 @@ export default function MyInfo({ handleOnOff, onOff }) {
           <CancelButton onClick={handleCancel}>취소하기</CancelButton>
         </ButtonContainer>
       </ContentContainer>
+      <DeleteUserButton />
     </Wrapper>
   );
 }
