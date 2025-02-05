@@ -1,9 +1,8 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { SHA256 } from "crypto-js";
 
-export default function useSignup(onSuccess) {
+export default function useSignup() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
@@ -16,13 +15,53 @@ export default function useSignup(onSuccess) {
   });
 
   const [errors, setErrors] = useState({});
+  const newErrors = {};
 
+  // 입력값 변경 핸들러
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // 유효성 검사 로직
+  // 이메일 중복 확인 API 호출
+  const isEmailDuplicate = async (email) => {
+    try {
+      const res = await axios.post("http://15.164.139.247:8080/auth/email", {
+        email,
+      });
+      return res.data.data.check; // `true`이면 중복, `false`이면 사용 가능
+    } catch (err) {
+      console.error("이메일 중복 확인 오류:", err);
+      return true; // 오류 발생 시 기본적으로 중복된 것으로 처리
+    }
+  };
+
+  // 닉네임 중복 확인 API 호출
+
+  const isNicknameDuplicate = async (nickname) => {
+    try {
+      const res = await axios.post("http://15.164.139.247:8080/auth/nickname", {
+        nickname,
+      });
+      return res.data.data.check; // `true`이면 중복, `false`이면 사용 가능
+    } catch (err) {
+      console.error("닉네임 중복 확인 오류:", err);
+      return true; // 오류 발생 시 기본적으로 중복된 것으로 처리
+    }
+  };
+
+  // 회원가입 API 호출
+  const signupUser = async (userData) => {
+    try {
+      await axios.post("http://15.164.139.247:8080/auth/sign-up", userData);
+      alert("회원가입 성공!");
+      navigate("/login");
+    } catch (error) {
+      alert(error.response?.data?.message || "회원가입 실패");
+    }
+  };
+
+  // 유효성 검사 함수
   const validationForm = () => {
     const {
       email,
@@ -34,17 +73,7 @@ export default function useSignup(onSuccess) {
       phoneNumber,
     } = formData;
 
-    const newErrors = {};
-
-    if (
-      !email ||
-      !nickname ||
-      !name ||
-      !password ||
-      !confirmPassword ||
-      !address ||
-      !phoneNumber
-    ) {
+    if (Object.values(formData).some((value) => !value.trim())) {
       newErrors.allField = "모든 필드를 입력해주세요.";
     }
 
@@ -80,7 +109,7 @@ export default function useSignup(onSuccess) {
     return Object.keys(newErrors).length === 0;
   };
 
-  // 회원가입 함수
+  // 회원가입 처리
   const handleSignup = async (e) => {
     e.preventDefault(); // 기본 동작을 먼저 방지하고
 
@@ -88,29 +117,19 @@ export default function useSignup(onSuccess) {
       return; // 유효성 검사를 통과하지 않으면 함수 중단
     }
 
-    const { email, nickname, name, password, address, phoneNumber } = formData;
+    if (await isEmailDuplicate(formData.email)) {
+      newErrors.email = "이미 사용 중인 이메일입니다.";
+      setErrors(newErrors);
+      return;
+    }
 
-    const sha256Password = SHA256(password).toString();
+    if (await isNicknameDuplicate(formData.nickname)) {
+      newErrors.nickname = "이미 사용 중인 이메일입니다.";
+      setErrors(newErrors);
+      return;
+    }
 
-    const userData = {
-      name,
-      nickname,
-      email,
-      password: sha256Password,
-      phoneNumber,
-      address,
-    };
-    console.log("암호화된 비밀번호 : ", userData.password);
-
-    await axios
-      .post("/auth/sign-up", userData)
-      .then((res) => {
-        alert("회원가입 성공!");
-        navigate("/login");
-      })
-      .catch((error) => {
-        alert(error.response?.data?.message || "회원가입 실패");
-      });
+    await signupUser(formData);
   };
 
   return {

@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import SideBar from "../components/my/SideBar";
+
+import SideBar from "../components/my/SideBar.jsx";
+import MyInfo from "../components/my/MyInfo";
+import MyOrder from "../components/my/MyOrder";
+import MyParty from "../components/my/MyParty";
+
 import styled from "styled-components";
 import axios from "axios";
 import MyInfo from "../components/my/MyInfo";
