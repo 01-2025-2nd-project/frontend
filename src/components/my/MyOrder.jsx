@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 
 import styled from "styled-components";
-import PaginationBar from "../common/PaginationBar";
+
+import PaginationBar from "../common/PaginationBar.jsx";
+
 import axios from "axios";
 
 const Wrapper = styled.div`
@@ -54,59 +56,6 @@ const OrderLine = styled.span`
 `;
 
 export default function MyOrder({}) {
-  const mockData = [
-    {
-      ordersId: "주문 id",
-      productImg: "aaaaa",
-      price: 5000,
-      productName: "제품 이름 1",
-      option: [
-        {
-          option_id: 1,
-          option: "5명 할인",
-          option_price: 0.1,
-        },
-      ],
-
-      finalPrice: 4500,
-      purchaseDate: "2025-01-02",
-    },
-
-    {
-      ordersId: "주문 id2",
-      productImg: "bbbbb",
-      price: 2500,
-      productName: "제품 이름 2",
-      option: [
-        {
-          option_id: 2,
-          option: "10명 할인",
-          option_price: 0.15,
-        },
-      ],
-
-      finalPrice: 2000,
-      purchaseDate: "2025-02-02",
-    },
-
-    {
-      ordersId: "주문 id3",
-      productImg: "ccccc",
-      price: 3000,
-      productName: "제품 이름 3",
-      option: [
-        {
-          option_id: 3,
-          option: "10명 할인",
-          option_price: 0.12,
-        },
-      ],
-
-      finalPrice: 2000,
-      purchaseDate: "2025-02-10",
-    },
-  ];
-
   const token = localStorage.getItem("token");
 
   const [orders, setOrders] = useState([]); // 주문 데이터 상태
@@ -115,26 +64,25 @@ export default function MyOrder({}) {
   const itemsPerPage = 1; // 한 페이지당 보여줄 아이템 개수
   const [loading, setLoading] = useState(false);
 
-  // // API 호출 함수
-  // const fetchOrders = async (page) => {
-  //   setLoading(true);
-  //   try {
-  //     const response = await axios.get(`/order/list?page=${page}`, {
-  //       headers: {
-  //         Authorization: `Bearer ${token}`, // 인증 헤더 추가
-  //       },
-  //     });
-  //     setOrders(response.data.orders);
-  //     setTotalItems(response.data.totalItems);
-  //   } catch (error) {
-  //     console.error("데이터 불러오기 실패:", error);
-  //   }
-  //   setLoading(false);
-  // };
-
-  // useEffect(() => {
-  //   fetchOrders(currentPage);
-  // }, [currentPage]);
+  useEffect(() => {
+    // API 호출 함수
+    const fetchOrders = async (page) => {
+      setLoading(true);
+      try {
+        const response = await axios.get(`/order/list?page=${page}`, {
+          headers: {
+            Authorization: `Bearer ${token}`, // 인증 헤더 추가
+          },
+        });
+        setOrders(response.data.orders);
+        setTotalItems(response.data.totalItems);
+      } catch (error) {
+        console.error("데이터 불러오기 실패:", error);
+      }
+      setLoading(false);
+    };
+    fetchOrders(currentPage);
+  }, [currentPage]);
 
   // 클릭 시 페이지 변경 함수
   const handlePageChange = (pageNumber) => {
@@ -152,7 +100,7 @@ export default function MyOrder({}) {
       <Divider></Divider>
 
       <OrderList>
-        {mockData
+        {orders
           .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
           .map((data) => (
             <OrderCard key={data.ordersId}>

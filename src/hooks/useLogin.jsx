@@ -1,7 +1,12 @@
 import axios from "axios";
-import { SHA256 } from "crypto-js";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+const K_REST_API_KEY = process.env.REACT_APP_REST_API_KEY;
+const K_REDIRECT_URI = `http://localhost:3000/kakao-login`;
+const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${K_REST_API_KEY}&redirect_uri=${K_REDIRECT_URI}&response_type=code`;
+
+console.log("K_REST_API_KEY:", process.env.REACT_APP_REST_API_KEY);
 
 export default function useLogin() {
   const navigate = useNavigate();
@@ -57,11 +62,9 @@ export default function useLogin() {
 
     const { email, password } = formData;
 
-    const sha256Password = SHA256(password).toString();
-
     const userData = {
       email,
-      password: sha256Password,
+      password,
     };
 
     console.log("암호화된 비밀번호 : ", userData.password);
@@ -82,10 +85,16 @@ export default function useLogin() {
       });
   };
 
+  // 카카오 로그인
+  const handleKakaoLogin = () => {
+    window.location.href = kakaoURL;
+  };
+
   return {
     formData,
     errors,
     handleInputChange,
     handleLogin,
+    handleKakaoLogin,
   };
 }
