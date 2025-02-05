@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import axios from "axios";
 import styled from "styled-components";
-import mockData from "../data/mockData";
 import Header from "../components/common/Header";
 import Parties from "../components/productDetail/Parties";
 
@@ -40,16 +40,32 @@ const ProductPrice = styled.div`
 export default function ProductDetail() {
   const { productId } = useParams();
   const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const productDetail = mockData.find(
-      (item) => item.productId === parseInt(productId, 10)
-    );
-    setProduct(productDetail);
+    const fetchProduct = async () => {
+      try {
+        const response = await axios.get(
+          `http://15.164.139.247:8080/product/${productId}`
+        );
+        setProduct(response.data.data);
+      } catch (err) {
+        setError("Failed to fetch product data.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
   }, [productId]);
 
-  if (!product) {
+  if (loading) {
     return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
   }
 
   return (
