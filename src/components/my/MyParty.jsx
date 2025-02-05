@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
+
 import PaginationBar from "../common/PaginationBar.jsx";
+
 import { FiMenu } from "react-icons/fi";
 
 const Wrapper = styled.div`

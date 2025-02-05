@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import axios from "axios";
 import styled from "styled-components";
-import mockData from "../data/mockData";
+import Header from "../components/common/Header";
+import Parties from "../components/productDetail/Parties";
 
+const DetailContainer = styled.div`
+  margin: 0px 30px;
+`;
 const ProductContainer = styled.div`
   max-width: 400px;
   margin: 20px 0px 20px 50px;
@@ -32,40 +37,46 @@ const ProductPrice = styled.div`
   font-weight: bold;
 `;
 
-const ProductDetail = () => {
-  const { product_id } = useParams();
+export default function ProductDetail() {
+  const { productId } = useParams();
   const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Fetch product detail from mockData
-    const productDetail = mockData.find(
-      (item) => item.product_id === parseInt(product_id, 10)
-    );
-    setProduct(productDetail);
+    const fetchProduct = async () => {
+      try {
+        const response = await axios.get(
+          `http://15.164.139.247:8080/product/${productId}`
+        );
+        setProduct(response.data.data);
+      } catch (err) {
+        setError("Failed to fetch product data.");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    // Server communication code (commented out)
-    // const fetchProduct = async () => {
-    //   try {
-    //     const response = await axios.get(`/product/${product_id}`);
-    //     setProduct(response.data);
-    //   } catch (error) {
-    //     console.error("Failed to fetch product:", error);
-    //   }
-    // };
-    // fetchProduct();
-  }, [product_id]);
+    fetchProduct();
+  }, [productId]);
 
-  if (!product) {
+  if (loading) {
     return <div>Loading...</div>;
   }
 
-  return (
-    <ProductContainer>
-      <ProductImage src={product.image} alt={product.product_name} />
-      <ProductTitle>{product.product_name}</ProductTitle>
-      <ProductPrice>{product.price}</ProductPrice>
-    </ProductContainer>
-  );
-};
+  if (error) {
+    return <div>{error}</div>;
+  }
 
-export default ProductDetail;
+  return (
+    <DetailContainer>
+      <Header />
+      <ProductContainer>
+        <ProductImage src={product.image} alt={product.productName} />
+        <ProductTitle>{product.productName}</ProductTitle>
+        <ProductPrice>{product.price}</ProductPrice>
+      </ProductContainer>
+      <Parties />
+    </DetailContainer>
+  );
+}
