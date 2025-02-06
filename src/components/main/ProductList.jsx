@@ -104,8 +104,12 @@ export default function ProductList() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://15.164.139.247:8080/product`, {
-          params: { sort, page, category },
+        const response = await axios.get("/api/product", {
+          params: {
+            sort: "default",
+            page: 1,
+            category: "",
+          },
         });
         if (response.data.code === 200) {
           const products = response.data.data.content.map((item, index) => ({

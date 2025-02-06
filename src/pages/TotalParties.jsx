@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import mockData from "../data/mockData3";
+import axios from "axios";
 import Header from "../components/common/Header";
 
 const Container = styled.div``;
@@ -53,27 +53,53 @@ const Status = styled.div`
   font-weight: bold;
 `;
 
-export default function TotalParties() {
+export default function TotalParties({ productId }) {
+  const [parties, setParties] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchParties = async () => {
+      try {
+        const response = await axios.get(`/api/product/${productId}/party`);
+        setParties(response.data);
+      } catch (error) {
+        console.error("Error fetching parties:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchParties();
+  }, [productId]);
+
   return (
     <Container>
       <Header />
       <PartiesContainer>
         <Title>전체 파티 보기</Title>
         <PartiesWrapper>
-          <PartyList>
-            {mockData.map((party) => (
-              <PartyItem key={party.partyId}>
-                <PartyInfo>
-                  <PartyName>{party.partyName}</PartyName>
-                  <PartyDetails>
-                    옵션: {party.option} | 참여 인원: {party.joinCount}/
-                    {party.capacity}
-                  </PartyDetails>
-                </PartyInfo>
-                <Status status={party.status}>{party.status}</Status>
-              </PartyItem>
-            ))}
-          </PartyList>
+          {loading ? (
+            <p>Loading...</p>
+          ) : (
+            <PartyList>
+              {parties.length > 0 ? (
+                parties.map((party) => (
+                  <PartyItem key={party.partyId}>
+                    <PartyInfo>
+                      <PartyName>{party.partyName}</PartyName>
+                      <PartyDetails>
+                        옵션: {party.option} | 참여 인원: {party.joinCount}/
+                        {party.capacity}
+                      </PartyDetails>
+                    </PartyInfo>
+                    <Status status={party.status}>{party.status}</Status>
+                  </PartyItem>
+                ))
+              ) : (
+                <p>파티가 없습니다.</p>
+              )}
+            </PartyList>
+          )}
         </PartiesWrapper>
       </PartiesContainer>
     </Container>

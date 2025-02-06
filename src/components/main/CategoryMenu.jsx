@@ -73,7 +73,7 @@ export default function CategoryMenu({ setSort }) {
     setSort(apiSortValue);
 
     try {
-      const response = await axios.get("http://15.164.139.247:8080/product", {
+      const response = await axios.get("api/product", {
         params: { sort: apiSortValue },
       });
       console.log("Sorted Data:", response.data);
