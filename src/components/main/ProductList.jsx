@@ -104,7 +104,7 @@ export default function ProductList() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("/api/product", {
+        const response = await axios.get("https://random-id.ngrok.io/product", {
           params: {
             sort: "default",
             page: 1,
