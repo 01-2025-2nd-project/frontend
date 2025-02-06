@@ -3,7 +3,6 @@ import ProductDetail from "./pages/ProductDetail ";
 import SignupPage from "./pages/SignupPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import Redirect from "./pages/Redirect.jsx";
-
 import Main from "./pages/Main.jsx";
 import TotalParties from "./pages/TotalParties.jsx";
 import MyPage from "./pages/MyPage.jsx";

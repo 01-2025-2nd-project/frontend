@@ -16,8 +16,8 @@ const Wrapper = styled.div`
 const MenuContainer = styled.div`
   height: 100vh;
   margin-right: 20px;
-
-  background: black;
+  background: var(--light-green);
+  padding: 3px;
 `;
 
 const ContentContainer = styled.div`
@@ -27,35 +27,14 @@ const ContentContainer = styled.div`
 `;
 
 const PaginationContainer = styled.div`
-  width: ${(props) => (props.onOff ? "100%" : "calc(100% - 300px)")};
+  width: 100vw;
   display: flex;
   justify-content: center;
   align-items: center;
   position: fixed;
-  bottom: 20px; /* 화면 하단에서 20px 떨어지게 */
+  bottom: 40px; /* 화면 하단에서 20px 떨어지게 */
 `;
 
-const FiMenuIcon = styled(FiMenu)`
-  left: 10px;
-  top: 10px;
-  width: 35px;
-  height: 35px;
-  cursor: pointer;
-  color: white;
-`;
-
-const Title = styled.h1`
-  margin: 0px;
-`;
-
-const Divider = styled.hr`
-  display: flex;
-  margin-left: 0;
-  width: 100%
-  color: black;
-
-  
-`;
 const OrderList = styled.div`
   display: grid;
   grid-template-columns: repeat(5, 1fr); /* 5개의 컬럼 */
@@ -139,15 +118,8 @@ export default function MyParty({ handleOnOff, onOff }) {
   };
 
   return (
-    <Wrapper onOff={onOff}>
-      <MenuContainer>
-        <FiMenuIcon onClick={handleOnOff} />
-      </MenuContainer>
-
+    <Wrapper>
       <ContentContainer>
-        <Title>파티 목록</Title>
-        <Divider></Divider>
-
         <OrderList>
           {parties
             .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
