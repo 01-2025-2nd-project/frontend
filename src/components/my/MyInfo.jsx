@@ -59,16 +59,20 @@ const EditButton = styled.button`
   height: 30px;
   background: var(--main);
   border: none;
-  border-radius: 5px;
+  border-radius: 10px;
   cursor: pointer;
 `;
 
 const CancelButton = styled.button`
   width: 100px;
   height: 30px;
+<<<<<<< Updated upstream
   background: var(--light-gray);
+=======
+  background: var(--gray);
+>>>>>>> Stashed changes
   border: none;
-  border-radius: 5px;
+  border-radius: 10px;
   cursor: pointer;
 `;
 

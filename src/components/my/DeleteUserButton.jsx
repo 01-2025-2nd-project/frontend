@@ -35,8 +35,10 @@ export default function DeleteUserButton() {
             <ModalTitle>회원 탈퇴</ModalTitle>
             <ModalContent>정말로 탈퇴하시겠습니까?🥹</ModalContent>
             <ButtonContainer>
-              <Button onClick={handleDeleteUser}>확인</Button>
-              <Button onClick={() => setIsModalOpen(false)}>취소</Button>
+              <ConfirmButton onClick={handleDeleteUser}>확인</ConfirmButton>
+              <CancelButton onClick={() => setIsModalOpen(false)}>
+                취소
+              </CancelButton>
             </ButtonContainer>
           </ModalBody>
         </Modal>
@@ -70,7 +72,9 @@ const ModalBody = styled.div`
   align-items: center;
 `;
 
-const ModalTitle = styled.h4``;
+const ModalTitle = styled.h4`
+  margin: 0;
+`;
 const ModalContent = styled.p``;
 
 const ButtonContainer = styled.div`
@@ -80,11 +84,28 @@ const ButtonContainer = styled.div`
   gap: 5px;
 `;
 
-const Button = styled.button``;
+const ConfirmButton = styled.button`
+  width: 60px;
+  height: 30px;
+  background: var(--main);
+  border: none;
+  border-radius: 15px;
+  color: white;
+`;
+
+const CancelButton = styled.button`
+  width: 60px;
+  height: 30px;
+  background: white;
+  border: 1px solid black;
+  border-radius: 15px;
+`;
 
 const DeleteButton = styled.button`
-  width: 100px;
-  background: var(--light-gray);
+  background: none;
   border: none;
-  border-radius: 10px;
+  margin-right: 20px;
+  font-size: 15px;
+  font-weight: bold;
+  color: var(--main);
 `;

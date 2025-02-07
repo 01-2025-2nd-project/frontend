@@ -40,7 +40,7 @@ const Text = styled.p`
   margin: 0;
 `;
 
-export default function SideBar({ onOff, onTabChange }) {
+export default function SideBar({ onTabChange }) {
   return (
     <>
       <Wrapper>

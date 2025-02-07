@@ -11,10 +11,9 @@ function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/" element={<ProductList />} />
         <Route path="/" element={<Main />} />
-
         <Route path="/product/:productId/party" element={<TotalParties />} />
-
         <Route path="/product/:product_id" element={<ProductDetail />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/login" element={<LoginPage />} />
