@@ -77,10 +77,7 @@ export default function useSignup() {
       newErrors.allField = "모든 필드를 입력해주세요.";
     }
 
-    if (
-      email &&
-      !/^[a-zA-Z0-9_\-.]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i.test(email)
-    ) {
+    if (email && !/^[a-z0-9_\-.]+@[a-z0-9.-]+\.[a-zA-Z]{2,4}$/i.test(email)) {
       newErrors.email = "유효한 이메일 주소를 입력해주세요.";
     }
 
@@ -95,7 +92,7 @@ export default function useSignup() {
     if (password !== confirmPassword) {
       newErrors.confirmPassword = "비밀번호가 일치하지 않습니다.";
     }
-    if (address && address.length < 10) {
+    if (address && address.length < 6) {
       newErrors.address = "상세 주소까지 정확히 입력해주세요.";
     }
 

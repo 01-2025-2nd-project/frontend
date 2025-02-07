@@ -3,6 +3,9 @@
 :root {
   --main: #6bae45;
   --sub-main: #54451a;
+  --gray: #e8e8e8;
+  --light-gray: #fcfcfc;
+  --light-green: #e3f1d9;
 }
 
 body {
