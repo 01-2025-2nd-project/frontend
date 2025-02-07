@@ -7,8 +7,10 @@ import PaginationBar from "../common/PaginationBar.jsx";
 import axios from "axios";
 
 const Wrapper = styled.div`
+  width: 100vw
   height: 100vh;
-  padding-left: 50px;
+  display: flex;
+  justify-content: center;
 `;
 
 const OrderList = styled.div`
@@ -55,6 +57,15 @@ const OrderLine = styled.span`
   text-decoration: line-through;
 `;
 
+const PaginationContainer = styled.div`
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  bottom: 40px; /* 화면 하단에서 20px 떨어지게 */
+`;
+
 export default function MyOrder({}) {
   const token = localStorage.getItem("token");
 
@@ -96,9 +107,6 @@ export default function MyOrder({}) {
 
   return (
     <Wrapper>
-      <Title>주문목록</Title>
-      <Divider></Divider>
-
       <OrderList>
         {orders
           .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
@@ -113,14 +121,15 @@ export default function MyOrder({}) {
           ))}
       </OrderList>
 
-      {/* 페이지네이션 */}
-
-      <PaginationBar
-        currentPage={currentPage}
-        itemsPerPage={itemsPerPage}
-        totalItems={totalItems}
-        handlePageChange={handlePageChange}
-      ></PaginationBar>
+      <PaginationContainer>
+        {/* 페이지네이션 */}
+        <PaginationBar
+          currentPage={currentPage}
+          itemsPerPage={itemsPerPage}
+          totalItems={totalItems}
+          handlePageChange={handlePageChange}
+        ></PaginationBar>
+      </PaginationContainer>
     </Wrapper>
   );
 }
