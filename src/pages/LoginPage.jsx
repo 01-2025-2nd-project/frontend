@@ -1,6 +1,15 @@
 import styled from "styled-components";
 import useLogin from "../hooks/useLogin";
-import kakaoLogin from "../images/kakao_login_medium_wide.png";
+import { useNavigate } from "react-router-dom";
+
+const Wrapper = styled.div`
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
 
 const Form = styled.form`
   display: flex;
@@ -34,33 +43,54 @@ const SubmitButton = styled.button`
   border: none;
   border-radius: 6px;
   padding: 0.5rem;
+  margin-top: 10px;
   font-size: 15px;
+  font-weight: bold;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  color: white;
 `;
+const SignupButton = styled.button`
+  width: 300px;
+  height: 45px;
+  background: var(--gray);
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem;
 
-const SocialButton = styled.button`
-  all: unset; /* 기본 스타일 제거 */
-  cursor: pointer; /* 버튼처럼 보이도록 */
+  font-size: 15px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  color: black;
 `;
 
 const Typo = styled.span`
   font-size: 0.5em;
 `;
 
-const Divider = styled.hr`
-  border-top: 0.05em solid #fafafa;
-  width: 20rem;
+const Title = styled.h1`
+  font-size: 1.5em;
+  font-weight: bold;
+  text-align: center;
+  color: var(--main);
 `;
 
 export default function LoginPage() {
-  const { formData, errors, handleInputChange, handleLogin, handleKakaoLogin } =
-    useLogin();
+  const navigate = useNavigate();
+  const { formData, errors, handleInputChange, handleLogin } = useLogin();
+
+  const handleGoToSignup = () => {
+    navigate("/signup");
+  };
 
   return (
-    <>
+    <Wrapper>
+      <Title>FarmPlus 로그인</Title>
       <Form name="loginForm">
         <InputContainer>
           <Label>이메일</Label>
@@ -92,11 +122,8 @@ export default function LoginPage() {
         <SubmitButton type="button" onClick={handleLogin}>
           로그인하기
         </SubmitButton>
-        <Divider />
-        <SocialButton type="button" onClick={handleKakaoLogin}>
-          <img src={kakaoLogin} alt="버튼 이미지" />
-        </SocialButton>
+        <SignupButton onClick={handleGoToSignup}>회원가입하기</SignupButton>
       </Form>
-    </>
+    </Wrapper>
   );
 }
