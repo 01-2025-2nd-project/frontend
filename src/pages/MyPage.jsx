@@ -4,7 +4,7 @@ import SideBar from "../components/my/SideBar.jsx";
 import MyOrder from "../components/my/MyOrder";
 import MyParty from "../components/my/MyParty";
 import styled from "styled-components";
-
+import MyInfo from "../components/my/MyInfo.jsx";
 import { useNavigate } from "react-router-dom";
 import { HiOutlineBellAlert } from "react-icons/hi2";
 import DeleteUserButton from "../components/my/DeleteUserButton.jsx";
