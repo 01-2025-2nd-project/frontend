@@ -77,10 +77,9 @@ const SubmitButton = styled.button`
 export default function PartyModal({ isOpen, onClose, productId }) {
   const [formData, setFormData] = useState({
     partyName: "",
-    partyMaster: "",
     optionId: "",
     productName: "",
-    end_date: "",
+    endDate: "",
     purchaseCount: "",
   });
 
@@ -113,9 +112,23 @@ export default function PartyModal({ isOpen, onClose, productId }) {
     fetchProductDetails();
   }, [isOpen, productId]);
 
+  const formatDateToYYYYMMDD = (date) => {
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    if (name === "endDate") {
+      const formattedDate = formatDateToYYYYMMDD(value);
+      console.log(formattedDate);
+      setFormData({ ...formData, [name]: formattedDate });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const handleOptionChange = (e) => {
@@ -141,13 +154,18 @@ export default function PartyModal({ isOpen, onClose, productId }) {
       ...formData,
       optionId: Number(formData.optionId), // 숫자로 변환
       purchaseCount: Number(formData.purchaseCount), // 숫자로 변환
-      end_date: Math.floor(new Date(formData.end_date).getTime() / 1000), // UNIX 타임스탬프로 변환
     };
+    console.log(formattedData);
 
+    const token = localStorage.getItem("token");
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
     try {
       const response = await axios.post(
         "http://15.164.139.247:8080/party",
-        formattedData
+        formattedData,
+        { headers }
       );
       alert("파티가 성공적으로 생성되었습니다.");
       console.log(response.data);
@@ -173,17 +191,6 @@ export default function PartyModal({ isOpen, onClose, productId }) {
               type="text"
               name="partyName"
               value={formData.partyName}
-              onChange={handleInputChange}
-              required
-            />
-          </InputGroup>
-
-          <InputGroup>
-            <Label>방장 이름</Label>
-            <Input
-              type="text"
-              name="partyMaster"
-              value={formData.partyMaster}
               onChange={handleInputChange}
               required
             />
@@ -227,8 +234,8 @@ export default function PartyModal({ isOpen, onClose, productId }) {
             <Label>종료 날짜</Label>
             <Input
               type="date"
-              name="end_date"
-              value={formData.end_date}
+              name="endDate"
+              value={formData.endDate}
               onChange={handleInputChange}
               required
             />

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import Header from "../components/common/Header";
+import { useParams } from "react-router-dom";
 
 const Container = styled.div``;
 const PartiesContainer = styled.div``;
@@ -53,15 +54,18 @@ const Status = styled.div`
   font-weight: bold;
 `;
 
-export default function TotalParties({ productId }) {
+export default function TotalParties() {
   const [parties, setParties] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { productId } = useParams();
 
   useEffect(() => {
     const fetchParties = async () => {
       try {
-        const response = await axios.get(`/api/product/${productId}/party`);
-        setParties(response.data);
+        const response = await axios.get(
+          `http://15.164.139.247:8080/product/${productId}/party`
+        );
+        setParties(response.data.data);
       } catch (error) {
         console.error("Error fetching parties:", error);
       } finally {
@@ -70,7 +74,7 @@ export default function TotalParties({ productId }) {
     };
 
     fetchParties();
-  }, [productId]);
+  }, []);
 
   return (
     <Container>
@@ -88,8 +92,7 @@ export default function TotalParties({ productId }) {
                     <PartyInfo>
                       <PartyName>{party.partyName}</PartyName>
                       <PartyDetails>
-                        옵션: {party.option} | 참여 인원: {party.joinCount}/
-                        {party.capacity}
+                        참여 인원: {party.joinCount}/{party.option}
                       </PartyDetails>
                     </PartyInfo>
                     <Status status={party.status}>{party.status}</Status>

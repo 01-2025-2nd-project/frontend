@@ -88,7 +88,7 @@ export default function MyParty({ handleOnOff, onOff }) {
   const token = localStorage.getItem("token");
 
   const [parties, setParties] = useState([]); // 주문 데이터 상태
-  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 번호 상태
+  const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 번호 상태
   const [totalItems, setTotalItems] = useState(30); // 전체 데이터 개수
   const itemsPerPage = 10; // 한 페이지당 보여줄 아이템 개수
   const [loading, setLoading] = useState(false);
