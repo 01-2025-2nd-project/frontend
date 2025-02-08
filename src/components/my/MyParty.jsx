@@ -106,7 +106,7 @@ export default function MyParty({ handleOnOff, onOff }) {
           }
         );
         console.log("파티 응답 데이터:", response.data);
-        setParties(response.data.partyList);
+        setParties(response.data);
         setTotalItems(response.data.totalItems);
       } catch (error) {
         console.error("데이터 불러오기 실패:", error);
