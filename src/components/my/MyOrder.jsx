@@ -7,10 +7,12 @@ import PaginationBar from "../common/PaginationBar.jsx";
 import axios from "axios";
 
 const Wrapper = styled.div`
-  width: 100vw
-  height: 100vh;
+  width: 100vw;
+  height: 100%;
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
 `;
 
 const OrderList = styled.div`

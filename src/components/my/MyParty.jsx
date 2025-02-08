@@ -7,23 +7,20 @@ import PaginationBar from "../common/PaginationBar.jsx";
 import { FiMenu } from "react-icons/fi";
 
 const Wrapper = styled.div`
-  width: 100vw
-  height: 100vh;
+  width: 100vw;
+  height: 100%;
   display: flex;
+  flex-direction: column;
   justify-content: center;
-`;
-
-const MenuContainer = styled.div`
-  height: 100vh;
-  margin-right: 20px;
-  background: var(--light-green);
-  padding: 3px;
+  align-items: center;
 `;
 
 const ContentContainer = styled.div`
-  width: 100vw;
-  height: 100%;
+  width: 100%;
   margin: 10px;
+  height: 100%;
+  display: flex;
+  justify-content: center;
 `;
 
 const PaginationContainer = styled.div`
@@ -42,10 +39,15 @@ const OrderList = styled.div`
 `;
 
 const OrderCard = styled.div`
+  width: 250px;
   height: 200px;
   background: #f7f7f7;
   border-radius: 10px;
   padding: 10px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 `;
 
 const Bold = styled.span`
@@ -57,7 +59,7 @@ const StatusChip = styled.span`
   width: 110px;
   height: 30px;
   border-radius: 15px;
-  background: lightgray;
+  background: var(--light-green);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -79,26 +81,39 @@ const JoinChip = styled.span`
   margin: 0px;
 `;
 
-const Span = styled.span`
+const P = styled.p`
   font-size: 15px;
   color: gray;
 `;
 
-export default function MyParty({ handleOnOff, onOff }) {
+const Content = styled.p`
+  font-size: 15px;
+  color: black;
+  margin: 0;
+`;
+
+const ChipContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  margin-bottom: 2px;
+`;
+
+export default function MyParty({ onOff }) {
   const token = localStorage.getItem("token");
 
   const [parties, setParties] = useState([]); // 주문 데이터 상태
-  const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 번호 상태
+  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 번호 상태
   const [totalItems, setTotalItems] = useState(30); // 전체 데이터 개수
   const itemsPerPage = 10; // 한 페이지당 보여줄 아이템 개수
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchParties = async (page) => {
+    const fetchParties = async () => {
       setLoading(true);
       try {
         const response = await axios.get(
-          `http://15.164.139.247:8080/party/list?page=${page}`,
+          `http://15.164.139.247:8080/party/list?page=${currentPage - 1}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // 인증 헤더 추가
@@ -106,8 +121,8 @@ export default function MyParty({ handleOnOff, onOff }) {
           }
         );
         console.log("파티 응답 데이터:", response.data);
-        setParties(response.data);
-        setTotalItems(response.data.totalItems);
+        setParties(response.data.data.content);
+        setTotalItems(response.data.data.totalElements);
       } catch (error) {
         console.error("데이터 불러오기 실패:", error);
       }
@@ -115,57 +130,48 @@ export default function MyParty({ handleOnOff, onOff }) {
     };
 
     fetchParties(currentPage);
-  }, [currentPage]);
-
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
+  }, [currentPage, token]);
 
   return (
     <Wrapper>
       <ContentContainer>
         <OrderList>
-          {parties
-            .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
-            .map((data) => (
-              <OrderCard key={data.partyId}>
-                <div
-                  style={{ display: "flex", flexDirection: "row", gap: "5px" }}
-                >
-                  <StatusChip>{data.status}</StatusChip>
+          {parties.map((data) => (
+            <OrderCard key={data.partyId}>
+              <ChipContainer>
+                <StatusChip>{data.status}</StatusChip>
 
-                  <JoinChip>
-                    {data.joinCount}/{data.capacity}
-                  </JoinChip>
-                </div>
+                <JoinChip>{data.joinCount}명 참여 중!</JoinChip>
+              </ChipContainer>
 
-                <Bold>{data.partyName}</Bold>
-                <Span>&nbsp;by {data.partyMember.partyMasterName}</Span>
-                <p>제품명: {data.productName} </p>
-                <p>
-                  파티 멤버: &nbsp;
-                  {data.partyMember.partyMemberName.length > 0 ? (
-                    data.partyMember.partyMemberName.map((member, index) => (
-                      <span key={index}>
-                        {member.name}
-                        {index < data.partyMember.partyMemberName.length - 1 &&
-                          ", "}
-                      </span>
-                    ))
-                  ) : (
-                    <span>없음</span>
-                  )}
-                </p>
-              </OrderCard>
-            ))}
+              <Bold>{data.partyName}</Bold>
+              <P>by {data.partyMember.partyMasterName}</P>
+              <Content>제품 | {data.productName} </Content>
+              <Content>
+                파티 멤버 | &nbsp;
+                {data.partyMember.partyMemberName.length > 0 ? (
+                  data.partyMember.partyMemberName.map((member, index) => (
+                    <span key={index}>
+                      {member.name}
+                      {index < data.partyMember.partyMemberName.length - 1 &&
+                        ", "}
+                    </span>
+                  ))
+                ) : (
+                  <span>없음</span>
+                )}
+              </Content>
+              <Content>마감 | &nbsp;{data.endDate}</Content>
+            </OrderCard>
+          ))}
         </OrderList>
         <PaginationContainer onOff={onOff}>
           {/* 페이지네이션 */}
           <PaginationBar
-            currentPage={currentPage}
+            currentPage={currentPage + 1} // currentPage에 1을 더한 값을 전달
             itemsPerPage={itemsPerPage}
             totalItems={totalItems}
-            handlePageChange={handlePageChange}
+            handlePageChange={(pageNumber) => setCurrentPage(pageNumber)} // 그냥 그대로 설정
           ></PaginationBar>
         </PaginationContainer>
       </ContentContainer>

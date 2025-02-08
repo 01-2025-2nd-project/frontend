@@ -6,12 +6,8 @@ import axios from "axios";
 
 export default function Alert({ email }) {
   const notifications = useWebsocket({ email });
-
-  //   const [notifications, setNotifications] = useState([
-  //     { id: 1, content: "구매 성사", createAt: "2025-02-06T00:00:00" },
-  //     { id: 2, content: "새로운 댓글", createAt: "2025-02-07T00:00:00" },
-  //     { id: 3, content: "구매성사 축축", createAt: "2025-02-08T00:00:00" },
-  //   ]);
+  console.log("알림 : ", notifications);
+  const token = localStorage.getItem("token");
 
   const [showNotification, setShowNotification] = useState(false);
 
@@ -24,26 +20,35 @@ export default function Alert({ email }) {
     if (notifications.length === 0) return;
 
     // 1. 현재 보이는 알림들의 ID 목록 가져오기
-    const notificationIds = notifications.map((n) => n.id);
+    const notificationIds = notifications.map((n) => n.notificationId);
+
+    let url = "";
 
     // 2. ID를 URL 쿼리 파라미터 형식으로 변환
-    const queryString = notificationIds
-      .map((id) => `notification-id=${id}`)
-      .join("&");
-    const url = `http://15.164.139.247:8080/notification/read?${queryString}`;
+    if (notificationIds.length > 0) {
+      const firstId = notificationIds[0];
+      const lastId = notificationIds[notificationIds.length - 1];
+
+      // 3. URL 쿼리 파라미터 생성
+      url = `http://15.164.139.247:8080/notification/read?notification-id=${firstId}&notification-id=${lastId}`;
+    }
 
     try {
-      // 3. POST 요청 보내기
-      const response = await axios.post(url);
+      // 4. POST 요청 보내기
+      const response = await axios.post(url, null, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (response.status === 200) {
         console.log("알림 읽음 처리 성공 ");
 
-        // 4. 성공하면 알림 목록에서 삭제
+        // 5. 성공하면 알림 목록에서 삭제
 
         setShowNotification(false);
       }
     } catch (error) {
-      console.error("알림 읽음 처리 실패 ❌", error);
+      console.error("알림 읽음 처리 실패: ", error);
     }
   };
 
@@ -68,7 +73,7 @@ export default function Alert({ email }) {
             </AlertContainer>
             <div>
               {notifications.map((notification) => (
-                <div key={notification.id}>
+                <div key={notification.notificationId}>
                   <p>{notification.content}</p>
                   <small>{notification.createAt}</small>
                 </div>
