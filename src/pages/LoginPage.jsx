@@ -82,7 +82,8 @@ const Title = styled.h1`
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const { formData, errors, handleInputChange, handleLogin } = useLogin();
+  const { formData, errors, handleInputChange, handleLogin, handleKeyDown } =
+    useLogin();
 
   const handleGoToSignup = () => {
     navigate("/signup");
@@ -119,7 +120,11 @@ export default function LoginPage() {
         </InputContainer>
 
         <Typo>{errors.allField}</Typo>
-        <SubmitButton type="button" onClick={handleLogin}>
+        <SubmitButton
+          type="button"
+          onClick={handleLogin}
+          onKeyDown={handleKeyDown}
+        >
           로그인하기
         </SubmitButton>
         <SignupButton onClick={handleGoToSignup}>회원가입하기</SignupButton>

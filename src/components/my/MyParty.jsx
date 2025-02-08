@@ -97,12 +97,16 @@ export default function MyParty({ handleOnOff, onOff }) {
     const fetchParties = async (page) => {
       setLoading(true);
       try {
-        const response = await axios.get(`/party/list?page=${page}`, {
-          headers: {
-            Authorization: `Bearer ${token}`, // 인증 헤더 추가
-          },
-        });
-        setParties(response.data.partyList);
+        const response = await axios.get(
+          `http://15.164.139.247:8080/party/list?page=${page}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // 인증 헤더 추가
+            },
+          }
+        );
+        console.log("파티 응답 데이터:", response.data);
+        setParties(response.data);
         setTotalItems(response.data.totalItems);
       } catch (error) {
         console.error("데이터 불러오기 실패:", error);
