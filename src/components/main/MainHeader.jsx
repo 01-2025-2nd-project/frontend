@@ -81,9 +81,10 @@ const NavLinks = styled.nav`
   }
 `;
 
-export default function MainHeader() {
+export default function MainHeader({ setPage }) {
   const navigate = useNavigate();
   const handleLogoClick = () => {
+    setPage(1);
     navigate("/");
   };
 

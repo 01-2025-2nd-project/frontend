@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
 
@@ -63,26 +63,65 @@ const DropdownItem = styled.div`
   }
 `;
 
-export default function CategoryMenu({ setSort }) {
+export default function CategoryMenu({ setProducts }) {
+  const [categories, setCategories] = useState([]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [selectedSort, setSelectedSort] = useState("정렬");
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [page, setPage] = useState(1); // 기본 페이지 번호
+
+  useEffect(() => {
+    // 카테고리 데이터를 백엔드에서 가져오기
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get(
+          "http://15.164.139.247:8080/product/admin/category"
+        );
+        setCategories(response.data.data);
+        console.log(response.data.data, "카테고리");
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  const fetchProducts = async ({ sort, category, page }) => {
+    try {
+      const response = await axios.get("http://15.164.139.247:8080/product", {
+        params: {
+          sort: sort || selectedSort,
+          category: category || selectedCategory,
+          page: page || 1,
+        },
+      });
+      setProducts(response.data.data); // 부모 컴포넌트에 데이터 전달
+      console.log("Filtered Products:", response.data.data);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  };
+
+  const handleCategoryChange = async (category, sort, page) => {
+    setSelectedCategory(category);
+
+    try {
+      const response = await axios.get("http://15.164.139.247:8080/product", {
+        params: { category, sort, page },
+      });
+      setProducts(response.data.data.content);
+    } catch (error) {
+      console.error("Error fetching filtered products:", error);
+    }
+  };
 
   const handleSortChange = async (sortOption, apiSortValue) => {
     setSelectedSort(sortOption);
     setDropdownOpen(false);
-    setSort(apiSortValue);
-
-    try {
-      const response = await axios.get("api/product", {
-        params: { sort: apiSortValue },
-      });
-      console.log("Sorted Data:", response.data);
-    } catch (error) {
-      console.error("Error fetching sorted products:", error);
-    }
+    fetchProducts({ sort: apiSortValue, category: selectedCategory, page });
   };
 
-  const categories = ["과일", "채소", "곡물", "견과류", "향신료"];
   const sortOptions = [
     { label: "구매순(많은)", value: "purchaseCount" },
     { label: "가격순(높은)", value: "priceDescending" },
@@ -94,7 +133,12 @@ export default function CategoryMenu({ setSort }) {
     <Container>
       <CategoryBar>
         {categories.map((category, index) => (
-          <CategoryItem key={index}>{category}</CategoryItem>
+          <CategoryItem
+            key={index}
+            onClick={() => handleCategoryChange(category.name)}
+          >
+            {category.name}
+          </CategoryItem>
         ))}
       </CategoryBar>
 

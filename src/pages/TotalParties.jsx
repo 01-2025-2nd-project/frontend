@@ -66,6 +66,7 @@ export default function TotalParties() {
           `http://15.164.139.247:8080/product/${productId}/party`
         );
         setParties(response.data.data);
+        console.log(response.data.data);
       } catch (error) {
         console.error("Error fetching parties:", error);
       } finally {
