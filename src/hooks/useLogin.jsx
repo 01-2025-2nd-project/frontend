@@ -33,13 +33,13 @@ export default function useLogin() {
       newErrors.email = "유효한 이메일 주소를 입력해주세요.";
     }
 
-    if (
-      password &&
-      !/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%&*]).{8,12}$/.test(password)
-    ) {
-      newErrors.password =
-        "비밀번호를 다시 확인해주세요. 비밀번호는 대문자, 소문자, 숫자, 그리고 특수문자(!@#$%&*)를 포함한 8~12자 입니다.";
-    }
+    // if (
+    //   password &&
+    //   !/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%&*]).{8,12}$/.test(password)
+    // ) {
+    //   newErrors.password =
+    //     "비밀번호를 다시 확인해주세요. 비밀번호는 대문자, 소문자, 숫자, 그리고 특수문자(!@#$%&*)를 포함한 8~12자 입니다.";
+    // }
 
     setErrors(newErrors);
 

@@ -6,8 +6,11 @@ import MyParty from "../components/my/MyParty";
 import styled from "styled-components";
 import MyInfo from "../components/my/MyInfo.jsx";
 import { useNavigate } from "react-router-dom";
-import { HiOutlineBellAlert } from "react-icons/hi2";
 import DeleteUserButton from "../components/my/DeleteUserButton.jsx";
+import LogoutButton from "../components/my/LogoutButton.jsx";
+import axios from "axios";
+import Alert from "../components/common/Alert.jsx";
+import { useDispatch, useSelector } from "react-redux";
 
 const Wrapper = styled.div`
   display: flex;
@@ -57,15 +60,41 @@ const LoginButton = styled.button`
   color: var(--main);
 `;
 
-const Icon = styled(HiOutlineBellAlert)`
-  width: 20px;
-  height: 20px;
-`;
-
 export default function MyPage() {
   const [activeTab, setActiveTab] = useState("my-info");
-
+  const [email, setEmail] = useState("");
+  const dispatch = useDispatch();
+  const token = useSelector((state) => state.auth.token);
   const navigate = useNavigate();
+
+  // useEffect를 사용하여 컴포넌트가 처음 렌더링될 때 GET 요청을 보냄
+  useEffect(() => {
+    if (token) {
+      const fetchData = async () => {
+        try {
+          const response = await axios.get(
+            "http://15.164.139.247:8080/mypage",
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          console.log("응답 데이터:", response.data);
+          setEmail(response.data.data.email);
+          console.log("마이페이지에서 내려줄 이메일:", email);
+        } catch (err) {
+          console.error(err);
+        }
+      };
+
+      fetchData();
+    } else {
+      navigate("/"); // 로그인 안 되어 있으면 로그인 페이지로 이동
+    }
+  }, [dispatch, token, navigate]); // token이 바뀌면 실행
+
   const handleLogoClick = () => {
     navigate("/");
   };
@@ -95,9 +124,15 @@ export default function MyPage() {
           <img src="/Farmplus_logo.png" alt="FarmPlus Logo" />
         </Logo>
         <ButtonContainer>
-          <LoginButton onClick={handleLoginClick}>로그인</LoginButton>
-          <DeleteUserButton></DeleteUserButton>
-          <Icon />
+          {token ? (
+            <>
+              <LogoutButton />
+              <DeleteUserButton />
+              <Alert email={email} />
+            </>
+          ) : (
+            <LoginButton onClick={handleLoginClick}>로그인</LoginButton>
+          )}
         </ButtonContainer>
       </Header>
       <SideBar onTabChange={(tab) => setActiveTab(tab)} />

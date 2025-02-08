@@ -1,8 +1,77 @@
 import React from "react";
 import styled from "styled-components";
 import { FiSearch } from "react-icons/fi";
-import { Link, useNavigate } from "react-router-dom";
-import CategoryMenu from "./CategoryMenu";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { setToken } from "../../redux/authSlice"; // setToken 액션
+
+export default function MainHeader() {
+  const navigate = useNavigate();
+  const token = useSelector((state) => state.auth.token); // Redux에서 token 가져오기
+  const dispatch = useDispatch(); // dispatch를 사용하여 액션 실행
+
+  // useEffect로 localStorage에서 token을 가져와 Redux에 설정
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    dispatch(setToken(token)); // localStorage에서 가져온 token을 Redux에 설정
+  }, [dispatch]);
+
+  const handleLogout = () => {
+    dispatch(setToken(null)); // 로그아웃 시 token을 null로 설정
+    navigate("/");
+  };
+
+  const handleLogoClick = () => {
+    navigate("/");
+  };
+
+  const handleMypageClick = () => {
+    navigate("/my");
+  };
+
+  const handleLoginClick = () => {
+    navigate("/login");
+  };
+
+  const handleSignupClick = () => {
+    navigate("/signup");
+  };
+
+  return (
+    <StyledHeader>
+      <Logo onClick={handleLogoClick}>
+        <img src="/Farmplus_logo.png" alt="FarmPlus Logo" />
+      </Logo>
+
+      <HeaderBarContainer>
+        <SearchBarWrapper>
+          <SearchBarContainer>
+            <SearchBar>
+              <input type="text" placeholder="상품 검색..." />
+            </SearchBar>
+            <SearchIcon a href="#" />
+          </SearchBarContainer>
+          <NavLinks>
+            {token ? (
+              <>
+                {/* 로그인 상태일 때 표시할 버튼들 */}
+                <Button onClick={handleMypageClick}>MY</Button>
+                <Button onClick={handleLogout}>로그아웃</Button>
+              </>
+            ) : (
+              <>
+                {/* 로그인 안 되었을 때 표시할 버튼들 */}
+                <Button onClick={handleLoginClick}>로그인</Button>
+                <Button onClick={handleSignupClick}>회원가입</Button>
+              </>
+            )}
+          </NavLinks>
+        </SearchBarWrapper>
+      </HeaderBarContainer>
+    </StyledHeader>
+  );
+}
 
 const StyledHeader = styled.header`
   display: flex;
@@ -81,33 +150,14 @@ const NavLinks = styled.nav`
   }
 `;
 
-export default function MainHeader({ setPage }) {
-  const navigate = useNavigate();
-  const handleLogoClick = () => {
-    setPage(1);
-    navigate("/");
-  };
 
-  return (
-    <StyledHeader>
-      <Logo onClick={handleLogoClick}>
-        <img src="/Farmplus_logo.png" alt="FarmPlus Logo" />
-      </Logo>
+const Button = styled.button`
+  background: none;
+  border: none;
+  border-radius: 20px;
+  padding: 3px;
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--main);
+`;
 
-      <HeaderBarContainer>
-        <SearchBarWrapper>
-          <SearchBarContainer>
-            <SearchBar>
-              <input type="text" placeholder="상품 검색..." />
-            </SearchBar>
-            <SearchIcon a href="#" />
-          </SearchBarContainer>
-          <NavLinks>
-            <Link to="/login">로그인</Link>
-            <Link to="/signup">회원가입</Link>
-          </NavLinks>
-        </SearchBarWrapper>
-      </HeaderBarContainer>
-    </StyledHeader>
-  );
-}

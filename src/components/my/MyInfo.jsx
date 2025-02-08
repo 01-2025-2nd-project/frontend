@@ -72,7 +72,7 @@ const CancelButton = styled.button`
   cursor: pointer;
 `;
 
-export default function MyInfo({ handleOnOff, onOff }) {
+export default function MyInfo({}) {
   const token = localStorage.getItem("token");
 
   const [formData, setFormData] = useState({
@@ -108,7 +108,7 @@ export default function MyInfo({ handleOnOff, onOff }) {
         // 응답 데이터 상태에 저장
         console.log("응답 데이터:", response.data);
         setFormData(response.data.data);
-        setOriginalProfileData(response.data);
+        setOriginalProfileData(response.data.data);
       } catch (err) {
         console.error(err);
       }
@@ -124,6 +124,7 @@ export default function MyInfo({ handleOnOff, onOff }) {
   };
 
   // 프로필 변경 저장
+  // 프로필 변경 저장
   const handleSave = async () => {
     if (!formData.nickname) {
       alert("닉네임을 입력해주세요.");
@@ -131,15 +132,20 @@ export default function MyInfo({ handleOnOff, onOff }) {
     }
 
     try {
-      // 닉네임 중복 확인 로직 들어가야 함 : 닉네임이 중복되지 않는지 확인하는 API 백엔드에 요청
+      console.log("내가 보내는 닉네임: ", formData.nickname);
+
+      // 닉네임 중복 확인 로직
       const checkResponse = await axios.post(
-        "http://15.164.139.247:8080/mypage",
+        "http://15.164.139.247:8080/auth/nickname",
         {
           nickname: formData.nickname,
         }
       );
 
-      if (checkResponse.data.isDuplicate) {
+      console.log("중복 확인 응답:", checkResponse.data); // 응답 로그 확인
+
+      // 응답 코드가 200이 아니면 이미 사용 중인 닉네임
+      if (checkResponse.data.code !== 200) {
         alert("이미 사용 중인 닉네임입니다.");
         return;
       }
@@ -150,6 +156,7 @@ export default function MyInfo({ handleOnOff, onOff }) {
         formData
       );
 
+      // 저장 성공 시 알림 표시
       if (saveResponse.status === 200) {
         alert("프로필이 성공적으로 업데이트되었습니다!");
         setOriginalProfileData(formData); // 원본 데이터 업데이트
