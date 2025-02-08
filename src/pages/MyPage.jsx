@@ -64,10 +64,9 @@ export default function MyPage() {
   const [activeTab, setActiveTab] = useState("my-info");
   const [email, setEmail] = useState("");
   const dispatch = useDispatch();
-  const token = useSelector((state) => state.auth.token);
+  const token = localStorage.getItem("token");
   const navigate = useNavigate();
 
-  // useEffect를 사용하여 컴포넌트가 처음 렌더링될 때 GET 요청을 보냄
   useEffect(() => {
     if (token) {
       const fetchData = async () => {
@@ -93,7 +92,7 @@ export default function MyPage() {
     } else {
       navigate("/"); // 로그인 안 되어 있으면 로그인 페이지로 이동
     }
-  }, [dispatch, token, navigate]); // token이 바뀌면 실행
+  }, [token, navigate]); // token이 바뀌면 실행
 
   const handleLogoClick = () => {
     navigate("/");

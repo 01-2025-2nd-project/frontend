@@ -6,12 +6,18 @@ const socketUrl = "ws://15.164.139.247:8080/ws";
 
 export default function useWebsocket({ email }) {
   const [notifications, setNotifications] = useState([]);
+  const token = localStorage.getItem("token");
 
   // 1. GET 요청을 통해 알림 목록 받아오기
   const fetchNotifications = async () => {
     try {
       const response = await axios.get(
-        `http://15.164.139.247:8080/notifications/${email}`
+        `http://15.164.139.247:8080/notification/notifications`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       if (response.data.code === 200) {
         setNotifications(response.data.data); // 기존 알림 목록 설정
