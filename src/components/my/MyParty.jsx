@@ -97,11 +97,15 @@ export default function MyParty({ handleOnOff, onOff }) {
     const fetchParties = async (page) => {
       setLoading(true);
       try {
-        const response = await axios.get(`/party/list?page=${page}`, {
-          headers: {
-            Authorization: `Bearer ${token}`, // 인증 헤더 추가
-          },
-        });
+        const response = await axios.get(
+          `http://15.164.139.247:8080/party/list?page=${page}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // 인증 헤더 추가
+            },
+          }
+        );
+        console.log("파티 응답 데이터:", response.data);
         setParties(response.data.partyList);
         setTotalItems(response.data.totalItems);
       } catch (error) {

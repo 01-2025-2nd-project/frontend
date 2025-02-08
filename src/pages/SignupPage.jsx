@@ -64,7 +64,8 @@ const ErrorText = styled.p`
 export default function SignupPage() {
   const navigate = useNavigate();
 
-  const { formData, errors, handleInputChange, handleSignup } = useSignup();
+  const { formData, errors, handleInputChange, handleSignup, handleKeyDown } =
+    useSignup();
 
   return (
     <Wrapper>
@@ -90,7 +91,7 @@ export default function SignupPage() {
             name="name"
             value={formData.name}
             type="text"
-            placeholder="아름을 입력하세요."
+            placeholder="이름을 입력하세요."
           ></InputBox>
           <ErrorText>{errors.name}</ErrorText>
         </InputContainer>
@@ -138,7 +139,7 @@ export default function SignupPage() {
             name="address"
             value={formData.address}
             type="text"
-            placeholder="주소를 입력하세요."
+            placeholder="배송받을 주소를 입력하세요."
           ></InputBox>
           <ErrorText>{errors.address}</ErrorText>
         </InputContainer>
@@ -156,7 +157,11 @@ export default function SignupPage() {
         </InputContainer>
       </Form>
       <ErrorText>{errors.allField}</ErrorText>
-      <SubmitButton type="button" onClick={handleSignup}>
+      <SubmitButton
+        type="button"
+        onClick={handleSignup}
+        onKeyDown={handleKeyDown}
+      >
         회원가입 하기
       </SubmitButton>
     </Wrapper>
