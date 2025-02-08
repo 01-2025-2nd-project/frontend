@@ -1,49 +1,72 @@
 import styled from "styled-components";
+import DeleteUserButton from "./DeleteUserButton";
+import { useState } from "react";
 
 const Wrapper = styled.div`
   display: flex;
-`;
-
-const Content = styled.div`
-  left: 0;
-  top: 0;
-  width: ${(props) => (props.onOff ? "0px" : "300px")};
-  height: 100vh;
-  background: #d9d9d7;
-  transition: width 0.1s ease-out, opacity 0.1s ease-out;
-  overflow: hidden; /* 내용이 넘치지 않도록 설정 */
-  opacity: ${(props) => (props.onOff ? "0" : "1")}; /* 내용 숨기기 */
-  display: flex;
   justify-content: center;
+  align-items: center;
+  background: var(--gray);
+  width: 100vw;
+  height: 50px;
 `;
 
 const MenuContainer = styled.div`
   display: flex;
-  flex-direction: column;
-  gap: 10px;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
 `;
 
 const Menus = styled.div`
   display: flex;
+  justify-content: center;
   align-items: center;
-  padding: 5px;
-  width: 300px;
-  height: 30px;
-  background: #f7f7f7;
+  padding: 6px;
+  width: 100px;
+  height: 20px;
+  background: ${(props) => (props.selected ? "var(--main) " : "#f4f4f4")};
+  color: ${(props) => (props.selected ? "white" : "black")};
+  border-radius: 15px;
 `;
 
-export default function SideBar({ onOff, onTabChange }) {
+const Text = styled.p`
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0;
+`;
+
+export default function SideBar({ onTabChange }) {
+  const [selectedMenu, setSelectedMenu] = useState(null);
+
+  const handleMenuClick = (menu) => {
+    setSelectedMenu(menu);
+    onTabChange(menu);
+  };
   return (
     <>
       <Wrapper>
-        <Content onOff={onOff}>
-          <MenuContainer>
-            <Menus>홈</Menus>
-            <Menus onClick={() => onTabChange("my-info")}>회원정보</Menus>
-            <Menus onClick={() => onTabChange("my-party")}>나의 팟</Menus>
-            <Menus onClick={() => onTabChange("my-order")}>구매목록</Menus>
-          </MenuContainer>
-        </Content>
+        <MenuContainer>
+          <Menus
+            selected={selectedMenu === "my-info"}
+            onClick={() => handleMenuClick("my-info")}
+          >
+            회원정보
+          </Menus>
+          <Menus
+            selected={selectedMenu === "my-party"}
+            onClick={() => handleMenuClick("my-party")}
+          >
+            나의 팟
+          </Menus>
+          <Menus
+            selected={selectedMenu === "my-order"}
+            onClick={() => handleMenuClick("my-order")}
+          >
+            구매목록
+          </Menus>
+        </MenuContainer>
       </Wrapper>
     </>
   );

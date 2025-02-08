@@ -12,9 +12,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Main />} />
-
         <Route path="/product/:productId/party" element={<TotalParties />} />
-
         <Route path="/product/:productId" element={<ProductDetail />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/login" element={<LoginPage />} />

@@ -2,38 +2,52 @@ import styled from "styled-components";
 import useSignup from "../hooks/useSignup";
 import { useNavigate } from "react-router-dom";
 
-const FormContainer = styled.body`
-  margin: 0;
-  height: 100vh; /* 화면 전체 높이를 사용 */
-  display: flex; /* Flexbox 활성화 */
-  justify-content: center; /* 가로 중앙 정렬 */
-  align-items: center; /* 세로 중앙 정렬 */
+const Wrapper = styled.div`
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
+
 const Title = styled.h1`
   font-size: 1.5em;
   font-weight: bold;
   text-align: center;
-  color: #04b404;
+  color: var(--main);
 `;
+
 const InputBox = styled.input`
-  padding: 0.5rem;
-  background: #fafafa;
-  border: 0.05rem solid #d8d8d8;
-  border-radius: 5px;
-  width: 18rem;
+  padding: 2px;
+  border: none;
+  border-bottom: 1px solid #d8d8d8;
+  width: 294px;
+  height: 30px;
+  outline: none;
 `;
 
 const InputContainer = styled.div`
-  width: 20rem;
+  width: 300px;
 `;
 const Label = styled.p`
-  font-size: 1em;
+  font-size: 15px;
 `;
 const SubmitButton = styled.button`
-  background: #04b404;
+  width: 300px;
+  height: 45px;
+  background: var(--main);
   border: none;
-  border-radius: 10px;
+  border-radius: 6px;
   padding: 0.5rem;
+  margin-top: 30px;
+  font-size: 15px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  color: white;
 `;
 
 const Form = styled.form`
@@ -41,18 +55,23 @@ const Form = styled.form`
   flex-direction: column;
   align-items: center;
   gap: 1rem;
-  margin: 2rem;
+`;
+
+const ErrorText = styled.p`
+  font-size: 12px;
 `;
 
 export default function SignupPage() {
   const navigate = useNavigate();
 
-  const { formData, errors, handleInputChange, handleSignup } = useSignup();
+  const { formData, errors, handleInputChange, handleSignup, handleKeyDown } =
+    useSignup();
 
   return (
-    <FormContainer>
+    <Wrapper>
+      <Title>FarmPlus 회원가입</Title>
+
       <Form name="signupForm">
-        <Title>FARM</Title>
         <InputContainer>
           <Label>이메일</Label>
           <InputBox
@@ -62,7 +81,7 @@ export default function SignupPage() {
             type="text"
             placeholder="이메일을 입력하세요."
           ></InputBox>
-          {errors.email}
+          <ErrorText>{errors.email}</ErrorText>
         </InputContainer>
 
         <InputContainer>
@@ -72,9 +91,9 @@ export default function SignupPage() {
             name="name"
             value={formData.name}
             type="text"
-            placeholder="아름을 입력하세요."
+            placeholder="이름을 입력하세요."
           ></InputBox>
-          {errors.name}
+          <ErrorText>{errors.name}</ErrorText>
         </InputContainer>
 
         <InputContainer>
@@ -86,7 +105,7 @@ export default function SignupPage() {
             type="text"
             placeholder="닉네임을 입력하세요."
           ></InputBox>
-          {errors.nickname}
+          <ErrorText>{errors.nickname}</ErrorText>
         </InputContainer>
 
         <InputContainer>
@@ -98,7 +117,7 @@ export default function SignupPage() {
             type="password"
             placeholder="비밀번호를 입력하세요."
           ></InputBox>
-          {errors.password}
+          <ErrorText>{errors.password}</ErrorText>
         </InputContainer>
 
         <InputContainer>
@@ -110,7 +129,7 @@ export default function SignupPage() {
             type="password"
             placeholder="비밀번호를 한 번 더 입력하세요."
           ></InputBox>
-          {errors.confirmPassword}
+          <ErrorText>{errors.confirmPassword}</ErrorText>
         </InputContainer>
 
         <InputContainer>
@@ -120,9 +139,9 @@ export default function SignupPage() {
             name="address"
             value={formData.address}
             type="text"
-            placeholder="주소를 입력하세요."
+            placeholder="배송받을 주소를 입력하세요."
           ></InputBox>
-          {errors.address}
+          <ErrorText>{errors.address}</ErrorText>
         </InputContainer>
 
         <InputContainer>
@@ -132,16 +151,19 @@ export default function SignupPage() {
             name="phoneNumber"
             value={formData.phoneNumber}
             type="text"
-            placeholder="연락처를 입력하세요."
+            placeholder="010-0000-0000"
           ></InputBox>
-          {errors.phoneNumber}
+          <ErrorText>{errors.phoneNumber}</ErrorText>
         </InputContainer>
-
-        {errors.allField}
-        <SubmitButton type="button" onClick={handleSignup}>
-          회원가입 하기
-        </SubmitButton>
       </Form>
-    </FormContainer>
+      <ErrorText>{errors.allField}</ErrorText>
+      <SubmitButton
+        type="button"
+        onClick={handleSignup}
+        onKeyDown={handleKeyDown}
+      >
+        회원가입 하기
+      </SubmitButton>
+    </Wrapper>
   );
 }

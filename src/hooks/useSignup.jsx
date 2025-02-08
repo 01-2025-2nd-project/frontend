@@ -29,7 +29,13 @@ export default function useSignup() {
       const res = await axios.post("http://15.164.139.247:8080/auth/email", {
         email,
       });
-      return res.data.data.check; // `true`이면 중복, `false`이면 사용 가능
+      console.log("이메일 중복 확인 응답:", res.data); // 응답 확인
+
+      if (!res.data || !res.data.message) {
+        throw new Error("응답 데이터가 올바르지 않습니다.");
+      }
+
+      return res.data.code !== "200"; // 200이면 사용 가능(false), 그 외는 중복(true)
     } catch (err) {
       console.error("이메일 중복 확인 오류:", err);
       return true; // 오류 발생 시 기본적으로 중복된 것으로 처리
@@ -43,44 +49,44 @@ export default function useSignup() {
       const res = await axios.post("http://15.164.139.247:8080/auth/nickname", {
         nickname,
       });
-      return res.data.data.check; // `true`이면 중복, `false`이면 사용 가능
+
+      console.log("닉네임 중복 확인 응답:", res.data); // 응답 확인
+      return res.data.code !== "200"; // 200이면 사용 가능(false), 그 외는 중복(true)
     } catch (err) {
       console.error("닉네임 중복 확인 오류:", err);
-      return true; // 오류 발생 시 기본적으로 중복된 것으로 처리
+      return true;
     }
   };
 
   // 회원가입 API 호출
   const signupUser = async (userData) => {
     try {
-      await axios.post("http://15.164.139.247:8080/auth/sign-up", userData);
+      console.log("보내는 데이터:", userData); //  확인용 콘솔 로그
+      const response = await axios.post(
+        "http://15.164.139.247:8080/auth/sign-up",
+        userData
+      );
       alert("회원가입 성공!");
+      console.log("회원가입 응답:", response.data);
       navigate("/login");
     } catch (error) {
       alert(error.response?.data?.message || "회원가입 실패");
+      console.error(
+        "회원가입 요청 실패:",
+        error.response ? error.response.data : error
+      );
     }
   };
 
   // 유효성 검사 함수
   const validationForm = () => {
-    const {
-      email,
-      nickname,
-      name,
-      password,
-      confirmPassword,
-      address,
-      phoneNumber,
-    } = formData;
+    const { email, password, confirmPassword, address } = formData;
 
     if (Object.values(formData).some((value) => !value.trim())) {
       newErrors.allField = "모든 필드를 입력해주세요.";
     }
 
-    if (
-      email &&
-      !/^[a-zA-Z0-9_\-.]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i.test(email)
-    ) {
+    if (email && !/^[a-z0-9_\-.]+@[a-z0-9.-]+\.[a-zA-Z]{2,4}$/i.test(email)) {
       newErrors.email = "유효한 이메일 주소를 입력해주세요.";
     }
 
@@ -95,12 +101,8 @@ export default function useSignup() {
     if (password !== confirmPassword) {
       newErrors.confirmPassword = "비밀번호가 일치하지 않습니다.";
     }
-    if (address && address.length < 10) {
+    if (address && address.length < 6) {
       newErrors.address = "상세 주소까지 정확히 입력해주세요.";
-    }
-
-    if (phoneNumber && !/^\d{3}-\d{3,4}-\d{4}$/.test(phoneNumber)) {
-      newErrors.phoneNumber = "올바른 연락처를 입력해주세요";
     }
 
     setErrors(newErrors);
@@ -112,24 +114,48 @@ export default function useSignup() {
   // 회원가입 처리
   const handleSignup = async (e) => {
     e.preventDefault(); // 기본 동작을 먼저 방지하고
+    console.log("회원가입 버튼 클릭");
 
     if (!validationForm()) {
+      console.log("유효성 검사 실패");
       return; // 유효성 검사를 통과하지 않으면 함수 중단
     }
 
-    if (await isEmailDuplicate(formData.email)) {
-      newErrors.email = "이미 사용 중인 이메일입니다.";
-      setErrors(newErrors);
-      return;
-    }
+    try {
+      const [emailDuplicate, nicknameDuplicate] = await Promise.all([
+        isEmailDuplicate(formData.email),
+        isNicknameDuplicate(formData.nickname),
+      ]);
 
-    if (await isNicknameDuplicate(formData.nickname)) {
-      newErrors.nickname = "이미 사용 중인 이메일입니다.";
-      setErrors(newErrors);
-      return;
-    }
+      console.log("이메일 중복 확인 결과:", emailDuplicate);
+      console.log("닉네임 중복 확인 결과:", nicknameDuplicate);
 
-    await signupUser(formData);
+      if (!emailDuplicate) {
+        newErrors.email = "이미 사용 중인 이메일입니다.";
+        setErrors(newErrors);
+        return;
+      }
+
+      if (!nicknameDuplicate) {
+        newErrors.nickname = "이미 사용 중인 닉네임입니다.";
+        setErrors(newErrors);
+        return;
+      }
+
+      console.log("회원가입 처리 직전");
+
+      // 이메일과 닉네임 중복이 아닌 경우 회원가입 처리
+      await signupUser(formData);
+    } catch (err) {
+      console.error("중복 확인 과정에서 오류 발생:", err);
+    }
+  };
+
+  // 엔터 키 동작 처리
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSignup();
+    }
   };
 
   return {
@@ -137,5 +163,6 @@ export default function useSignup() {
     errors,
     handleInputChange,
     handleSignup,
+    handleKeyDown,
   };
 }

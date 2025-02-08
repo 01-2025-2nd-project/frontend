@@ -5,35 +5,20 @@ import { FiMenu } from "react-icons/fi";
 import DeleteUserButton from "./DeleteUserButton";
 
 const Wrapper = styled.div`
-  width: 100vw
-  height: 100vh;
+  width: 100vw;
+  height: 100%;
   display: flex;
-  padding: 10px;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
 `;
 
 const ContentContainer = styled.div`
-  width: 100vw;
-  margin: 0px 20px 0px 20px;
-`;
-
-const MenuContainer = styled.div`
-  height: 100vh;
-  margin-right: 20px;
-  margin-left: 10px;
-`;
-
-const FiMenuIcon = styled(FiMenu)`
-  left: 10px;
-  top: 10px;
-  width: 35px;
-  height: 35px;
-  cursor: pointer;
-  color: black;
-`;
-
-const Title = styled.h1`
-  margin: 0px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
 `;
 
 const Label = styled.label`
@@ -43,51 +28,48 @@ const Label = styled.label`
 const Input = styled.input`
   border: white;
   border-bottom: 1px solid #d9d9d7;
-  width: 1000px;
+  width: 600px;
   height: 20px;
   outline: none;
+  background: none;
 `;
 
 const InputBox = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 50px;
 `;
 
 const InputContainer = styled.div`
-  margin-top: 20px;
-  margin-bottom: 40px;
+  display: flex;
+  display: flex;
+  flex-direction: column;
 `;
 
 const ButtonContainer = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
-  gap: 5px;
+  gap: 15px;
+  margin-top: 50px;
 `;
 const EditButton = styled.button`
   width: 100px;
   height: 30px;
-  background: white-gray;
+  background: var(--main);
   border: none;
-  border-radius: 5px;
+  border-radius: 10px;
   cursor: pointer;
 `;
 
 const CancelButton = styled.button`
   width: 100px;
   height: 30px;
-  background: gray;
+  background: var(--gray);
   border: none;
-  border-radius: 5px;
+  border-radius: 10px;
   cursor: pointer;
-`;
-
-const Divider = styled.hr`
-  display: flex;
-  margin-left: 0;
-  width: 100%
-  color: black;
 `;
 
 export default function MyInfo({ handleOnOff, onOff }) {
@@ -124,7 +106,8 @@ export default function MyInfo({ handleOnOff, onOff }) {
         });
 
         // 응답 데이터 상태에 저장
-        setFormData(response.data);
+        console.log("응답 데이터:", response.data);
+        setFormData(response.data.data);
         setOriginalProfileData(response.data);
       } catch (err) {
         console.error(err);
@@ -183,15 +166,8 @@ export default function MyInfo({ handleOnOff, onOff }) {
   };
 
   return (
-    <Wrapper onOff={onOff}>
-      <MenuContainer>
-        <FiMenuIcon onClick={handleOnOff} />
-      </MenuContainer>
-
+    <Wrapper>
       <ContentContainer>
-        <Title>내 정보</Title>
-        <Divider></Divider>
-
         <InputBox>
           <InputContainer>
             <Label>이름</Label>
@@ -239,7 +215,6 @@ export default function MyInfo({ handleOnOff, onOff }) {
           <CancelButton onClick={handleCancel}>취소하기</CancelButton>
         </ButtonContainer>
       </ContentContainer>
-      <DeleteUserButton />
     </Wrapper>
   );
 }
