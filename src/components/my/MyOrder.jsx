@@ -85,6 +85,7 @@ export default function MyOrder({}) {
             Authorization: `Bearer ${token}`, // 인증 헤더 추가
           },
         });
+        console.log("주문 응답 데이터:", response.data);
         setOrders(response.data.orders);
         setTotalItems(response.data.totalItems);
       } catch (error) {
@@ -107,7 +108,7 @@ export default function MyOrder({}) {
 
   return (
     <Wrapper>
-      <OrderList>
+      {/* <OrderList>
         {orders
           .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
           .map((data) => (
@@ -119,7 +120,7 @@ export default function MyOrder({}) {
               <OrderLine>{data.price}원</OrderLine>
             </OrderCard>
           ))}
-      </OrderList>
+      </OrderList> */}
 
       <PaginationContainer>
         {/* 페이지네이션 */}
