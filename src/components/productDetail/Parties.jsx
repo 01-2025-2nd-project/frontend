@@ -1,13 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import PartyModal from "./PartyModal";
-import mockData from "../../data/mockData3";
+import axios from "axios";
 
 const GroupContainer = styled.div`
   display: flex;
   justify-content: center;
 `;
+
 const GroupWrapper = styled.div`
   margin: 40px 0px;
   width: 60%;
@@ -51,18 +52,47 @@ const JoinButton = styled.button`
     cursor: not-allowed;
   }
 `;
+
 export default function Parties() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { productId } = useParams();
   const navigate = useNavigate();
+  const [parties, setParties] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchParties = async () => {
+      try {
+        const response = await axios.get(
+          `http://15.164.139.247:8080/product/${productId}/party`
+        );
+        setParties(response.data.data); // API 응답에 따라 구조 확인 필요
+      } catch (err) {
+        setError("파티 정보를 불러오는데 실패했습니다.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchParties();
+  }, [productId]);
 
   const handleTotalParties = () => {
     navigate(`/product/${productId}/party`);
   };
 
-  const handleJoinGroup = (group_id) => {
-    alert(`Group ${group_id}에 참여하였습니다.`);
+  const handleJoinGroup = (groupId) => {
+    alert(`Group ${groupId}에 참여하였습니다.`);
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
 
   return (
     <GroupContainer>
@@ -72,7 +102,7 @@ export default function Parties() {
           <PartyBtn onClick={() => setIsModalOpen(true)}>파티 만들기</PartyBtn>
           <PartyBtn onClick={handleTotalParties}>파티 전체보기</PartyBtn>
         </TitleWrapper>
-        {mockData.slice(0, 5).map((item) => (
+        {parties.slice(0, 5).map((item) => (
           <GroupItem key={item.partyId}>
             <GroupName>
               {item.partyName} ({item.joinCount}/{item.capacity})
@@ -81,7 +111,6 @@ export default function Parties() {
               <GroupStatus completed>공동구매완료</GroupStatus>
             ) : (
               <>
-                <GroupStatus>남은시간</GroupStatus>
                 <JoinButton onClick={() => handleJoinGroup(item.partyId)}>
                   주문참여
                 </JoinButton>
@@ -92,6 +121,7 @@ export default function Parties() {
         <PartyModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
+          productId={productId}
         />
       </GroupWrapper>
     </GroupContainer>
