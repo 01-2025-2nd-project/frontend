@@ -4,6 +4,7 @@ import styled from "styled-components";
 import axios from "axios";
 import mockData from "../../data/mockData";
 import CategoryMenu from "./CategoryMenu";
+import MainHeader from "./MainHeader";
 
 const ItemGrid = styled.div`
   display: grid;
@@ -111,14 +112,21 @@ export default function ProductList() {
             category: "",
           },
         });
+
         if (response.data.code === 200) {
-          const products = response.data.data.content.map((item, index) => ({
+          const mockDataMap = mockData.reduce((acc, item) => {
+            acc[item.productId] = item.image; // productId를 키로 매핑
+            return acc;
+          }, {});
+
+          const products = response.data.data.content.map((item) => ({
             ...item,
-            image: mockData[index % mockData.length], // Mock 데이터에서 이미지 할당
+            image: mockDataMap[item.productId] || "/image/garlic.jpg",
           }));
+
           setItems(products);
           setTotalPages(response.data.data.totalPages);
-          console.log(response.data.data.content);
+          console.log("Fetched Products:", products);
         }
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -137,7 +145,8 @@ export default function ProductList() {
 
   return (
     <>
-      <CategoryMenu setSort={setSort} />
+      <MainHeader setPage={setPage} />
+      <CategoryMenu setSort={setSort} setProducts={setItems} />
       <ItemGrid>
         {items.map((item) => (
           <Item

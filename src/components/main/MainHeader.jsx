@@ -150,6 +150,7 @@ const NavLinks = styled.nav`
   }
 `;
 
+
 const Button = styled.button`
   background: none;
   border: none;
@@ -159,3 +160,4 @@ const Button = styled.button`
   font-weight: bold;
   color: var(--main);
 `;
+

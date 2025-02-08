@@ -11,6 +11,7 @@ import store from "./redux/store.js";
 
 function App() {
   return (
+
     <Provider store={store}>
       <Router>
         <Routes>
@@ -24,6 +25,7 @@ function App() {
         </Routes>
       </Router>
     </Provider>
+
   );
 }
 
