@@ -2,12 +2,6 @@ import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const K_REST_API_KEY = process.env.REACT_APP_REST_API_KEY;
-const K_REDIRECT_URI = `http://localhost:3000/kakao-login`;
-const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${K_REST_API_KEY}&redirect_uri=${K_REDIRECT_URI}&response_type=code`;
-
-console.log("K_REST_API_KEY:", process.env.REACT_APP_REST_API_KEY);
-
 export default function useLogin() {
   const navigate = useNavigate();
 
@@ -60,34 +54,40 @@ export default function useLogin() {
       return;
     }
 
-    const { email, password } = formData;
-
-    const userData = {
-      email,
-      password,
-    };
-
-    console.log("암호화된 비밀번호 : ", userData.password);
-
-    await axios
-      .post("/auth/login", userData)
-      .then((res) => {
-        const token = res.headers.authorization?.split("")[1];
-
-        if (token) {
-          // 로컬 스토리지에 액세스 토큰 저장
-          localStorage.setItem("token", token);
+    try {
+      console.log("보내는 데이터:", formData); //  확인용 콘솔 로그
+      const res = await axios.post(
+        "http://15.164.139.247:8080/auth/login",
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
         }
-        navigate("/");
-      })
-      .catch((error) => {
-        alert(error.response?.data?.message || "로그인 실패");
-      });
+      );
+
+      const token = res.headers.authorization?.split(" ")[1];
+
+      if (token) {
+        localStorage.setItem("token", token);
+      }
+
+      navigate("/");
+    } catch (error) {
+      alert(error.response?.data?.message || "로그인 실패");
+      console.error(
+        "로그인 오류:",
+        error.response ? error.response.data : error
+      );
+    }
   };
 
-  // 카카오 로그인
-  const handleKakaoLogin = () => {
-    window.location.href = kakaoURL;
+  // 엔터 키 동작 처리
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleLogin();
+    }
   };
 
   return {
@@ -95,6 +95,6 @@ export default function useLogin() {
     errors,
     handleInputChange,
     handleLogin,
-    handleKakaoLogin,
+    handleKeyDown,
   };
 }

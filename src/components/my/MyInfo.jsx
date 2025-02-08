@@ -66,11 +66,7 @@ const EditButton = styled.button`
 const CancelButton = styled.button`
   width: 100px;
   height: 30px;
-<<<<<<< Updated upstream
-  background: var(--light-gray);
-=======
   background: var(--gray);
->>>>>>> Stashed changes
   border: none;
   border-radius: 10px;
   cursor: pointer;
@@ -110,7 +106,8 @@ export default function MyInfo({ handleOnOff, onOff }) {
         });
 
         // 응답 데이터 상태에 저장
-        setFormData(response.data);
+        console.log("응답 데이터:", response.data);
+        setFormData(response.data.data);
         setOriginalProfileData(response.data);
       } catch (err) {
         console.error(err);
