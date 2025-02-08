@@ -6,20 +6,24 @@ import Redirect from "./pages/Redirect.jsx";
 import Main from "./pages/Main.jsx";
 import TotalParties from "./pages/TotalParties.jsx";
 import MyPage from "./pages/MyPage.jsx";
+import { Provider } from "react-redux";
+import store from "./redux/store.js";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Main />} />
-        <Route path="/product/:productId/party" element={<TotalParties />} />
-        <Route path="/product/:product_id" element={<ProductDetail />} />
-        <Route path="/signup" element={<SignupPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/my" element={<MyPage />} />
-        <Route path="/kakao-login" element={<Redirect />} />
-      </Routes>
-    </Router>
+    <Provider store={store}>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Main />} />
+          <Route path="/product/:productId/party" element={<TotalParties />} />
+          <Route path="/product/:product_id" element={<ProductDetail />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/my" element={<MyPage />} />
+          <Route path="/kakao-login" element={<Redirect />} />
+        </Routes>
+      </Router>
+    </Provider>
   );
 }
 

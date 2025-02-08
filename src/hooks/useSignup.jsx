@@ -35,7 +35,7 @@ export default function useSignup() {
         throw new Error("응답 데이터가 올바르지 않습니다.");
       }
 
-      return res.data.code !== "200"; // 200이면 사용 가능(false), 그 외는 중복(true)
+      return res.data.code !== 200; // 200이면 사용 가능(false), 그 외는 중복(true)
     } catch (err) {
       console.error("이메일 중복 확인 오류:", err);
       return true; // 오류 발생 시 기본적으로 중복된 것으로 처리
@@ -51,7 +51,7 @@ export default function useSignup() {
       });
 
       console.log("닉네임 중복 확인 응답:", res.data); // 응답 확인
-      return res.data.code !== "200"; // 200이면 사용 가능(false), 그 외는 중복(true)
+      return res.data.code !== 200; // 200이면 사용 가능(false), 그 외는 중복(true)
     } catch (err) {
       console.error("닉네임 중복 확인 오류:", err);
       return true;
