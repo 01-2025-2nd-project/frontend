@@ -11,6 +11,9 @@ export default function Parties() {
   const [parties, setParties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [refreshTrigger, setRefreshTrigger] = useState(false);
+
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     const fetchParties = async () => {
@@ -25,7 +28,21 @@ export default function Parties() {
     };
 
     fetchParties();
-  }, [productId]);
+  }, [productId, refreshTrigger]);
+
+  const handleCreateParty = () => {
+    if (!token) {
+      alert("로그인이 필요합니다");
+      navigate("/login");
+      return;
+    }
+    setIsModalOpen(true);
+  };
+
+  //파티 생성 후 트리거 변경하여 useEffect 실행
+  const handlePartyCreated = () => {
+    setRefreshTrigger((prev) => !prev);
+  };
 
   const handleTotalParties = () => {
     navigate(`/product/${productId}/party`);
@@ -49,9 +66,7 @@ export default function Parties() {
         <TitleWrapper>
           <h3>공동구매 참여하기</h3>
           <PartyWrapper>
-            <PartyBtn onClick={() => setIsModalOpen(true)}>
-              파티 만들기
-            </PartyBtn>
+            <PartyBtn onClick={handleCreateParty}>파티 만들기</PartyBtn>
             <PartyBtn onClick={handleTotalParties}>파티 전체보기</PartyBtn>
           </PartyWrapper>
         </TitleWrapper>
@@ -75,6 +90,7 @@ export default function Parties() {
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           productId={productId}
+          onPartyCreated={handlePartyCreated}
         />
       </GroupWrapper>
     </GroupContainer>
