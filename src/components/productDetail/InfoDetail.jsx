@@ -45,6 +45,9 @@ export default function InfoDetail() {
     return <div>{error}</div>;
   }
 
+  const handleBuy = () => {
+    console.log("test");
+  };
   return (
     <>
       <InfoContainer>
@@ -54,7 +57,7 @@ export default function InfoDetail() {
         <InfoSection>
           <ProductTitle>{product.productName}</ProductTitle>
           <ProductPrice>{product.price}</ProductPrice>
-          <PurchaseBtn>바로 구매</PurchaseBtn>
+          <PurchaseBtn onClick={handleBuy}>바로 구매</PurchaseBtn>
         </InfoSection>
       </InfoContainer>
     </>

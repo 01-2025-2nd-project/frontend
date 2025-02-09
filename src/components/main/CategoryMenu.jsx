@@ -89,7 +89,7 @@ export default function CategoryMenu({ setProducts }) {
 
   const fetchProducts = async ({ sort, category, page }) => {
     try {
-      const response = await axios.get("/api/product", {
+      const response = await axios.get("http://15.164.139.247:8080/product", {
         params: {
           sort: sort || selectedSort,
           category: category || selectedCategory,
@@ -107,7 +107,7 @@ export default function CategoryMenu({ setProducts }) {
     setSelectedCategory(category);
 
     try {
-      const response = await axios.get("/api/product", {
+      const response = await axios.get("http://15.164.139.247:8080/product", {
         params: { category, sort, page },
       });
       setProducts(response.data.data.content);
