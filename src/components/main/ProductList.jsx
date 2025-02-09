@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
 import mockData from "../../data/mockData";
@@ -96,10 +96,12 @@ const Pagination = ({ totalPages, currentPage, onPageChange }) => {
 
 export default function ProductList() {
   const [items, setItems] = useState([]);
-  const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [sort, setSort] = useState("default");
   const [category, setCategory] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const page = parseInt(searchParams.get("page")) || 1;
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -135,18 +137,26 @@ export default function ProductList() {
     fetchData();
   }, [page, sort, category]);
 
+  const formatPrice = (price) => {
+    return price.toLocaleString();
+  };
+
   const handleItemClick = (productId) => {
     navigate(`/product/${productId}`);
   };
 
   const handlePageChange = (newPage) => {
-    setPage(newPage);
+    setSearchParams({ page: newPage }); // URL 업데이트
   };
 
   return (
     <>
-      <MainHeader setPage={setPage} />
-      <CategoryMenu setSort={setSort} setProducts={setItems} />
+      <MainHeader setSearchParams={setSearchParams} />
+      <CategoryMenu
+        setSort={setSort}
+        setProducts={setItems}
+        setSearchParams={setSearchParams}
+      />
       <ItemGrid>
         {items.map((item) => (
           <Item
@@ -155,7 +165,7 @@ export default function ProductList() {
           >
             <img src={item.image} alt={item.productName} />
             <ItemTitle>{item.productName}</ItemTitle>
-            <ItemPrice>{item.price}원</ItemPrice>
+            <ItemPrice>{formatPrice(item.price)}원</ItemPrice>
           </Item>
         ))}
       </ItemGrid>

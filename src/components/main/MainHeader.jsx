@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setToken } from "../../redux/authSlice"; // setToken 액션
 
-export default function MainHeader() {
+export default function MainHeader({ setSearchParams }) {
   const navigate = useNavigate();
   const token = useSelector((state) => state.auth.token); // Redux에서 token 가져오기
   const dispatch = useDispatch(); // dispatch를 사용하여 액션 실행
