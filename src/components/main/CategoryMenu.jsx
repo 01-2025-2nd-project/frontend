@@ -145,7 +145,7 @@ export default function CategoryMenu({ setProducts, setSearchParams }) {
   return (
     <Container>
       <CategoryBar>
-        {categories.map((category, index) => (
+        {categories?.map((category, index) => (
           <CategoryItem
             key={index}
             onClick={() => handleCategoryChange(category.name)}
