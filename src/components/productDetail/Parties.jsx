@@ -11,6 +11,7 @@ export default function Parties() {
   const [parties, setParties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [refreshTrigger, setRefreshTrigger] = useState(false);
 
   const token = localStorage.getItem("token");
 
@@ -29,7 +30,7 @@ export default function Parties() {
     };
 
     fetchParties();
-  }, [productId]);
+  }, [productId, refreshTrigger]);
 
   const handleCreateParty = () => {
     if (!token) {
@@ -38,6 +39,11 @@ export default function Parties() {
       return;
     }
     setIsModalOpen(true);
+  };
+
+  //파티 생성 후 트리거 변경하여 useEffect 실행
+  const handlePartyCreated = () => {
+    setRefreshTrigger((prev) => !prev);
   };
 
   const handleTotalParties = () => {
@@ -86,6 +92,7 @@ export default function Parties() {
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           productId={productId}
+          onPartyCreated={handlePartyCreated}
         />
       </GroupWrapper>
     </GroupContainer>

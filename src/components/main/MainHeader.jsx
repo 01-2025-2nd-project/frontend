@@ -23,7 +23,7 @@ export default function MainHeader({ setSearchParams }) {
   };
 
   const handleLogoClick = () => {
-    navigate("/");
+    navigate("/?page=1");
   };
 
   const handleMypageClick = () => {

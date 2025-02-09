@@ -2,7 +2,12 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 
-export default function PartyModal({ isOpen, onClose, productId }) {
+export default function PartyModal({
+  isOpen,
+  onClose,
+  productId,
+  onPartyCreated,
+}) {
   const [formData, setFormData] = useState({
     partyName: "",
     optionId: "",
@@ -101,6 +106,7 @@ export default function PartyModal({ isOpen, onClose, productId }) {
       );
       alert("파티가 성공적으로 생성되었습니다.");
       console.log(response.data);
+      onPartyCreated();
       onClose();
     } catch (error) {
       console.error("파티 생성 실패:", error);
