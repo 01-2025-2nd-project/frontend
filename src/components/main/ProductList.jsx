@@ -109,7 +109,7 @@ export default function ProductList() {
       try {
         const response = await axios.get("http://15.164.139.247:8080/product", {
           params: {
-            sort: "default",
+            sort: "",
             page: 1,
             category: "",
           },
