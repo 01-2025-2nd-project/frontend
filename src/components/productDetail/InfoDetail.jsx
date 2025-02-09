@@ -82,11 +82,9 @@ export default function InfoDetail({ setOptions }) {
     };
 
     try {
-      const response = axios.post(
-        `http://15.164.139.247:8080/order/${productId}`,
-        orderData,
-        { headers }
-      );
+      const response = axios.post(`/api/order/${productId}`, orderData, {
+        headers,
+      });
       console.log(response.data);
       alert("주문이 완료되었습니다");
     } catch (error) {
