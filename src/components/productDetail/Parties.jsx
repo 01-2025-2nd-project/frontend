@@ -15,9 +15,7 @@ export default function Parties() {
   useEffect(() => {
     const fetchParties = async () => {
       try {
-        const response = await axios.get(
-          `http://15.164.139.247:8080/product/${productId}/party`
-        );
+        const response = await axios.get(`/api/product/${productId}/party`);
         setParties(response.data.data);
       } catch (err) {
         setError("파티 정보를 불러오는데 실패했습니다.");

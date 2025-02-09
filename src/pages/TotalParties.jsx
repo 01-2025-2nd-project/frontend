@@ -62,9 +62,7 @@ export default function TotalParties() {
   useEffect(() => {
     const fetchParties = async () => {
       try {
-        const response = await axios.get(
-          `http://15.164.139.247:8080/product/${productId}/party`
-        );
+        const response = await axios.get(`/api/product/${productId}/party`);
         setParties(response.data.data);
         console.log(response.data.data);
       } catch (error) {
