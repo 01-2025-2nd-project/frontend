@@ -91,8 +91,8 @@ export default function MyOrder({}) {
           }
         );
         console.log("주문 응답 데이터:", response.data);
-        setOrders(response.data.orders);
-        setTotalItems(response.data.totalItems);
+        setOrders(response.data.data.content);
+        setTotalItems(response.data.data.totalElements);
       } catch (error) {
         console.error("데이터 불러오기 실패:", error);
       }
