@@ -20,6 +20,7 @@ export default function MyPage() {
   console.log("token:", token);
 
   useEffect(() => {
+
     if (!token) {
       navigate("/");
       return;
@@ -34,6 +35,18 @@ export default function MyPage() {
         console.log("응답 데이터:", response.data);
 
         if (response.data && response.data.data) {
+
+    if (token) {
+      const fetchData = async () => {
+        try {
+          const response = await axios.get("/api/mypage", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          console.log("응답 데이터:", response.data);
+
           setEmail(response.data.data.email);
         } else {
           console.error("서버 응답 데이터에 'data'가 없습니다:", response.data);

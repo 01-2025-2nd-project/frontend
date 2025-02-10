@@ -74,7 +74,9 @@ export default function CategoryMenu({ setProducts, setSearchParams }) {
     // 카테고리 데이터를 백엔드에서 가져오기
     const fetchCategories = async () => {
       try {
-        const response = await axios.get("/api/admin/category");
+
+        const response = await axios.get("/api/product/admin/category");
+
         setCategories(response.data.data);
       } catch (error) {
         console.error("Error fetching categories:", error);
@@ -145,7 +147,7 @@ export default function CategoryMenu({ setProducts, setSearchParams }) {
   return (
     <Container>
       <CategoryBar>
-        {categories.map((category, index) => (
+        {categories?.map((category, index) => (
           <CategoryItem
             key={index}
             onClick={() => handleCategoryChange(category.name)}
