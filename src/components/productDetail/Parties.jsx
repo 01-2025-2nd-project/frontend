@@ -24,9 +24,7 @@ export default function Parties() {
   useEffect(() => {
     const fetchParties = async () => {
       try {
-        const response = await axios.get(
-          `http://15.164.139.247:8080/product/${productId}/party`
-        );
+        const response = await axios.get(`/api/product/${productId}/party`);
 
         // partyMaster가 userId와 일치하면 isOwner: true
         const partiesWithOwnership = response.data.data.map((party) => ({
@@ -117,7 +115,7 @@ export default function Parties() {
     };
 
     try {
-      await axios.delete(`http://15.164.139.247:8080/party/${partyId}`, {
+      await axios.delete(`/api/party/${partyId}`, {
         headers,
       });
       alert("파티가 성공적으로 삭제되었습니다.");
