@@ -112,7 +112,8 @@ export default function MyOrder({}) {
         {orders.map((data) => (
           <OrderCard key={data.ordersId}>
             <OrderBold>배송완료</OrderBold>
-            <p>주문번호 {data.ordersId}</p>
+            <OrderGray>주문번호 {data.ordersId}</OrderGray>
+            <p>{data.productName}</p>
             <OrderGray>{formatDate(data.purchaseDate)} 주문</OrderGray>
             <OrderBold>{data.finalPrice}원</OrderBold>&nbsp;&nbsp;
             <OrderLine>{data.price}원</OrderLine>
