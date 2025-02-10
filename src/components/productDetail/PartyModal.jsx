@@ -37,9 +37,7 @@ export default function PartyModal({
 
     const fetchProductDetails = async () => {
       try {
-        const response = await axios.get(
-          `http://15.164.139.247:8080/product/${productId}`
-        );
+        const response = await axios.get(`/api/product/${productId}`);
         const data = response.data.data;
         setProductOptions(data.productOptions);
         setProductPrice(data.price); // 원래 상품 가격 저장

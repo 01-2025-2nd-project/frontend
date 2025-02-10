@@ -71,14 +71,11 @@ export default function MyPage() {
     if (token) {
       const fetchData = async () => {
         try {
-          const response = await axios.get(
-            "http://15.164.139.247:8080/mypage",
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
+          const response = await axios.get("/api/mypage", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
 
           console.log("응답 데이터:", response.data);
           setEmail(response.data.data.email);

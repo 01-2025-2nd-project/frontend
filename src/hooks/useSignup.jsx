@@ -26,7 +26,7 @@ export default function useSignup() {
   // 이메일 중복 확인 API 호출
   const isEmailDuplicate = async (email) => {
     try {
-      const res = await axios.post("http://15.164.139.247:8080/auth/email", {
+      const res = await axios.post("/api/auth/email", {
         email,
       });
       console.log("이메일 중복 확인 응답:", res.data); // 응답 확인
@@ -46,7 +46,7 @@ export default function useSignup() {
 
   const isNicknameDuplicate = async (nickname) => {
     try {
-      const res = await axios.post("http://15.164.139.247:8080/auth/nickname", {
+      const res = await axios.post("/api/auth/nickname", {
         nickname,
       });
 
@@ -62,10 +62,7 @@ export default function useSignup() {
   const signupUser = async (userData) => {
     try {
       console.log("보내는 데이터:", userData); //  확인용 콘솔 로그
-      const response = await axios.post(
-        "http://15.164.139.247:8080/auth/sign-up",
-        userData
-      );
+      const response = await axios.post("/api/auth/sign-up", userData);
       alert("회원가입 성공!");
       console.log("회원가입 응답:", response.data);
       navigate("/login");
