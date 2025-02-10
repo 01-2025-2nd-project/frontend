@@ -1,3 +1,14 @@
+/* 기본 스타일 (전체 화면 크기 적용) */
+body {
+  font-family: "Pretendard Variable", Pretendard, -apple-system,
+    BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI",
+    "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+}
+
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
 
 :root {
@@ -8,17 +19,51 @@
   --light-green: #e3f1d9;
 }
 
-body {
-  margin: 0;
-  font-family: "Pretendard Variable", Pretendard, -apple-system,
-    BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI",
-    "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji",
-    "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* 모바일 화면 (최대 767px) */
+@media screen and (max-width: 767px) {
+  body {
+    font-size: 14px;
+    padding: 10px;
+  }
+  /* 모바일에 특화된 스타일 */
+  .container {
+    width: 100%;
+    padding: 15px;
+  }
+  h1 {
+    font-size: 24px;
+  }
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+/* 태블릿 화면 (768px 이상 1024px 이하) */
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+  body {
+    font-size: 16px;
+    padding: 15px;
+  }
+  /* 태블릿에 특화된 스타일 */
+  .container {
+    width: 80%;
+    padding: 20px;
+  }
+  h1 {
+    font-size: 28px;
+  }
+}
+
+/* PC 화면 (1025px 이상) */
+@media screen and (min-width: 1025px) {
+  body {
+    font-size: 18px;
+    padding: 20px;
+  }
+  /* PC에 특화된 스타일 */
+  .container {
+    width: 70%;
+    margin: 0 auto;
+    padding: 30px;
+  }
+  h1 {
+    font-size: 32px;
+  }
 }

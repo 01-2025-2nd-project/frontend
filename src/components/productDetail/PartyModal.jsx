@@ -1,24 +1,35 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import useAuthUser from "../../hooks/useAuthUser";
 
 export default function PartyModal({
   isOpen,
   onClose,
   productId,
   onPartyCreated,
+  editingParty,
 }) {
-  const [formData, setFormData] = useState({
-    partyName: "",
-    optionId: "",
-    productName: "",
-    endDate: "",
-    purchaseCount: 1,
-  });
+  const userId = useAuthUser();
 
   const [productOptions, setProductOptions] = useState([]);
-  const [productPrice, setProductPrice] = useState(0); // 원래 상품 가격 저장
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [productPrice, setProductPrice] = useState(0);
+  const isEditing = !!editingParty;
+  const [formData, setFormData] = useState(
+    editingParty || {
+      partyName: "",
+      optionId: "",
+      productName: "",
+      endDate: "",
+      purchaseCount: 1,
+    }
+  );
+
+  useEffect(() => {
+    if (editingParty) {
+      setFormData(editingParty);
+    }
+  }, [editingParty]);
 
   // 모달이 열릴 때만 상품 정보 가져오기
   useEffect(() => {
@@ -42,6 +53,13 @@ export default function PartyModal({
 
     fetchProductDetails();
   }, [isOpen, productId]);
+
+  useEffect(() => {
+    if (userId) {
+      setFormData((prev) => ({ ...prev, partyMaster: userId }));
+      console.log("partyMaster 업데이트됨:", userId);
+    }
+  }, [userId]);
 
   const formatDateToYYYYMMDD = (date) => {
     const d = new Date(date);
@@ -82,33 +100,53 @@ export default function PartyModal({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
 
-    // 백엔드 요구사항에 맞게 데이터 변환
     const formattedData = {
       ...formData,
+      // partyMaster: userId,
       optionId: Number(formData.optionId),
       purchaseCount: Number(formData.purchaseCount),
     };
-    console.log(formattedData);
+
+    console.log("전송할 데이터:", formattedData); // 🔹 디버깅 로그 추가
 
     const token = localStorage.getItem("token");
-    const headers = {
-      Authorization: `Bearer ${token}`,
-    };
+    const headers = { Authorization: `Bearer ${token}` };
+
     try {
-      const response = await axios.post("/api/party", formattedData, {
-        headers,
-      });
-      alert("파티가 성공적으로 생성되었습니다.");
-      console.log(response.data);
+      if (isEditing) {
+        // 수정 요청 (PUT)
+        await axios.put(
+          `http://15.164.139.247:8080/party/${editingParty.partyId}`,
+          formData,
+          { headers }
+        );
+        alert("파티가 수정되었습니다.");
+      } else {
+        // 생성 요청 (POST)
+        await axios.post("http://15.164.139.247:8080/party", formData, {
+          headers,
+        });
+        alert("파티가 생성되었습니다.");
+      }
       onPartyCreated();
-      onClose();
+      setFormData({
+        partyMaster: "",
+        partyName: "",
+        optionId: "",
+        productName: "",
+        endDate: "",
+        purchaseCount: 1,
+      });
+      onClose(); // 모달 닫기
     } catch (error) {
-      console.error("파티 생성 실패:", error);
-      alert("파티 생성에 실패했습니다.");
-    } finally {
-      setIsSubmitting(false);
+      if (isEditing) {
+        console.error("파티 수정 실패:", error);
+        alert("파티 수정에 실패했습니다. 다시 시도해 주세요.");
+      } else {
+        console.error("파티 생성 실패:", error);
+        alert("파티 생성에 실패했습니다. 다시 시도해 주세요.");
+      }
     }
   };
 
@@ -119,12 +157,19 @@ export default function PartyModal({
     }
   };
 
+  useEffect(() => {
+    console.log("selectedOption:", selectedOption);
+    console.log("productPrice:", productPrice);
+    console.log("purchaseCount:", formData.purchaseCount);
+    console.log("totalPrice:", totalPrice);
+  }, [selectedOption, productPrice, formData.purchaseCount, totalPrice]);
+
   if (!isOpen) return null;
 
   return (
     <ModalOverlay onClick={handleOverlayClick}>
       <ModalContent onClick={(e) => e.stopPropagation()}>
-        <h4>파티 만들기</h4>
+        <h4>{isEditing ? "파티 수정" : "파티 만들기"}</h4>
         <form onSubmit={handleSubmit}>
           <InputGroup>
             <Label>파티 이름</Label>
@@ -188,8 +233,8 @@ export default function PartyModal({
 
           <ModalActions>
             <CloseButton onClick={onClose}>닫기</CloseButton>
-            <SubmitButton type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "생성 중..." : "생성"}
+            <SubmitButton type="submit">
+              {isEditing ? "수정" : "생성"}
             </SubmitButton>
           </ModalActions>
         </form>
