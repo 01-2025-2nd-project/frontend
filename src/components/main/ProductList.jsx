@@ -101,6 +101,7 @@ export default function ProductList() {
   const [category, setCategory] = useState("");
   const [searchParams, setSearchParams] = useSearchParams();
   const page = parseInt(searchParams.get("page")) || 1;
+  const keyword = searchParams.get("keyword") || "";
 
   const navigate = useNavigate();
 
@@ -109,9 +110,10 @@ export default function ProductList() {
       try {
         const response = await axios.get("http://15.164.139.247:8080/product", {
           params: {
-            sort: "",
-            page: 1,
-            category: "",
+            sort,
+            page,
+            category,
+            keyword,
           },
         });
 
@@ -135,7 +137,7 @@ export default function ProductList() {
       }
     };
     fetchData();
-  }, [page, sort, category]);
+  }, [page, sort, category, keyword]);
 
   const formatPrice = (price) => {
     return price.toLocaleString();
@@ -146,12 +148,15 @@ export default function ProductList() {
   };
 
   const handlePageChange = (newPage) => {
-    setSearchParams({ page: newPage }); // URL 업데이트
+    setSearchParams({ page: newPage, keyword }); // URL 업데이트
   };
 
   return (
     <>
-      <MainHeader setSearchParams={setSearchParams} />
+      <MainHeader
+        setSearchResults={setItems}
+        setSearchParams={setSearchParams}
+      />
       <CategoryMenu
         setSort={setSort}
         setProducts={setItems}

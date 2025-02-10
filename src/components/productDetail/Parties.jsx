@@ -41,7 +41,7 @@ export default function Parties() {
     setIsModalOpen(true);
   };
 
-  //파티 생성 후 트리거 변경하여 useEffect 실행
+  //파티 생성, 조인인 후 트리거 변경하여 useEffect 실행
   const handlePartyCreated = () => {
     setRefreshTrigger((prev) => !prev);
   };
@@ -50,8 +50,28 @@ export default function Parties() {
     navigate(`/product/${productId}/party`);
   };
 
-  const handleJoinGroup = (groupId) => {
-    alert(`Group ${groupId}에 참여하였습니다.`);
+  const handleJoinGroup = async (partyId) => {
+    try {
+      const headers = { Authorization: `Bearer ${token}` };
+      const response = await axios.post(
+        `/party/${partyId}/join`,
+        {},
+        { headers }
+      );
+      console.log(response.data);
+      alert(`파티에 참여하였습니다.`);
+      setRefreshTrigger((prev) => !prev);
+    } catch (error) {
+      if (error.response?.status === 400) {
+        alert("이미 참여한 파티입니다.");
+      } else {
+        console.error(
+          "Error joining group:",
+          error.response?.data || error.message
+        );
+        alert("파티 참여에 실패했습니다. 다시 시도해 주세요.");
+      }
+    }
   };
 
   if (loading) {
@@ -65,13 +85,15 @@ export default function Parties() {
   return (
     <GroupContainer>
       <GroupWrapper>
-        <TitleWrapper>
-          <h3>공동구매 참여하기</h3>
+        <TitleContainer>
+          <TitleWrapper>
+            <h3>공동구매 참여하기</h3>
+          </TitleWrapper>
           <PartyWrapper>
             <PartyBtn onClick={handleCreateParty}>파티 만들기</PartyBtn>
             <PartyBtn onClick={handleTotalParties}>파티 전체보기</PartyBtn>
           </PartyWrapper>
-        </TitleWrapper>
+        </TitleContainer>
         {parties.slice(0, 5).map((item) => (
           <GroupItem key={item.partyId}>
             <GroupName>
@@ -108,13 +130,20 @@ const GroupContainer = styled.div`
 const GroupWrapper = styled.div`
   margin: 40px 0px;
   width: 60%;
+
+  @media (max-width: 768px) {
+    width: 90%;
+  }
 `;
 
-const TitleWrapper = styled.div`
+const TitleContainer = styled.div`
   display: flex;
   justify-content: space-between;
   margin-bottom: 20px;
+  flex-wrap: wrap;
 `;
+
+const TitleWrapper = styled.div``;
 
 const PartyWrapper = styled.div`
   display: flex;
@@ -135,6 +164,13 @@ const PartyBtn = styled.button`
   align-items: center;
   cursor: pointer;
   color: white;
+  white-space: nowrap;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    font-size: 12px;
+    height: 40px;
+  }
 `;
 
 const GroupItem = styled.div`
@@ -143,10 +179,19 @@ const GroupItem = styled.div`
   align-items: center;
   padding: 10px 0;
   border-bottom: 1px solid #ccc;
+  flex-wrap: wrap;
+
+  @media (max-width: 768px) {
+    gap: 10px;
+  }
 `;
 
 const GroupName = styled.div`
   font-size: 16px;
+
+  @media (max-width: 768px) {
+    font-size: 14px;
+  }
 `;
 
 const GroupStatus = styled.div`
