@@ -114,6 +114,7 @@ export default function PartyModal({
     const headers = { Authorization: `Bearer ${token}` };
 
     try {
+
       if (isEditing) {
         // 수정 요청 (PUT)
         await axios.put(`/api/party/${editingParty.partyId}`, formData, {
@@ -127,6 +128,7 @@ export default function PartyModal({
         });
         alert("파티가 생성되었습니다.");
       }
+
       onPartyCreated();
       setFormData({
         partyMaster: "",

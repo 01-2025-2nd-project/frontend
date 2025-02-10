@@ -26,6 +26,7 @@ export default function Parties() {
       try {
         const response = await axios.get(`/api/product/${productId}/party`);
 
+
         // partyMaster가 userId와 일치하면 isOwner: true
         const partiesWithOwnership = response.data.data.map((party) => ({
           ...party,
@@ -33,6 +34,7 @@ export default function Parties() {
         }));
         console.log("백엔드에서 받은 데이터:", response.data);
         setParties(partiesWithOwnership);
+
       } catch (err) {
         setError("파티 정보를 불러오는데 실패했습니다.");
       } finally {

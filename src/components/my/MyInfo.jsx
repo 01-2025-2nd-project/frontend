@@ -1,8 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { FiMenu } from "react-icons/fi";
-import DeleteUserButton from "./DeleteUserButton";
 
 const Wrapper = styled.div`
   width: 100vw;
@@ -43,7 +41,6 @@ const InputBox = styled.div`
 
 const InputContainer = styled.div`
   display: flex;
-  display: flex;
   flex-direction: column;
 `;
 
@@ -54,6 +51,7 @@ const ButtonContainer = styled.div`
   gap: 15px;
   margin-top: 50px;
 `;
+
 const EditButton = styled.button`
   width: 100px;
   height: 30px;
@@ -72,7 +70,7 @@ const CancelButton = styled.button`
   cursor: pointer;
 `;
 
-export default function MyInfo({}) {
+export default function MyInfo() {
   const token = localStorage.getItem("token");
 
   const [formData, setFormData] = useState({
@@ -95,36 +93,40 @@ export default function MyInfo({}) {
     point: "",
   });
 
-  // useEffect를 사용하여 컴포넌트가 처음 렌더링될 때 GET 요청을 보냄
+  // 프로필 정보 가져오기
   useEffect(() => {
     const fetchData = async () => {
+      if (!token) return; // 🔥 토큰이 없으면 요청하지 않음
+
       try {
+
         const response = await axios.get("/api/mypage", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
+
         });
 
-        // 응답 데이터 상태에 저장
-        console.log("응답 데이터:", response.data);
-        setFormData(response.data.data);
-        setOriginalProfileData(response.data.data);
+        if (response.data && response.data.data) {
+          // 🔥 응답 데이터가 있는지 확인 후 상태 업데이트
+          setFormData(response.data.data);
+          setOriginalProfileData(response.data.data);
+        }
       } catch (err) {
-        console.error(err);
+        console.error("프로필 불러오기 실패:", err);
       }
     };
 
-    fetchData(); // 함수 호출
-  }, []); // 컴포넌트가 마운트될 때만 실행되도록 빈 배열 전달
+    fetchData();
+  }, [token]); // 🔥 token이 바뀌면 다시 실행
 
-  // 프로필 입력 필드 변경
+  // 입력값 변경 처리
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // 프로필 변경 저장
-  // 프로필 변경 저장
+  // 프로필 저장
   const handleSave = async () => {
     if (!formData.nickname) {
       alert("닉네임을 입력해주세요.");
@@ -134,26 +136,28 @@ export default function MyInfo({}) {
     try {
       console.log("내가 보내는 닉네임: ", formData.nickname);
 
+
       // 닉네임 중복 확인 로직
       const checkResponse = await axios.post("/api/auth/nickname", {
         nickname: formData.nickname,
       });
 
-      console.log("중복 확인 응답:", checkResponse.data); // 응답 로그 확인
 
-      // 응답 코드가 200이 아니면 이미 사용 중인 닉네임
-      if (checkResponse.data.code !== 200) {
+      console.log("중복 확인 응답:", checkResponse.data);
+
+      if (checkResponse.data.code !== "200") {
         alert("이미 사용 중인 닉네임입니다.");
         return;
       }
 
+
       // 중복이 없으면 저장 API 호출
       const saveResponse = await axios.put("/api/mypage", formData);
 
-      // 저장 성공 시 알림 표시
+
       if (saveResponse.status === 200) {
         alert("프로필이 성공적으로 업데이트되었습니다!");
-        setOriginalProfileData(formData); // 원본 데이터 업데이트
+        setOriginalProfileData(formData);
       }
     } catch (error) {
       console.error("저장 중 오류 발생:", error);
@@ -163,7 +167,7 @@ export default function MyInfo({}) {
 
   // 프로필 변경 취소
   const handleCancel = () => {
-    setFormData(originalProfileData); // 화면에서 원래 데이터로 돌리기
+    setFormData(originalProfileData);
   };
 
   return (
@@ -172,13 +176,11 @@ export default function MyInfo({}) {
         <InputBox>
           <InputContainer>
             <Label>이름</Label>
-            <br />
             <Input type="text" name="name" value={formData.name} readOnly />
           </InputContainer>
 
           <InputContainer>
             <Label>닉네임</Label>
-            <br />
             <Input
               type="text"
               name="nickname"
@@ -189,13 +191,11 @@ export default function MyInfo({}) {
 
           <InputContainer>
             <Label>이메일</Label>
-            <br />
             <Input type="text" name="email" value={formData.email} readOnly />
           </InputContainer>
 
           <InputContainer>
             <Label>주소</Label>
-            <br />
             <Input
               type="text"
               name="address"
@@ -206,7 +206,6 @@ export default function MyInfo({}) {
 
           <InputContainer>
             <Label>내 포인트</Label>
-            <br />
             <Input type="text" name="point" value={formData.point} readOnly />
           </InputContainer>
         </InputBox>

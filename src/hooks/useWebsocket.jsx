@@ -2,7 +2,7 @@ import { Client } from "@stomp/stompjs";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-const socketUrl = "ws://15.164.139.247:8080/ws";
+const socketUrl = "ws://api/ws";
 
 export default function useWebsocket({ email }) {
   const [notifications, setNotifications] = useState([]);

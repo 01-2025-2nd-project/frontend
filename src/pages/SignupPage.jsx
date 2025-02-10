@@ -61,11 +61,27 @@ const ErrorText = styled.p`
   font-size: 12px;
 `;
 
-export default function SignupPage() {
-  const navigate = useNavigate();
+const Button = styled.button`
+  height: 32px;
+  padding: 0 10px;
+  background: var(--main);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+`;
 
-  const { formData, errors, handleInputChange, handleSignup, handleKeyDown } =
-    useSignup();
+export default function SignupPage() {
+  const {
+    formData,
+    handleInputChange,
+    checkEmailDuplicate,
+    checkNicknameDuplicate,
+    signupUser,
+    isEmailValid,
+    isNicknameValid,
+    errors,
+  } = useSignup();
 
   return (
     <Wrapper>
@@ -81,6 +97,9 @@ export default function SignupPage() {
             type="text"
             placeholder="이메일을 입력하세요."
           ></InputBox>
+          <Button type="button" onClick={checkEmailDuplicate}>
+            중복 확인
+          </Button>
           <ErrorText>{errors.email}</ErrorText>
         </InputContainer>
 
@@ -93,6 +112,7 @@ export default function SignupPage() {
             type="text"
             placeholder="이름을 입력하세요."
           ></InputBox>
+
           <ErrorText>{errors.name}</ErrorText>
         </InputContainer>
 
@@ -105,6 +125,9 @@ export default function SignupPage() {
             type="text"
             placeholder="닉네임을 입력하세요."
           ></InputBox>
+          <Button type="button" onClick={checkNicknameDuplicate}>
+            중복 확인
+          </Button>
           <ErrorText>{errors.nickname}</ErrorText>
         </InputContainer>
 
@@ -159,8 +182,8 @@ export default function SignupPage() {
       <ErrorText>{errors.allField}</ErrorText>
       <SubmitButton
         type="button"
-        onClick={handleSignup}
-        onKeyDown={handleKeyDown}
+        onClick={signupUser}
+        disabled={!isEmailValid || !isNicknameValid}
       >
         회원가입 하기
       </SubmitButton>
