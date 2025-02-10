@@ -1,26 +1,25 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import styled from "styled-components";
 
 import SideBar from "../components/my/SideBar.jsx";
 import MyOrder from "../components/my/MyOrder";
 import MyParty from "../components/my/MyParty";
-import styled from "styled-components";
 import MyInfo from "../components/my/MyInfo.jsx";
-import { useNavigate } from "react-router-dom";
 import DeleteUserButton from "../components/my/DeleteUserButton.jsx";
 import LogoutButton from "../components/my/LogoutButton.jsx";
-import axios from "axios";
 import Alert from "../components/common/Alert.jsx";
 
 export default function MyPage() {
   const [activeTab, setActiveTab] = useState("my-info");
   const [email, setEmail] = useState("");
-  const token = localStorage.getItem("token");
   const navigate = useNavigate();
+  const token = localStorage.getItem("token");
 
   console.log("token:", token);
 
   useEffect(() => {
-
     if (!token) {
       navigate("/");
       return;
@@ -35,18 +34,6 @@ export default function MyPage() {
         console.log("응답 데이터:", response.data);
 
         if (response.data && response.data.data) {
-
-    if (token) {
-      const fetchData = async () => {
-        try {
-          const response = await axios.get("/api/mypage", {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-
-          console.log("응답 데이터:", response.data);
-
           setEmail(response.data.data.email);
         } else {
           console.error("서버 응답 데이터에 'data'가 없습니다:", response.data);
@@ -57,11 +44,11 @@ export default function MyPage() {
     };
 
     fetchData();
-  }, []); // token 변경 시 실행
+  }, [token]); // token 변경 시 실행
 
   useEffect(() => {
     console.log("마이페이지에서 내려줄 이메일:", email);
-  }, []);
+  }, [email]); // email이 변경될 때 실행
 
   const handleLogoClick = () => navigate("/");
   const handleLoginClick = () => navigate("/login");
