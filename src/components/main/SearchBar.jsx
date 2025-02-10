@@ -17,6 +17,7 @@ export default function SearchBar({ setSearchParams, setSearchResults }) {
 
     try {
       setLoading(true);
+      console.log("검색 요청:", { keyword, page: 1 });
       const response = await axios.get(
         `http://15.164.139.247:8080/product/search?keyword=${keyword}&page=1`
       );

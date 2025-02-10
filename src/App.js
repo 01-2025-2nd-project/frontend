@@ -8,7 +8,6 @@ import TotalParties from "./pages/TotalParties.jsx";
 import MyPage from "./pages/MyPage.jsx";
 import { Provider } from "react-redux";
 import store from "./redux/store.js";
-import Order from "./pages/Order.jsx";
 
 function App() {
   return (
