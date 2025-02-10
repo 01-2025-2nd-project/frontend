@@ -174,7 +174,7 @@ export default function SignupPage() {
             name="phoneNumber"
             value={formData.phoneNumber}
             type="text"
-            placeholder="010-0000-0000"
+            placeholder="01000000000"
           ></InputBox>
           <ErrorText>{errors.phoneNumber}</ErrorText>
         </InputContainer>
