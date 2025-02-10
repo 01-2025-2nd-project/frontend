@@ -85,7 +85,7 @@ export default function Parties() {
     try {
       const headers = { Authorization: `Bearer ${token}` };
       const response = await axios.post(
-        `/party/${partyId}/join`,
+        `/api/party/${partyId}/join`,
         {},
         { headers }
       );
