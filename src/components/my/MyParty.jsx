@@ -113,7 +113,7 @@ export default function MyParty({ onOff }) {
       setLoading(true);
       try {
         const response = await axios.get(
-          `/api/party/list?page=${currentPage - 1}`,
+          `http://15.164.139.247:8080/party/list?page=${currentPage - 1}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // 인증 헤더 추가

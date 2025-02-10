@@ -87,7 +87,7 @@ export default function Parties() {
     try {
       const headers = { Authorization: `Bearer ${token}` };
       const response = await axios.post(
-        `/party/${partyId}/join`,
+        `http://15.164.139.247:8080//party/${partyId}/join`,
         {},
         { headers }
       );

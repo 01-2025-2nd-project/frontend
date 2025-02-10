@@ -99,7 +99,7 @@ export default function MyInfo({}) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("/api/mypage", {
+        const response = await axios.get("http://15.164.139.247:8080/mypage", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -135,9 +135,12 @@ export default function MyInfo({}) {
       console.log("내가 보내는 닉네임: ", formData.nickname);
 
       // 닉네임 중복 확인 로직
-      const checkResponse = await axios.post("/api/auth/nickname", {
-        nickname: formData.nickname,
-      });
+      const checkResponse = await axios.post(
+        "http://15.164.139.247:8080/auth/nickname",
+        {
+          nickname: formData.nickname,
+        }
+      );
 
       console.log("중복 확인 응답:", checkResponse.data); // 응답 로그 확인
 
@@ -148,7 +151,10 @@ export default function MyInfo({}) {
       }
 
       // 중복이 없으면 저장 API 호출
-      const saveResponse = await axios.put("/api/mypage", formData);
+      const saveResponse = await axios.put(
+        "http://15.164.139.247:8080/mypage",
+        formData
+      );
 
       // 저장 성공 시 알림 표시
       if (saveResponse.status === 200) {
