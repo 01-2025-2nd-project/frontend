@@ -75,10 +75,7 @@ export default function InfoDetail({ setOptions }) {
     };
 
     const orderData = {
-      price: product.price,
-      finalPrice: totalPrice,
-      totalCount: quantity,
-      purchaseDate: new Date().toISOString(),
+      quantity: Number(quantity),
     };
 
     try {
@@ -102,7 +99,6 @@ export default function InfoDetail({ setOptions }) {
         <InfoSection>
           <ProductTitle>{product.productName}</ProductTitle>
           <QuantitySection>
-            <span>수량:</span>
             <QuantityButton onClick={decreaseQuantity}>-</QuantityButton>
             <QuantityDisplay>{quantity}</QuantityDisplay>
             <QuantityButton onClick={increaseQuantity}>+</QuantityButton>
@@ -119,43 +115,53 @@ export default function InfoDetail({ setOptions }) {
 const InfoContainer = styled.div`
   display: flex;
   justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 20px;
 `;
 
-const ImageSection = styled.div``;
+const ImageSection = styled.div`
+  max-width: 400px;
+  width: 100%;
+
+  @media (max-width: 768px) {
+    text-align: center;
+  }
+`;
 
 const MainImage = styled.img`
-  width: 400px;
-  height: 400px;
+  width: 100%;
+  height: auto;
   object-fit: cover;
   border-radius: 8px;
 `;
 
 const InfoSection = styled.div`
-  width: 400px;
-  height: 400px;
+  max-width: 400px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+
+  @media (max-width: 768px) {
+    align-items: center;
+    text-align: center;
+  }
 `;
 
 const ProductTitle = styled.h2`
   margin: 20px 0;
   font-size: 24px;
-  color: #333;
+  margin-bottom: 15px;
 `;
-
-const ProductPrice = styled.div`
-  font-size: 20px;
-  color: #54451a;
-  font-weight: bold;
-`;
-
 const QuantitySection = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
   font-size: 18px;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 `;
 
-// 🔹 수량 표시 숫자
 const QuantityDisplay = styled.div`
   font-size: 18px;
   font-weight: bold;
@@ -163,11 +169,10 @@ const QuantityDisplay = styled.div`
   text-align: center;
 `;
 
-// 🔹 수량 조절 버튼 스타일
 const QuantityButton = styled.button`
   width: 30px;
   height: 30px;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -176,6 +181,13 @@ const QuantityButton = styled.button`
   &:hover {
     background-color: #f0f0f0;
   }
+`;
+
+const ProductPrice = styled.div`
+  font-size: 20px;
+  color: #54451a;
+  font-weight: bold;
+  margin-bottom: 15px;
 `;
 
 const PurchaseBtn = styled.button`
@@ -193,4 +205,9 @@ const PurchaseBtn = styled.button`
   align-items: center;
   cursor: pointer;
   color: white;
+
+  @media (max-width: 768px) {
+    width: 40%;
+    margin: 20px auto;
+  }
 `;

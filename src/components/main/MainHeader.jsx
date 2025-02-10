@@ -1,12 +1,12 @@
 import React from "react";
 import styled from "styled-components";
-import { FiSearch } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setToken } from "../../redux/authSlice"; // setToken 액션
+import SearchBar from "./SearchBar";
 
-export default function MainHeader({ setSearchParams }) {
+export default function MainHeader({ setSearchParams, setSearchResults }) {
   const navigate = useNavigate();
   const token = useSelector((state) => state.auth.token); // Redux에서 token 가져오기
   const dispatch = useDispatch(); // dispatch를 사용하여 액션 실행
@@ -46,12 +46,10 @@ export default function MainHeader({ setSearchParams }) {
 
       <HeaderBarContainer>
         <SearchBarWrapper>
-          <SearchBarContainer>
-            <SearchBar>
-              <input type="text" placeholder="상품 검색..." />
-            </SearchBar>
-            <SearchIcon a href="#" />
-          </SearchBarContainer>
+          <SearchBar
+            setSearchParams={setSearchParams}
+            setSearchResults={setSearchResults}
+          />
           <NavLinks>
             {token ? (
               <>
@@ -77,6 +75,11 @@ const StyledHeader = styled.header`
   display: flex;
   align-items: center;
   padding: 10px 30px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    padding: 10px;
+  }
 `;
 
 const Logo = styled.div`
@@ -102,41 +105,6 @@ const SearchBarWrapper = styled.div`
   margin-bottom: 20px;
 `;
 
-const SearchBarContainer = styled.div`
-  position: relative;
-  width: 50%;
-`;
-
-const SearchBar = styled.div`
-  display: flex;
-  align-items: center;
-  position: relative;
-
-  input {
-    padding: 12px;
-    font-size: 16px;
-    border: 2px solid #e2e2e2;
-    border-radius: 8px;
-    width: 100%;
-    outline: none;
-    transition: border-color 0.3s;
-
-    &:focus {
-      border-color: #6bae45;
-    }
-  }
-`;
-
-const SearchIcon = styled(FiSearch)`
-  position: absolute;
-  top: 50%;
-  right: 1rem;
-  transform: translateY(-50%);
-  color: #6bae45;
-  font-size: 1.2rem;
-  cursor: pointer;
-`;
-
 const NavLinks = styled.nav`
   display: flex;
   align-items: center;
@@ -158,4 +126,8 @@ const Button = styled.button`
   font-size: 20px;
   font-weight: bold;
   color: var(--main);
+
+  @media (max-width: 768px) {
+    font-size: 15px;
+  }
 `;
