@@ -131,6 +131,7 @@ export default function PartyModal({
         });
         alert("파티가 생성되었습니다.");
       }
+      console.log(formData, "폼데이터");
       onPartyCreated();
       setFormData({
         partyMaster: "",

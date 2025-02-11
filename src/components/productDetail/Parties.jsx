@@ -34,6 +34,7 @@ export default function Parties() {
           isOwner: String(party.partyMaster) === String(userId),
         }));
         console.log("백엔드에서 받은 데이터:", response.data);
+        console.log(userId);
         setParties(partiesWithOwnership);
       } catch (err) {
         setError("파티 정보를 불러오는데 실패했습니다.");
@@ -76,6 +77,10 @@ export default function Parties() {
 
   //파티 생성, 조인인 후 트리거 변경하여 useEffect 실행
   const handlePartyCreated = () => {
+    if (!token) {
+      alert("로그인이 필요합니다.");
+      navigate("/login");
+    }
     setRefreshTrigger((prev) => !prev);
   };
 
