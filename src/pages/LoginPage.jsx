@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import useLogin from "../hooks/useLogin";
 import { useNavigate } from "react-router-dom";
+import SubHeader from "../components/common/SubHeader";
 
 const Wrapper = styled.div`
   width: 100vw;
@@ -91,6 +92,7 @@ export default function LoginPage() {
 
   return (
     <Wrapper>
+      <SubHeader />
       <Title>FarmPlus 로그인</Title>
       <Form name="loginForm">
         <InputContainer>

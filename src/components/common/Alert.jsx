@@ -34,8 +34,8 @@ export default function Alert({ email }) {
     }
 
     try {
-      // 4. POST 요청 보내기
-      const response = await axios.post(url, null, {
+      // 4. PUT 요청 보내기
+      const response = await axios.put(url, null, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -43,9 +43,9 @@ export default function Alert({ email }) {
       if (response.status === 200) {
         console.log("알림 읽음 처리 성공 ");
 
-        // 5. 성공하면 알림 목록에서 삭제
+        notifications.length = 0; // notifications 배열을 빈 배열로 만듦
 
-        setShowNotification(false);
+        setShowNotification(false); // 알림 상태 숨기기
       }
     } catch (error) {
       console.error("알림 읽음 처리 실패: ", error);
