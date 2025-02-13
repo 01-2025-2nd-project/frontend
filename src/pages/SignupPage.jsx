@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import useSignup from "../hooks/useSignup";
 import { useNavigate } from "react-router-dom";
+import SubHeader from "../components/common/SubHeader";
 
 const Wrapper = styled.div`
   width: 100vw;
@@ -54,7 +55,7 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: 2px;
 `;
 
 const ErrorText = styled.p`
@@ -85,6 +86,7 @@ export default function SignupPage() {
 
   return (
     <Wrapper>
+      <SubHeader />
       <Title>FarmPlus 회원가입</Title>
 
       <Form name="signupForm">

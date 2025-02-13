@@ -1,4 +1,5 @@
 import axios from "axios";
+import { address } from "framer-motion/client";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 
@@ -26,7 +27,7 @@ const Label = styled.label`
 const Input = styled.input`
   border: white;
   border-bottom: 1px solid #d9d9d7;
-  width: 600px;
+  width: 400px;
   height: 20px;
   outline: none;
   background: none;
@@ -59,6 +60,7 @@ const EditButton = styled.button`
   border: none;
   border-radius: 10px;
   cursor: pointer;
+  opacity: ${(props) => (props.disabled ? "0.5" : "1")};
 `;
 
 const CancelButton = styled.button`
@@ -68,6 +70,21 @@ const CancelButton = styled.button`
   border: none;
   border-radius: 10px;
   cursor: pointer;
+`;
+
+const CheckButton = styled.button`
+  width: 100px;
+  height: 25px;
+  background: var(--blue);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 10px;
+`;
+
+const InputRow = styled.div`
+  display: flex;
+  align-items: center;
 `;
 
 export default function MyInfo() {
@@ -93,20 +110,21 @@ export default function MyInfo() {
     point: "",
   });
 
+  const [isNicknameChecked, setIsNicknameChecked] = useState(false);
+
   // 프로필 정보 가져오기
   useEffect(() => {
     const fetchData = async () => {
-      if (!token) return; // 🔥 토큰이 없으면 요청하지 않음
+      if (!token) return;
 
       try {
         const response = await axios.get("/api/mypage", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+
+          headers: { Authorization: `Bearer ${token}` },
+
         });
 
         if (response.data && response.data.data) {
-          // 🔥 응답 데이터가 있는지 확인 후 상태 업데이트
           setFormData(response.data.data);
           setOriginalProfileData(response.data.data);
         }
@@ -116,38 +134,82 @@ export default function MyInfo() {
     };
 
     fetchData();
-  }, [token]); // 🔥 token이 바뀌면 다시 실행
+  }, [token]);
 
   // 입력값 변경 처리
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+
+    if (name === "nickname") {
+      setIsNicknameChecked(false); // 닉네임을 수정하면 다시 중복 확인이 필요함
+    }
   };
 
-  // 프로필 저장
-  const handleSave = async () => {
+  // 닉네임 중복 확인
+  const handleCheckNickname = async () => {
     if (!formData.nickname) {
       alert("닉네임을 입력해주세요.");
       return;
     }
 
     try {
-      console.log("내가 보내는 닉네임: ", formData.nickname);
 
-      // 닉네임 중복 확인 로직
+      console.log("닉네임 중복 확인 요청:", formData.nickname);
+
+
       const checkResponse = await axios.post("/api/auth/nickname", {
         nickname: formData.nickname,
       });
 
       console.log("중복 확인 응답:", checkResponse.data);
 
-      if (checkResponse.data.code !== "200") {
+      if (checkResponse.data.code === 200) {
+        alert("사용 가능한 닉네임입니다!");
+        setIsNicknameChecked(true);
+      } else {
         alert("이미 사용 중인 닉네임입니다.");
-        return;
+        setIsNicknameChecked(false);
       }
+    } catch (error) {
+      console.error("중복 확인 중 오류 발생:", error);
+      alert("오류가 발생했습니다. 다시 시도해주세요.");
+      setIsNicknameChecked(false);
+    }
+  };
+
+
+  // 프로필 저장
+  const handleSave = async () => {
+    if (!isNicknameChecked) {
+      alert("닉네임 중복 확인을 해주세요.");
+      return;
+    }
+    try {
+      console.log("프로필 저장 요청 데이터:", {
+        nickname: formData.nickname,
+        address: formData.address,
+        phoneNumber: formData.phoneNumber,
+      });
+
+      const saveResponse = await axios.put(
+        "/api/mypage",
+        {
+          nickname: formData.nickname,
+          address: formData.address,
+          phoneNumber: formData.phoneNumber,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       // 중복이 없으면 저장 API 호출
       const saveResponse = await axios.put("/api/mypage", formData);
+
 
       if (saveResponse.status === 200) {
         alert("프로필이 성공적으로 업데이트되었습니다!");
@@ -162,6 +224,7 @@ export default function MyInfo() {
   // 프로필 변경 취소
   const handleCancel = () => {
     setFormData(originalProfileData);
+    setIsNicknameChecked(true);
   };
 
   return (
@@ -175,17 +238,30 @@ export default function MyInfo() {
 
           <InputContainer>
             <Label>닉네임</Label>
-            <Input
-              type="text"
-              name="nickname"
-              value={formData.nickname}
-              onChange={handleChange}
-            />
+            <InputRow>
+              <Input
+                type="text"
+                name="nickname"
+                value={formData.nickname}
+                onChange={handleChange}
+              />
+              <CheckButton onClick={handleCheckNickname}>중복 확인</CheckButton>
+            </InputRow>
           </InputContainer>
 
           <InputContainer>
             <Label>이메일</Label>
             <Input type="text" name="email" value={formData.email} readOnly />
+          </InputContainer>
+
+          <InputContainer>
+            <Label>전화번호</Label>
+            <Input
+              type="number"
+              name="phoneNumber"
+              value={formData.phoneNumber}
+              onChange={handleChange}
+            />
           </InputContainer>
 
           <InputContainer>
@@ -205,7 +281,9 @@ export default function MyInfo() {
         </InputBox>
 
         <ButtonContainer>
-          <EditButton onClick={handleSave}>수정하기</EditButton>
+          <EditButton onClick={handleSave} disabled={!isNicknameChecked}>
+            수정하기
+          </EditButton>
           <CancelButton onClick={handleCancel}>취소하기</CancelButton>
         </ButtonContainer>
       </ContentContainer>
