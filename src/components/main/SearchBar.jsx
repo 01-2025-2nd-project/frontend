@@ -17,13 +17,13 @@ export default function SearchBar({ setSearchParams, setSearchResults }) {
 
     try {
       setLoading(true);
-      console.log("검색 요청:", { keyword, page: 1 });
+
       const response = await axios.get(
-        `http://15.164.139.247:8080/product/search?keyword=${keyword}&page=1`
+        `http://15.164.139.247:8080/product/search?keyword=${keyword}&page=0`
       );
       setSearchResults(response.data.data.content);
       console.log(response.data.data.content);
-      navigate(`/product/search?keyword=${keyword}&page=1`);
+      // navigate(`/product/search?keyword=${keyword}&page=1`);
     } catch (error) {
       console.error("Error fetching search results:", error);
       alert("검색 중 오류가 발생했습니다. 다시 시도해 주세요.");
