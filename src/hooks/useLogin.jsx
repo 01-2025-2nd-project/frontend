@@ -56,12 +56,16 @@ export default function useLogin() {
 
     try {
       console.log("보내는 데이터:", formData); //  확인용 콘솔 로그
-      const res = await axios.post("/api/auth/login", formData, {
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-      });
+      const res = await axios.post(
+        "http://15.164.139.247:8080/auth/login",
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        }
+      );
 
       const token = res.headers.authorization?.split(" ")[1];
 

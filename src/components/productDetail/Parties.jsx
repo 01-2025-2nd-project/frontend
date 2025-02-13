@@ -23,8 +23,9 @@ export default function Parties() {
   useEffect(() => {
     const fetchParties = async () => {
       try {
-        const response = await axios.get(`/api/product/${productId}/party`);
-
+        const response = await axios.get(
+          `http://15.164.139.247:8080/product/${productId}/party`
+        );
 
         // partyMaster가 userId와 일치하면 isOwner: true
         const partiesWithOwnership = response.data.data.map((party) => ({
@@ -32,7 +33,6 @@ export default function Parties() {
           isOwner: String(party.partyMaster) === String(userId),
         }));
         setParties(partiesWithOwnership);
-
       } catch (err) {
         setError("파티 정보를 불러오는데 실패했습니다.");
       } finally {

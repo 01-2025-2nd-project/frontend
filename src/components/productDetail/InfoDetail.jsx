@@ -14,7 +14,9 @@ export default function InfoDetail({ setOptions }) {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await axios.get(`/api/product/${productId}`);
+        const response = await axios.get(
+          `http://15.164.139.247:8080/product/${productId}`
+        );
         const fetchedProduct = response.data.data;
         const productOptions = response.data.data.productOptions || [];
 

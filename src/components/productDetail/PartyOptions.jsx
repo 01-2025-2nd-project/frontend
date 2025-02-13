@@ -33,7 +33,7 @@ export default function PartyOptions({ party, onEdit, onDelete }) {
     if (!window.confirm("정말로 이 파티를 삭제하시겠습니까?")) return;
 
     try {
-      await axios.delete(`/api/party/${party.partyId}`, {
+      await axios.delete(`http://15.164.139.247:8080/party/${party.partyId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       alert("파티가 성공적으로 삭제되었습니다.");

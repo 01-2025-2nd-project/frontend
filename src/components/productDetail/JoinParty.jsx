@@ -7,7 +7,11 @@ export default function JoinParty({ partyId, onJoin }) {
   const handleJoinGroup = async () => {
     try {
       const headers = { Authorization: `Bearer ${token}` };
-      await axios.post(`/api/party/${partyId}/join`, {}, { headers });
+      await axios.post(
+        `http://15.164.139.247:8080/party/${partyId}/join`,
+        {},
+        { headers }
+      );
       alert(`파티에 참여하였습니다.`);
       onJoin();
     } catch (error) {
