@@ -27,9 +27,14 @@ export default function PartyModal({
 
   useEffect(() => {
     if (!isOpen) return; // 모달이 닫혔을 때 실행 X
-
     if (editingParty) {
-      setFormData(editingParty); // 수정 시 기존 데이터 유지
+      setFormData({
+        partyName: editingParty.partyName || "",
+        optionId: editingParty.option || "", // ✅ `option` 필드를 `optionId`로 매핑
+        productName: "", // ✅ 필요시 서버에서 불러오기
+        endDate: "", // ✅ 필요시 서버에서 불러오기
+        purchaseCount: editingParty.capacity ?? 1, // ✅ `capacity`를 `purchaseCount`로 사용
+      });
     } else {
       setFormData({
         partyName: "",
