@@ -74,9 +74,9 @@ export default function CategoryMenu({ setProducts, setSearchParams }) {
     // 카테고리 데이터를 백엔드에서 가져오기
     const fetchCategories = async () => {
       try {
-        const response = await axios.get(
-          "http://15.164.139.247:8080/product/admin/category"
-        );
+
+        const response = await axios.get("/api/product/admin/category");
+
         setCategories(response.data.data);
       } catch (error) {
         console.error("Error fetching categories:", error);

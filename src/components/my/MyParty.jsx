@@ -165,7 +165,7 @@ export default function MyParty({ onOff }) {
             </OrderCard>
           ))}
         </OrderList>
-        <PaginationContainer onOff={onOff}>
+        <PaginationContainer>
           {/* 페이지네이션 */}
           <PaginationBar
             currentPage={currentPage + 1} // currentPage에 1을 더한 값을 전달
