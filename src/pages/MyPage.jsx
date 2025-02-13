@@ -20,31 +20,31 @@ export default function MyPage() {
   console.log("token:", token);
 
   useEffect(() => {
-
     if (token) {
       const fetchData = async () => {
         try {
-          const response = await axios.get(
-            "/api/mypage",
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
+          const response = await axios.get("/api/mypage", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
 
           console.log("응답 데이터:", response.data);
 
-          setEmail(response.data.data.email);
-        } else {
-          console.error("서버 응답 데이터에 'data'가 없습니다:", response.data);
+          // response.data.data가 존재하는지 확인 후 설정
+          if (response.data && response.data.data) {
+            setEmail(response.data.data.email);
+          } else {
+            console.error(
+              "서버 응답 데이터에 'data'가 없습니다:",
+              response.data
+            );
+          }
+        } catch (err) {
+          console.error("마이페이지 데이터 불러오기 실패:", err);
         }
-      } catch (err) {
-        console.error("마이페이지 데이터 불러오기 실패:", err);
-      }
-    };
+      };
 
-    fetchData();
+      fetchData();
+    }
   }, [token]); // token 변경 시 실행
 
   useEffect(() => {

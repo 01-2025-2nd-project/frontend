@@ -59,23 +59,6 @@ export default function useSignup() {
     }
   };
 
-  // 회원가입 API 호출
-  const signupUser = async (userData) => {
-    try {
-      console.log("보내는 데이터:", userData); //  확인용 콘솔 로그
-      const response = await axios.post("/api/auth/sign-up", userData);
-      alert("회원가입 성공!");
-      console.log("회원가입 응답:", response.data);
-      navigate("/login");
-    } catch (error) {
-      alert(error.response?.data?.message || "회원가입 실패");
-      console.error(
-        "회원가입 요청 실패:",
-        error.response ? error.response.data : error
-      );
-    }
-  };
-
   // 유효성 검사 함수
   const validationForm = () => {
     const { email, password, confirmPassword, address } = formData;
