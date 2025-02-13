@@ -26,10 +26,20 @@ export default function PartyModal({
   );
 
   useEffect(() => {
+    if (!isOpen) return; // 모달이 닫혔을 때 실행 X
+
     if (editingParty) {
-      setFormData(editingParty);
+      setFormData(editingParty); // 수정 시 기존 데이터 유지
+    } else {
+      setFormData({
+        partyName: "",
+        optionId: "",
+        productName: "",
+        endDate: "",
+        purchaseCount: 1,
+      }); // 생성 시 기본값 초기화
     }
-  }, [editingParty]);
+  }, [isOpen, editingParty]);
 
   // 모달이 열릴 때만 상품 정보 가져오기
   useEffect(() => {
@@ -103,7 +113,7 @@ export default function PartyModal({
 
     const formattedData = {
       ...formData,
-      // partyMaster: userId,
+      partyMaster: userId,
       optionId: Number(formData.optionId),
       purchaseCount: Number(formData.purchaseCount),
     };
@@ -114,7 +124,6 @@ export default function PartyModal({
     const headers = { Authorization: `Bearer ${token}` };
 
     try {
-
       if (isEditing) {
         // 수정 요청 (PUT)
         await axios.put(`/api/party/${editingParty.partyId}`, formData, {
@@ -131,7 +140,7 @@ export default function PartyModal({
 
       onPartyCreated();
       setFormData({
-        partyMaster: "",
+        partyMaster: userId,
         partyName: "",
         optionId: "",
         productName: "",
@@ -156,13 +165,6 @@ export default function PartyModal({
       onClose();
     }
   };
-
-  useEffect(() => {
-    console.log("selectedOption:", selectedOption);
-    console.log("productPrice:", productPrice);
-    console.log("purchaseCount:", formData.purchaseCount);
-    console.log("totalPrice:", totalPrice);
-  }, [selectedOption, productPrice, formData.purchaseCount, totalPrice]);
 
   if (!isOpen) return null;
 

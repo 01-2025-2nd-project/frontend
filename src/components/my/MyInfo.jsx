@@ -119,7 +119,9 @@ export default function MyInfo() {
 
       try {
         const response = await axios.get("/api/mypage", {
+
           headers: { Authorization: `Bearer ${token}` },
+
         });
 
         if (response.data && response.data.data) {
@@ -152,7 +154,10 @@ export default function MyInfo() {
     }
 
     try {
+
       console.log("닉네임 중복 확인 요청:", formData.nickname);
+
+
       const checkResponse = await axios.post("/api/auth/nickname", {
         nickname: formData.nickname,
       });
@@ -172,6 +177,7 @@ export default function MyInfo() {
       setIsNicknameChecked(false);
     }
   };
+
 
   // 프로필 저장
   const handleSave = async () => {
@@ -200,6 +206,10 @@ export default function MyInfo() {
           },
         }
       );
+
+      // 중복이 없으면 저장 API 호출
+      const saveResponse = await axios.put("/api/mypage", formData);
+
 
       if (saveResponse.status === 200) {
         alert("프로필이 성공적으로 업데이트되었습니다!");
