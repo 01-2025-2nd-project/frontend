@@ -99,13 +99,10 @@ export default function MyInfo() {
       if (!token) return; // 🔥 토큰이 없으면 요청하지 않음
 
       try {
-
         const response = await axios.get("/api/mypage", {
-
           headers: {
             Authorization: `Bearer ${token}`,
           },
-
         });
 
         if (response.data && response.data.data) {
@@ -137,15 +134,10 @@ export default function MyInfo() {
     try {
       console.log("내가 보내는 닉네임: ", formData.nickname);
 
-
       // 닉네임 중복 확인 로직
-      const checkResponse = await axios.post(
-        "http://15.164.139.247:8080/auth/nickname",
-        {
-          nickname: formData.nickname,
-        }
-      );
-
+      const checkResponse = await axios.post("/api/auth/nickname", {
+        nickname: formData.nickname,
+      });
 
       console.log("중복 확인 응답:", checkResponse.data);
 
@@ -154,13 +146,8 @@ export default function MyInfo() {
         return;
       }
 
-
       // 중복이 없으면 저장 API 호출
-      const saveResponse = await axios.put(
-        "http://15.164.139.247:8080/mypage",
-        formData
-      );
-
+      const saveResponse = await axios.put("/api/mypage", formData);
 
       if (saveResponse.status === 200) {
         alert("프로필이 성공적으로 업데이트되었습니다!");

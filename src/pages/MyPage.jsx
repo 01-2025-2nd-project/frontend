@@ -25,7 +25,7 @@ export default function MyPage() {
       const fetchData = async () => {
         try {
           const response = await axios.get(
-            "http://15.164.139.247:8080/mypage",
+            "/api/mypage",
             {
               headers: {
                 Authorization: `Bearer ${token}`,

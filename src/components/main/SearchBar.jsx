@@ -19,7 +19,7 @@ export default function SearchBar({ setSearchParams, setSearchResults }) {
       setLoading(true);
 
       const response = await axios.get(
-        `http://15.164.139.247:8080/product/search?keyword=${keyword}&page=0`
+        `/api/product/search?keyword=${keyword}&page=0`
       );
       setSearchResults(response.data.data.content);
       console.log(response.data.data.content);
