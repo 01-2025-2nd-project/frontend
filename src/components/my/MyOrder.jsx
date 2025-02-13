@@ -83,7 +83,7 @@ export default function MyOrder({}) {
       setLoading(true);
       try {
         const response = await axios.get(
-          `http://15.164.139.247:8080/order/list?page=${currentPage - 1}`,
+          `/api/order/list?page=${currentPage - 1}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // 인증 헤더 추가

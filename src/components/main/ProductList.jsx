@@ -108,7 +108,7 @@ export default function ProductList() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://15.164.139.247:8080/product", {
+        const response = await axios.get("/api/product", {
           params: {
             sort,
             page,

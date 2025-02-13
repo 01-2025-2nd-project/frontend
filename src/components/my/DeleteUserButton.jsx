@@ -12,7 +12,7 @@ export default function DeleteUserButton() {
   const handleDeleteUser = (e) => {
     e.preventDefault();
     axios
-      .delete("http://15.164.139.247:8080/mypage", {
+      .delete("/api/mypage", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
