@@ -30,7 +30,7 @@ export default function Alert({ email }) {
       const lastId = notificationIds[notificationIds.length - 1];
 
       // 3. URL 쿼리 파라미터 생성
-      url = `/api/notification/read?notification-id=${firstId}&notification-id=${lastId}`;
+      url = `http://15.164.139.247:8080/notification/read?notification-id=${firstId}&notification-id=${lastId}`;
     }
 
     try {

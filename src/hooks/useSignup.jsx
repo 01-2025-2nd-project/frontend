@@ -23,9 +23,61 @@ export default function useSignup() {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
 
-    // 값이 변경될 때마다 중복 확인 상태 초기화
-    if (name === "email") setIsEmailValid(false);
-    if (name === "nickname") setIsNicknameValid(false);
+  };
+
+  // 이메일 중복 확인 API 호출
+  const isEmailDuplicate = async (email) => {
+    try {
+      const res = await axios.post("http://15.164.139.247:8080/auth/email", {
+        email,
+      });
+      console.log("이메일 중복 확인 응답:", res.data); // 응답 확인
+
+      if (!res.data || !res.data.message) {
+        throw new Error("응답 데이터가 올바르지 않습니다.");
+      }
+
+      return res.data.code !== 200; // 200이면 사용 가능(false), 그 외는 중복(true)
+    } catch (err) {
+      console.error("이메일 중복 확인 오류:", err);
+      return true; // 오류 발생 시 기본적으로 중복된 것으로 처리
+    }
+  };
+
+  // 닉네임 중복 확인 API 호출
+
+  const isNicknameDuplicate = async (nickname) => {
+    try {
+      const res = await axios.post("http://15.164.139.247:8080/auth/nickname", {
+        nickname,
+      });
+
+      console.log("닉네임 중복 확인 응답:", res.data); // 응답 확인
+      return res.data.code !== 200; // 200이면 사용 가능(false), 그 외는 중복(true)
+    } catch (err) {
+      console.error("닉네임 중복 확인 오류:", err);
+      return true;
+    }
+  };
+
+  // 회원가입 API 호출
+  const signupUser = async (userData) => {
+    try {
+      console.log("보내는 데이터:", userData); //  확인용 콘솔 로그
+      const response = await axios.post(
+        "http://15.164.139.247:8080/auth/sign-up",
+        userData
+      );
+      alert("회원가입 성공!");
+      console.log("회원가입 응답:", response.data);
+      navigate("/login");
+    } catch (error) {
+      alert(error.response?.data?.message || "회원가입 실패");
+      console.error(
+        "회원가입 요청 실패:",
+        error.response ? error.response.data : error
+      );
+    }
   };
 
   // 유효성 검사 함수

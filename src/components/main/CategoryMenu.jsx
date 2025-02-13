@@ -102,7 +102,7 @@ export default function CategoryMenu({ setProducts, setSearchParams }) {
   // 🔹 상품 데이터 가져오기 (정렬, 카테고리 변경 시)
   const fetchProducts = async ({ sort, category, page }) => {
     try {
-      const response = await axios.get("/api/product", {
+      const response = await axios.get("http://15.164.139.247:8080/product", {
         params: {
           sort: sort || selectedSort,
           category: category || selectedCategory,
