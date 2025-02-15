@@ -44,6 +44,7 @@ export default function Purchase({ productId, productPrice }) {
         orderData,
         { headers }
       );
+
       alert("주문이 완료되었습니다");
     } catch (error) {
       console.error("주문 실패:", error);

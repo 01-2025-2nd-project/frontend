@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import useSignup from "../hooks/useSignup";
 import { useNavigate } from "react-router-dom";
+import SubHeader from "../components/common/SubHeader";
 
 const Wrapper = styled.div`
   width: 100vw;
@@ -54,21 +55,38 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: 2px;
 `;
 
 const ErrorText = styled.p`
   font-size: 12px;
 `;
 
-export default function SignupPage() {
-  const navigate = useNavigate();
+const Button = styled.button`
+  height: 32px;
+  padding: 0 10px;
+  background: var(--main);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+`;
 
-  const { formData, errors, handleInputChange, handleSignup, handleKeyDown } =
-    useSignup();
+export default function SignupPage() {
+  const {
+    formData,
+    handleInputChange,
+    checkEmailDuplicate,
+    checkNicknameDuplicate,
+    signupUser,
+    isEmailValid,
+    isNicknameValid,
+    errors,
+  } = useSignup();
 
   return (
     <Wrapper>
+      <SubHeader />
       <Title>FarmPlus 회원가입</Title>
 
       <Form name="signupForm">
@@ -81,6 +99,9 @@ export default function SignupPage() {
             type="text"
             placeholder="이메일을 입력하세요."
           ></InputBox>
+          <Button type="button" onClick={checkEmailDuplicate}>
+            중복 확인
+          </Button>
           <ErrorText>{errors.email}</ErrorText>
         </InputContainer>
 
@@ -93,6 +114,7 @@ export default function SignupPage() {
             type="text"
             placeholder="이름을 입력하세요."
           ></InputBox>
+
           <ErrorText>{errors.name}</ErrorText>
         </InputContainer>
 
@@ -105,6 +127,9 @@ export default function SignupPage() {
             type="text"
             placeholder="닉네임을 입력하세요."
           ></InputBox>
+          <Button type="button" onClick={checkNicknameDuplicate}>
+            중복 확인
+          </Button>
           <ErrorText>{errors.nickname}</ErrorText>
         </InputContainer>
 
@@ -151,7 +176,7 @@ export default function SignupPage() {
             name="phoneNumber"
             value={formData.phoneNumber}
             type="text"
-            placeholder="010-0000-0000"
+            placeholder="01000000000"
           ></InputBox>
           <ErrorText>{errors.phoneNumber}</ErrorText>
         </InputContainer>
@@ -159,8 +184,8 @@ export default function SignupPage() {
       <ErrorText>{errors.allField}</ErrorText>
       <SubmitButton
         type="button"
-        onClick={handleSignup}
-        onKeyDown={handleKeyDown}
+        onClick={signupUser}
+        disabled={!isEmailValid || !isNicknameValid}
       >
         회원가입 하기
       </SubmitButton>

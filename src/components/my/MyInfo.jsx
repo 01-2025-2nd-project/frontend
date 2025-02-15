@@ -1,8 +1,7 @@
 import axios from "axios";
+import { address } from "framer-motion/client";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { FiMenu } from "react-icons/fi";
-import DeleteUserButton from "./DeleteUserButton";
 
 const Wrapper = styled.div`
   width: 100vw;
@@ -28,7 +27,7 @@ const Label = styled.label`
 const Input = styled.input`
   border: white;
   border-bottom: 1px solid #d9d9d7;
-  width: 600px;
+  width: 400px;
   height: 20px;
   outline: none;
   background: none;
@@ -43,7 +42,6 @@ const InputBox = styled.div`
 
 const InputContainer = styled.div`
   display: flex;
-  display: flex;
   flex-direction: column;
 `;
 
@@ -54,6 +52,7 @@ const ButtonContainer = styled.div`
   gap: 15px;
   margin-top: 50px;
 `;
+
 const EditButton = styled.button`
   width: 100px;
   height: 30px;
@@ -61,6 +60,7 @@ const EditButton = styled.button`
   border: none;
   border-radius: 10px;
   cursor: pointer;
+  opacity: ${(props) => (props.disabled ? "0.5" : "1")};
 `;
 
 const CancelButton = styled.button`
@@ -72,7 +72,22 @@ const CancelButton = styled.button`
   cursor: pointer;
 `;
 
-export default function MyInfo({}) {
+const CheckButton = styled.button`
+  width: 100px;
+  height: 25px;
+  background: var(--blue);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 10px;
+`;
+
+const InputRow = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+export default function MyInfo() {
   const token = localStorage.getItem("token");
 
   const [formData, setFormData] = useState({
@@ -95,46 +110,50 @@ export default function MyInfo({}) {
     point: "",
   });
 
-  // useEffect를 사용하여 컴포넌트가 처음 렌더링될 때 GET 요청을 보냄
+  const [isNicknameChecked, setIsNicknameChecked] = useState(false);
+
+  // 프로필 정보 가져오기
   useEffect(() => {
     const fetchData = async () => {
+      if (!token) return;
+
       try {
         const response = await axios.get("http://15.164.139.247:8080/mypage", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
 
-        // 응답 데이터 상태에 저장
-        console.log("응답 데이터:", response.data);
-        setFormData(response.data.data);
-        setOriginalProfileData(response.data.data);
+        if (response.data && response.data.data) {
+          setFormData(response.data.data);
+          setOriginalProfileData(response.data.data);
+        }
       } catch (err) {
-        console.error(err);
+        console.error("프로필 불러오기 실패:", err);
       }
     };
 
-    fetchData(); // 함수 호출
-  }, []); // 컴포넌트가 마운트될 때만 실행되도록 빈 배열 전달
+    fetchData();
+  }, [token]);
 
-  // 프로필 입력 필드 변경
+  // 입력값 변경 처리
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+
+    if (name === "nickname") {
+      setIsNicknameChecked(false); // 닉네임을 수정하면 다시 중복 확인이 필요함
+    }
   };
 
-  // 프로필 변경 저장
-  // 프로필 변경 저장
-  const handleSave = async () => {
+  // 닉네임 중복 확인
+  const handleCheckNickname = async () => {
     if (!formData.nickname) {
       alert("닉네임을 입력해주세요.");
       return;
     }
 
     try {
-      console.log("내가 보내는 닉네임: ", formData.nickname);
+      console.log("닉네임 중복 확인 요청:", formData.nickname);
 
-      // 닉네임 중복 확인 로직
       const checkResponse = await axios.post(
         "http://15.164.139.247:8080/auth/nickname",
         {
@@ -142,24 +161,53 @@ export default function MyInfo({}) {
         }
       );
 
-      console.log("중복 확인 응답:", checkResponse.data); // 응답 로그 확인
+      console.log("중복 확인 응답:", checkResponse.data);
 
-      // 응답 코드가 200이 아니면 이미 사용 중인 닉네임
-      if (checkResponse.data.code !== 200) {
+      if (checkResponse.data.code === 200) {
+        alert("사용 가능한 닉네임입니다!");
+        setIsNicknameChecked(true);
+      } else {
         alert("이미 사용 중인 닉네임입니다.");
-        return;
+        setIsNicknameChecked(false);
       }
+    } catch (error) {
+      console.error("중복 확인 중 오류 발생:", error);
+      alert("오류가 발생했습니다. 다시 시도해주세요.");
+      setIsNicknameChecked(false);
+    }
+  };
 
-      // 중복이 없으면 저장 API 호출
+  // 프로필 저장
+  const handleSave = async () => {
+    if (!isNicknameChecked) {
+      alert("닉네임 중복 확인을 해주세요.");
+      return;
+    }
+    try {
+      console.log("프로필 저장 요청 데이터:", {
+        nickname: formData.nickname,
+        address: formData.address,
+        phoneNumber: formData.phoneNumber,
+      });
+
       const saveResponse = await axios.put(
         "http://15.164.139.247:8080/mypage",
-        formData
+        {
+          nickname: formData.nickname,
+          address: formData.address,
+          phoneNumber: formData.phoneNumber,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
 
-      // 저장 성공 시 알림 표시
       if (saveResponse.status === 200) {
         alert("프로필이 성공적으로 업데이트되었습니다!");
-        setOriginalProfileData(formData); // 원본 데이터 업데이트
+        setOriginalProfileData(formData);
       }
     } catch (error) {
       console.error("저장 중 오류 발생:", error);
@@ -169,7 +217,8 @@ export default function MyInfo({}) {
 
   // 프로필 변경 취소
   const handleCancel = () => {
-    setFormData(originalProfileData); // 화면에서 원래 데이터로 돌리기
+    setFormData(originalProfileData);
+    setIsNicknameChecked(true);
   };
 
   return (
@@ -178,30 +227,39 @@ export default function MyInfo({}) {
         <InputBox>
           <InputContainer>
             <Label>이름</Label>
-            <br />
             <Input type="text" name="name" value={formData.name} readOnly />
           </InputContainer>
 
           <InputContainer>
             <Label>닉네임</Label>
-            <br />
+            <InputRow>
+              <Input
+                type="text"
+                name="nickname"
+                value={formData.nickname}
+                onChange={handleChange}
+              />
+              <CheckButton onClick={handleCheckNickname}>중복 확인</CheckButton>
+            </InputRow>
+          </InputContainer>
+
+          <InputContainer>
+            <Label>이메일</Label>
+            <Input type="text" name="email" value={formData.email} readOnly />
+          </InputContainer>
+
+          <InputContainer>
+            <Label>전화번호</Label>
             <Input
-              type="text"
-              name="nickname"
-              value={formData.nickname}
+              type="number"
+              name="phoneNumber"
+              value={formData.phoneNumber}
               onChange={handleChange}
             />
           </InputContainer>
 
           <InputContainer>
-            <Label>이메일</Label>
-            <br />
-            <Input type="text" name="email" value={formData.email} readOnly />
-          </InputContainer>
-
-          <InputContainer>
             <Label>주소</Label>
-            <br />
             <Input
               type="text"
               name="address"
@@ -212,13 +270,14 @@ export default function MyInfo({}) {
 
           <InputContainer>
             <Label>내 포인트</Label>
-            <br />
             <Input type="text" name="point" value={formData.point} readOnly />
           </InputContainer>
         </InputBox>
 
         <ButtonContainer>
-          <EditButton onClick={handleSave}>수정하기</EditButton>
+          <EditButton onClick={handleSave} disabled={!isNicknameChecked}>
+            수정하기
+          </EditButton>
           <CancelButton onClick={handleCancel}>취소하기</CancelButton>
         </ButtonContainer>
       </ContentContainer>

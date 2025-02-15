@@ -15,7 +15,8 @@ export default function useSignup() {
   });
 
   const [errors, setErrors] = useState({});
-  const newErrors = {};
+  const [isEmailValid, setIsEmailValid] = useState(false); // 이메일 중복 확인 완료 여부
+  const [isNicknameValid, setIsNicknameValid] = useState(false); // 닉네임 중복 확인 완료 여부
 
   // 입력값 변경 핸들러
   const handleInputChange = (e) => {
@@ -58,29 +59,10 @@ export default function useSignup() {
     }
   };
 
-  // 회원가입 API 호출
-  const signupUser = async (userData) => {
-    try {
-      console.log("보내는 데이터:", userData); //  확인용 콘솔 로그
-      const response = await axios.post(
-        "http://15.164.139.247:8080/auth/sign-up",
-        userData
-      );
-      alert("회원가입 성공!");
-      console.log("회원가입 응답:", response.data);
-      navigate("/login");
-    } catch (error) {
-      alert(error.response?.data?.message || "회원가입 실패");
-      console.error(
-        "회원가입 요청 실패:",
-        error.response ? error.response.data : error
-      );
-    }
-  };
-
   // 유효성 검사 함수
   const validationForm = () => {
     const { email, password, confirmPassword, address } = formData;
+    const newErrors = {};
 
     if (Object.values(formData).some((value) => !value.trim())) {
       newErrors.allField = "모든 필드를 입력해주세요.";
@@ -101,13 +83,13 @@ export default function useSignup() {
     if (password !== confirmPassword) {
       newErrors.confirmPassword = "비밀번호가 일치하지 않습니다.";
     }
+
     if (address && address.length < 6) {
       newErrors.address = "상세 주소까지 정확히 입력해주세요.";
     }
 
     setErrors(newErrors);
 
-    // 오류가 없으면 true 반환하기
     return Object.keys(newErrors).length === 0;
   };
 
@@ -121,48 +103,97 @@ export default function useSignup() {
       return; // 유효성 검사를 통과하지 않으면 함수 중단
     }
 
+    // 이메일 중복 확인
+    if (!isEmailValid) {
+      console.log("이메일 중복 확인이 필요합니다.");
+      return; // 이메일이 유효하지 않으면 진행하지 않음
+    }
+
+    // 닉네임 중복 확인
+    if (!isNicknameValid) {
+      console.log("닉네임 중복 확인이 필요합니다.");
+      return; // 닉네임이 유효하지 않으면 진행하지 않음
+    }
+
+    // 유효성 검사를 통과하면 회원가입 API 호출
+    signupUser();
+  };
+
+  // 이메일 중복 확인 API
+  const checkEmailDuplicate = async () => {
     try {
-      const [emailDuplicate, nicknameDuplicate] = await Promise.all([
-        isEmailDuplicate(formData.email),
-        isNicknameDuplicate(formData.nickname),
-      ]);
+      console.log("보내는 데이터 (이메일 중복 확인):", {
+        email: formData.email,
+      });
+      const res = await axios.post("http://15.164.139.247:8080/auth/email", {
+        email: formData.email,
+      });
 
-      console.log("이메일 중복 확인 결과:", emailDuplicate);
-      console.log("닉네임 중복 확인 결과:", nicknameDuplicate);
+      console.log("받은 데이터 (이메일 중복 확인 응답):", res.data);
 
-      if (!emailDuplicate) {
-        newErrors.email = "이미 사용 중인 이메일입니다.";
-        setErrors(newErrors);
-        return;
+      if (res.data.code === 200) {
+        alert("사용 가능한 이메일입니다.");
+        setIsEmailValid(true);
+      } else {
+        alert("이미 사용 중인 이메일입니다.");
+        setIsEmailValid(false);
       }
-
-      if (!nicknameDuplicate) {
-        newErrors.nickname = "이미 사용 중인 닉네임입니다.";
-        setErrors(newErrors);
-        return;
-      }
-
-      console.log("회원가입 처리 직전");
-
-      // 이메일과 닉네임 중복이 아닌 경우 회원가입 처리
-      await signupUser(formData);
     } catch (err) {
-      console.error("중복 확인 과정에서 오류 발생:", err);
+      console.error("이메일 중복 확인 오류:", err);
+      alert("이메일 확인 중 오류가 발생했습니다.");
     }
   };
 
-  // 엔터 키 동작 처리
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
-      handleSignup();
+  // 닉네임 중복 확인 API
+  const checkNicknameDuplicate = async () => {
+    try {
+      console.log("보내는 데이터 (닉네임 중복 확인):", {
+        nickname: formData.nickname,
+      });
+      const res = await axios.post("http://15.164.139.247:8080/auth/nickname", {
+        nickname: formData.nickname,
+      });
+
+      console.log("받은 데이터 (닉네임 중복 확인 응답):", res.data);
+
+      if (res.data.code === 200) {
+        alert("사용 가능한 닉네임입니다.");
+        setIsNicknameValid(true);
+      } else {
+        alert("이미 사용 중인 닉네임입니다.");
+        setIsNicknameValid(false);
+      }
+    } catch (err) {
+      console.error("닉네임 중복 확인 오류:", err);
+      alert("닉네임 확인 중 오류가 발생했습니다.");
+    }
+  };
+
+  // 회원가입 API
+  const signupUser = async () => {
+    try {
+      console.log("보내는 데이터 (회원가입):", formData);
+      const response = await axios.post(
+        "http://15.164.139.247:8080/auth/sign-up",
+        formData
+      );
+      console.log("받은 데이터 (회원가입 응답):", response.data);
+      alert("회원가입 성공!");
+      navigate("/login");
+    } catch (error) {
+      console.error("회원가입 오류:", error);
+      alert(error.response?.data?.message || "회원가입 실패");
     }
   };
 
   return {
     formData,
-    errors,
     handleInputChange,
-    handleSignup,
-    handleKeyDown,
+    checkEmailDuplicate,
+    checkNicknameDuplicate,
+    handleSignup, // 회원가입 함수 반환
+    isEmailValid,
+    isNicknameValid,
+    errors, // 오류 메시지도 반환
   };
 }

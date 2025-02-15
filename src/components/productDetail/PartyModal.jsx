@@ -136,7 +136,9 @@ export default function PartyModal({
         await axios.put(
           `http://15.164.139.247:8080/party/${editingParty.partyId}`,
           formData,
-          { headers }
+          {
+            headers,
+          }
         );
         alert("파티가 수정되었습니다.");
       } else {
@@ -146,6 +148,7 @@ export default function PartyModal({
         });
         alert("파티가 생성되었습니다.");
       }
+
       onPartyCreated();
       setFormData({
         partyMaster: userId,

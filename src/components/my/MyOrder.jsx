@@ -74,7 +74,7 @@ export default function MyOrder({}) {
   const [orders, setOrders] = useState([]); // 주문 데이터 상태
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 번호 상태
   const [totalItems, setTotalItems] = useState(10); // 전체 데이터 개수
-  const itemsPerPage = 1; // 한 페이지당 보여줄 아이템 개수
+  const itemsPerPage = 10; // 한 페이지당 보여줄 아이템 개수
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -82,14 +82,17 @@ export default function MyOrder({}) {
     const fetchOrders = async (page) => {
       setLoading(true);
       try {
-        const response = await axios.get(`/order/list?page=${page}`, {
-          headers: {
-            Authorization: `Bearer ${token}`, // 인증 헤더 추가
-          },
-        });
+        const response = await axios.get(
+          `http://15.164.139.247:8080/order/list?page=${currentPage - 1}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // 인증 헤더 추가
+            },
+          }
+        );
         console.log("주문 응답 데이터:", response.data);
-        setOrders(response.data.orders);
-        setTotalItems(response.data.totalItems);
+        setOrders(response.data.data.content);
+        setTotalItems(response.data.data.totalElements);
       } catch (error) {
         console.error("데이터 불러오기 실패:", error);
       }
@@ -98,11 +101,6 @@ export default function MyOrder({}) {
     fetchOrders(currentPage);
   }, [currentPage]);
 
-  // 클릭 시 페이지 변경 함수
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-
   const formatDate = (dateString) => {
     const [year, month, day] = dateString.split("-");
     return `${month}.${day}`;
@@ -110,27 +108,26 @@ export default function MyOrder({}) {
 
   return (
     <Wrapper>
-      {/* <OrderList>
-        {orders
-          .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
-          .map((data) => (
-            <OrderCard key={data.ordersId}>
-              <OrderBold>배송완료</OrderBold>
-              <p>주문번호 {data.ordersId}</p>
-              <OrderGray>{formatDate(data.purchaseDate)} 주문</OrderGray>
-              <OrderBold>{data.finalPrice}원</OrderBold>&nbsp;&nbsp;
-              <OrderLine>{data.price}원</OrderLine>
-            </OrderCard>
-          ))}
-      </OrderList> */}
+      <OrderList>
+        {orders.map((data) => (
+          <OrderCard key={data.ordersId}>
+            <OrderBold>배송완료</OrderBold>
+            <OrderGray>주문번호 {data.ordersId}</OrderGray>
+            <p>{data.productName}</p>
+            <OrderGray>{formatDate(data.purchaseDate)} 주문</OrderGray>
+            <OrderBold>{data.finalPrice}원</OrderBold>&nbsp;&nbsp;
+            <OrderLine>{data.price}원</OrderLine>
+          </OrderCard>
+        ))}
+      </OrderList>
 
       <PaginationContainer>
         {/* 페이지네이션 */}
         <PaginationBar
-          currentPage={currentPage}
+          currentPage={currentPage + 1} // currentPage에 1을 더한 값을 전달
           itemsPerPage={itemsPerPage}
           totalItems={totalItems}
-          handlePageChange={handlePageChange}
+          handlePageChange={(pageNumber) => setCurrentPage(pageNumber)} // 그냥 그대로 설정
         ></PaginationBar>
       </PaginationContainer>
     </Wrapper>
