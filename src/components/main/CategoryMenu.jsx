@@ -71,7 +71,6 @@ export default function CategoryMenu({ setProducts, setSearchParams }) {
   const [selectedCategory, setSelectedCategory] = useState(null);
 
   useEffect(() => {
-    // 카테고리 데이터를 백엔드에서 가져오기
     const fetchCategories = async () => {
       try {
         const response = await axios.get(

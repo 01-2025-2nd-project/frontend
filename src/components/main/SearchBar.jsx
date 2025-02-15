@@ -2,12 +2,10 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { FiSearch } from "react-icons/fi";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import mockData from "../../data/mockData";
 
 export default function SearchBar({ setSearchParams, setSearchResults }) {
   const [keyword, setKeyword] = useState("");
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
   const handleSearch = async () => {
@@ -57,6 +55,7 @@ export default function SearchBar({ setSearchParams, setSearchResults }) {
   );
 }
 
+//style
 const SearchBarContainer = styled.div`
   display: flex;
   align-items: center;
