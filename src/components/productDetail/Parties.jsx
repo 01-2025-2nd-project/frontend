@@ -25,6 +25,11 @@ export default function Parties() {
     const fetchParties = async () => {
       try {
 
+        // ✅ 1. 해당 상품의 모든 파티 가져오기 (로그인 없이 가능)
+        const response = await axios.get(
+          `http://15.164.139.247:8080/product/${productId}/party`
+        );
+        let partiesWithOwnership = response.data.data.map((party) => ({
         //  1. 해당 상품의 모든 파티 가져오기
         const response = await axios.get(
           `http://15.164.139.247:8080/product/${productId}/party`
@@ -62,9 +67,48 @@ export default function Parties() {
         // ✅ 3. `isOwner`, `isJoined` 속성 추가
         const partiesWithOwnership = response.data.data.map((party) => ({
           ...party,
-          isOwner: String(party.partyMaster) === String(userId),
-          isJoined: userJoinedParties.some((p) => p.partyId === party.partyId), // ✅ 정확한 isJoined 판별
+          isOwner: false, // 기본적으로 false 설정
+          isJoined: false, // 기본적으로 false 설정
         }));
+
+        // ✅ 2. 로그인한 경우, 사용자가 참여한 파티 정보 가져오기
+        if (token) {
+          const fetchAllUserParties = async () => {
+            let allUserParties = [];
+            let page = 0;
+            let totalPages = 1;
+
+            while (page < totalPages) {
+              const res = await axios.get(
+                `http://15.164.139.247:8080/party/list?page=${page}&size=10`,
+                { headers: { Authorization: `Bearer ${token}` } }
+              );
+
+              const { content, totalPages: fetchedTotalPages } = res.data.data;
+              allUserParties = [...allUserParties, ...content];
+              totalPages = fetchedTotalPages;
+              page++;
+            }
+
+            return allUserParties;
+          };
+
+          const userJoinedParties = await fetchAllUserParties();
+
+          console.log(
+            "✅ 내가 참여한 모든 파티 ID:",
+            userJoinedParties.map((p) => p.partyId)
+          );
+
+          // ✅ 3. `isOwner`, `isJoined` 속성 추가
+          partiesWithOwnership = partiesWithOwnership.map((party) => ({
+            ...party,
+            isOwner: String(party.partyMaster) === String(userId),
+            isJoined: userJoinedParties.some(
+              (p) => p.partyId === party.partyId
+            ),
+          }));
+        }
 
         setParties(partiesWithOwnership);
       } catch (err) {
@@ -75,7 +119,7 @@ export default function Parties() {
     };
 
     fetchParties();
-  }, [productId, refreshTrigger, userId]);
+  }, [productId, refreshTrigger, userId, token]);
 
   const handleCreateParty = () => {
     if (!token) {
