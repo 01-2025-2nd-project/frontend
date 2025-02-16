@@ -25,9 +25,7 @@ export default function Parties() {
     const fetchParties = async () => {
       try {
         // ✅ 1. 해당 상품의 모든 파티 가져오기 (로그인 없이 가능)
-        const response = await axios.get(
-          `http://15.164.139.247:8080/product/${productId}/party`
-        );
+        const response = await axios.get(`/api/product/${productId}/party`);
         let partiesWithOwnership = response.data.data.map((party) => ({
           ...party,
           isOwner: false, // 기본적으로 false 설정
@@ -43,7 +41,7 @@ export default function Parties() {
 
             while (page < totalPages) {
               const res = await axios.get(
-                `http://15.164.139.247:8080/party/list?page=${page}&size=10`,
+                `/api/party/list?page=${page}&size=10`,
                 { headers: { Authorization: `Bearer ${token}` } }
               );
 
