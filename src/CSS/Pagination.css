@@ -4,23 +4,44 @@
   justify-content: center;
   align-items: center;
   padding: 0;
+  margin: 20px 0;
 }
 
 .pagination li {
   margin: 0 5px;
-  padding: 5px 10px;
+  padding: 8px 14px;
   border: none;
-  background-color: #efeeee;
+  background-color: #f0f0f0;
   border-radius: 5px;
   cursor: pointer;
 }
 
 .pagination li:hover {
   color: white;
-  background-color: gray;
+  background-color: #e2e2e2;
 }
+
+.pagination li.active {
+  background-color: #6bae45;
+  color: white;
+}
+
+.pagination li.disabled {
+  background-color: #ddd;
+  color: #aaa;
+  cursor: not-allowed;
+}
+
 .pagination li a {
-  color: black; /* 기본 글자 색 */
+  color: black;
   text-decoration: none;
   border-radius: 5px;
+}
+
+.pagination li.active a {
+  color: white;
+}
+
+.pagination li.disabled a {
+  color: #aaa;
 }

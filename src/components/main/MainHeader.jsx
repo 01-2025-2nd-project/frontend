@@ -1,15 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setToken } from "../../redux/authSlice"; // setToken 액션
 import SearchBar from "./SearchBar";
 
-export default function MainHeader({ setSearchParams, setSearchResults }) {
+export default function MainHeader({ setSearchResults }) {
   const navigate = useNavigate();
   const token = useSelector((state) => state.auth.token); // Redux에서 token 가져오기
   const dispatch = useDispatch(); // dispatch를 사용하여 액션 실행
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [keyword, setKeyword] = useState("");
 
   // useEffect로 localStorage에서 token을 가져와 Redux에 설정
   useEffect(() => {
@@ -17,13 +19,25 @@ export default function MainHeader({ setSearchParams, setSearchResults }) {
     dispatch(setToken(token)); // localStorage에서 가져온 token을 Redux에 설정
   }, [dispatch]);
 
+  //페이지가 처음 로드될 때 URL에 page=1을 추가
+  useEffect(() => {
+    if (!searchParams.get("page")) {
+      setSearchParams((prevParams) => {
+        prevParams.set("page", "1"); // 기본값 1 설정
+        return prevParams;
+      });
+    }
+  }, [searchParams, setSearchParams]);
+
   const handleLogout = () => {
     dispatch(setToken(null)); // 로그아웃 시 token을 null로 설정
     navigate("/");
   };
 
   const handleLogoClick = () => {
-    navigate("/?page=1");
+    setSearchParams({ page: "1" });
+    setKeyword("");
+    navigate("/");
   };
 
   const handleMypageClick = () => {
@@ -49,6 +63,8 @@ export default function MainHeader({ setSearchParams, setSearchResults }) {
           <SearchBar
             setSearchParams={setSearchParams}
             setSearchResults={setSearchResults}
+            setKeyword={setKeyword}
+            keyword={keyword}
           />
           <NavLinks>
             {token ? (
