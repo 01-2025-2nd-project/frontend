@@ -18,7 +18,7 @@ const Wrapper = styled.div`
 const ContentContainer = styled.div`
   width: 100%;
   margin: 10px;
-  height: 100%;
+  height: 100vh;
   display: flex;
   justify-content: center;
 `;
@@ -33,9 +33,13 @@ const PaginationContainer = styled.div`
 `;
 
 const OrderList = styled.div`
+  width: 250px;
+  height: 180px;
   display: grid;
+  justify-content: center;
+  align-items: center;
   grid-template-columns: repeat(5, 1fr); /* 5개의 컬럼 */
-  grid-gap: 20px; /* 카드들 사이에 간격 */
+  gap: 20px; /* 🔥 가로 & 세로 간격을 10px로 설정 */
 `;
 
 const OrderCard = styled.div`
@@ -44,13 +48,14 @@ const OrderCard = styled.div`
   background: #f7f7f7;
   border-radius: 10px;
   padding: 10px;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
 
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  &:hover {
+    box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.2);
+  }
 `;
 
-const Bold = styled.span`
+const Bold = styled.p`
   font-size: 20px;
   font-weight: bold;
 `;
@@ -69,7 +74,7 @@ const StatusChip = styled.span`
 `;
 
 const JoinChip = styled.span`
-  width: 50px;
+  width: 60px;
   height: 30px;
   border-radius: 15px;
   background: lightgray;
@@ -95,8 +100,7 @@ const Content = styled.p`
 const ChipContainer = styled.div`
   display: flex;
   flex-direction: row;
-  gap: 10px;
-  margin-bottom: 2px;
+  gap: 100px;
 `;
 
 export default function MyParty({ onOff }) {
@@ -113,7 +117,7 @@ export default function MyParty({ onOff }) {
       setLoading(true);
       try {
         const response = await axios.get(
-          `http://15.164.139.247:8080/party/list?page=${currentPage - 1}`,
+          `/api/party/list?page=${currentPage - 1}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // 인증 헤더 추가
@@ -141,7 +145,9 @@ export default function MyParty({ onOff }) {
               <ChipContainer>
                 <StatusChip>{data.status}</StatusChip>
 
-                <JoinChip>{data.joinCount}명 참여 중!</JoinChip>
+                <JoinChip>
+                  {data.optionId}/{data.joinCount}
+                </JoinChip>
               </ChipContainer>
 
               <Bold>{data.partyName}</Bold>
@@ -165,7 +171,7 @@ export default function MyParty({ onOff }) {
             </OrderCard>
           ))}
         </OrderList>
-        <PaginationContainer>
+        <PaginationContainer onOff={onOff}>
           {/* 페이지네이션 */}
           <PaginationBar
             currentPage={currentPage + 1} // currentPage에 1을 더한 값을 전달

@@ -28,7 +28,7 @@ export default function ProductList() {
         let response;
 
         if (keyword) {
-          // ✅ 검색어가 있을 때는 검색 API 호출
+          //  검색어가 있을 때는 검색 API 호출
           response = await axios.get(
             `http://15.164.139.247:8080/product/search`,
             {
@@ -36,11 +36,12 @@ export default function ProductList() {
             }
           );
         } else {
-          // ✅ 카테고리, 정렬 포함하여 기본 상품 목록 호출
+          //  카테고리, 정렬 포함하여 기본 상품 목록 호출
           response = await axios.get("http://15.164.139.247:8080/product", {
             params: { page: Math.max(page - 1, 0), category, sort },
           });
         }
+
 
         if (response.data.code === 200) {
           //mockData를 객체(Map) 형태로 변환하여 검색 최적화

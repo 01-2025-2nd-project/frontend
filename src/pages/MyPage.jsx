@@ -23,12 +23,9 @@ export default function MyPage() {
     if (token) {
       const fetchData = async () => {
         try {
-          const response = await axios.get(
-            "http://15.164.139.247:8080/mypage",
-            {
-              headers: { Authorization: `Bearer ${token}` },
-            }
-          );
+          const response = await axios.get("/api/mypage", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
 
           console.log("응답 데이터:", response.data);
 
@@ -98,14 +95,17 @@ export default function MyPage() {
 }
 
 const Wrapper = styled.div`
+  width: 100%;
+  height: 100%;
   display: flex;
-  height: 100vh;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
+  margin: 0;
 `;
 
 const Header = styled.div`
-  width: 100%;
+  width: 100vw;
   height: 80px;
   background: var(--light-green);
   display: flex;

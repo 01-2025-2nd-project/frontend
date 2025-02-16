@@ -24,11 +24,48 @@ export default function Parties() {
   useEffect(() => {
     const fetchParties = async () => {
       try {
+
         // ✅ 1. 해당 상품의 모든 파티 가져오기 (로그인 없이 가능)
         const response = await axios.get(
           `http://15.164.139.247:8080/product/${productId}/party`
         );
         let partiesWithOwnership = response.data.data.map((party) => ({
+        //  1. 해당 상품의 모든 파티 가져오기
+        const response = await axios.get(
+          `http://15.164.139.247:8080/product/${productId}/party`
+        );
+
+
+        //  2. 내가 참여한 모든 파티 가져오기 (페이지네이션 해결)
+        const fetchAllUserParties = async () => {
+          let allUserParties = [];
+          let page = 0;
+          let totalPages = 1;
+
+          while (page < totalPages) {
+            const res = await axios.get(
+              `http://15.164.139.247:8080/party/list?page=${page}&size=10`,
+              { headers: { Authorization: `Bearer ${token}` } }
+            );
+
+            const { content, totalPages: fetchedTotalPages } = res.data.data;
+            allUserParties = [...allUserParties, ...content]; // ✅ 모든 데이터 병합
+            totalPages = fetchedTotalPages; // ✅ 전체 페이지 수 업데이트
+            page++;
+          }
+
+          return allUserParties;
+        };
+
+        const userJoinedParties = await fetchAllUserParties();
+
+        console.log(
+          "✅ 내가 참여한 모든 파티 ID:",
+          userJoinedParties.map((p) => p.partyId)
+        );
+
+        // ✅ 3. `isOwner`, `isJoined` 속성 추가
+        const partiesWithOwnership = response.data.data.map((party) => ({
           ...party,
           isOwner: false, // 기본적으로 false 설정
           isJoined: false, // 기본적으로 false 설정

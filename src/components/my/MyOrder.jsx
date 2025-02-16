@@ -10,9 +10,9 @@ const Wrapper = styled.div`
   width: 100vw;
   height: 100%;
   display: flex;
-  flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+  margin-top: 50px;
 `;
 
 const OrderList = styled.div`
@@ -24,39 +24,50 @@ const OrderList = styled.div`
 `;
 
 const OrderCard = styled.div`
-  width: 800px;
-  background: #f7f7f7;
+  width: 700px;
+  height: 110px;
+  background: var(--light-gray);
   border-radius: 10px;
-  padding: 20px;
-`;
-
-const Title = styled.h1`
-  margin-top: 50px;
-`;
-
-const Divider = styled.hr`
+  padding: 10px;
   display: flex;
+  flex-direction: column;
   justify-content: center;
-  align-items: center;
-  width: 98%;
-  color: black;
 `;
 
-const OrderBold = styled.span`
-  font-size: 20px;
+const OrderBold = styled.p`
+  font-size: 18px;
   font-weight: bold;
+  margin: 2px 0 0 0;
 `;
 
 const OrderGray = styled.p`
   font-size: 15px;
   color: gray;
+  margin: 2px 0 0 0;
+`;
+
+const P = styled.p`
+  font-size: 18px;
+  color: gray;
+  margin: 2px 0 2px 0;
 `;
 
 const OrderLine = styled.span`
-  font-size: 20px;
+  font-size: 18px;
   font-weight: bold;
   color: gray;
   text-decoration: line-through;
+  margin: 2px 0 0 0;
+`;
+
+const OrderTop = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+const OrderRow = styled.div`
+  display: flex;
+  flex-direction: row;
 `;
 
 const PaginationContainer = styled.div`
@@ -83,7 +94,7 @@ export default function MyOrder({}) {
       setLoading(true);
       try {
         const response = await axios.get(
-          `http://15.164.139.247:8080/order/list?page=${currentPage - 1}`,
+          `/api/order/list?page=${currentPage - 1}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // 인증 헤더 추가
@@ -111,12 +122,16 @@ export default function MyOrder({}) {
       <OrderList>
         {orders.map((data) => (
           <OrderCard key={data.ordersId}>
-            <OrderBold>배송완료</OrderBold>
+            <OrderTop>
+              <OrderBold>배송완료</OrderBold>
+              <OrderGray>{formatDate(data.purchaseDate)} 주문</OrderGray>
+            </OrderTop>
             <OrderGray>주문번호 {data.ordersId}</OrderGray>
-            <p>{data.productName}</p>
-            <OrderGray>{formatDate(data.purchaseDate)} 주문</OrderGray>
-            <OrderBold>{data.finalPrice}원</OrderBold>&nbsp;&nbsp;
-            <OrderLine>{data.price}원</OrderLine>
+            <P>{data.productName}</P>
+            <OrderRow>
+              <OrderBold>{data.finalPrice}원</OrderBold>&nbsp;&nbsp;
+              <OrderLine>{data.price}원</OrderLine>
+            </OrderRow>
           </OrderCard>
         ))}
       </OrderList>

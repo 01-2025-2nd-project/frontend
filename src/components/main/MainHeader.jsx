@@ -104,7 +104,7 @@ const Logo = styled.div`
   cursor: pointer;
 
   img {
-    height: 200px;
+    height: 180px;
     margin-right: 10px;
   }
 `;
