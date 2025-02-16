@@ -52,7 +52,9 @@ export default function PartyModal({
 
     const fetchProductDetails = async () => {
       try {
-        const response = await axios.get(`/api/product/${productId}`);
+        const response = await axios.get(
+          `http://15.164.139.247:8080/product/${productId}`
+        );
         const data = response.data.data;
         setProductOptions(data.productOptions);
         setProductPrice(data.price); // 원래 상품 가격 저장
@@ -131,13 +133,17 @@ export default function PartyModal({
     try {
       if (isEditing) {
         // 수정 요청 (PUT)
-        await axios.put(`/api/party/${editingParty.partyId}`, formData, {
-          headers,
-        });
+        await axios.put(
+          `http://15.164.139.247:8080/party/${editingParty.partyId}`,
+          formData,
+          {
+            headers,
+          }
+        );
         alert("파티가 수정되었습니다.");
       } else {
         // 생성 요청 (POST)
-        await axios.post("/api/party", formData, {
+        await axios.post("http://15.164.139.247:8080/party", formData, {
           headers,
         });
         alert("파티가 생성되었습니다.");

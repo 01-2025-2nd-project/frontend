@@ -39,7 +39,11 @@ export default function Purchase({ productId, productPrice }) {
     };
 
     try {
-      await axios.post(`/api/order/${productId}`, orderData, { headers });
+      await axios.post(
+        `http://15.164.139.247:8080/order/${productId}`,
+        orderData,
+        { headers }
+      );
 
       alert("주문이 완료되었습니다");
     } catch (error) {
