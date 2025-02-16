@@ -6,6 +6,7 @@ import axios from "axios";
 import useAuthUser from "../../hooks/useAuthUser";
 import PartyOptions from "./PartyOptions";
 import JoinParty from "./JoinParty";
+import LeaveParty from "./LeaveParty";
 
 export default function Parties() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -23,15 +24,46 @@ export default function Parties() {
   useEffect(() => {
     const fetchParties = async () => {
       try {
+        // ✅ 1. 해당 상품의 모든 파티 가져오기
         const response = await axios.get(
           `http://15.164.139.247:8080/product/${productId}/party`
         );
 
-        // partyMaster가 userId와 일치하면 isOwner: true
+        // ✅ 2. 내가 참여한 모든 파티 가져오기 (페이지네이션 해결)
+        const fetchAllUserParties = async () => {
+          let allUserParties = [];
+          let page = 0;
+          let totalPages = 1;
+
+          while (page < totalPages) {
+            const res = await axios.get(
+              `http://15.164.139.247:8080/party/list?page=${page}&size=10`,
+              { headers: { Authorization: `Bearer ${token}` } }
+            );
+
+            const { content, totalPages: fetchedTotalPages } = res.data.data;
+            allUserParties = [...allUserParties, ...content]; // ✅ 모든 데이터 병합
+            totalPages = fetchedTotalPages; // ✅ 전체 페이지 수 업데이트
+            page++;
+          }
+
+          return allUserParties;
+        };
+
+        const userJoinedParties = await fetchAllUserParties();
+
+        console.log(
+          "✅ 내가 참여한 모든 파티 ID:",
+          userJoinedParties.map((p) => p.partyId)
+        );
+
+        // ✅ 3. `isOwner`, `isJoined` 속성 추가
         const partiesWithOwnership = response.data.data.map((party) => ({
           ...party,
           isOwner: String(party.partyMaster) === String(userId),
+          isJoined: userJoinedParties.some((p) => p.partyId === party.partyId), // ✅ 정확한 isJoined 판별
         }));
+
         setParties(partiesWithOwnership);
       } catch (err) {
         setError("파티 정보를 불러오는데 실패했습니다.");
@@ -112,6 +144,11 @@ export default function Parties() {
                   party={item}
                   onEdit={handleEditParty}
                   onDelete={() => setRefreshTrigger((prev) => !prev)}
+                />
+              ) : item.isJoined ? (
+                <LeaveParty
+                  partyId={item.partyId}
+                  onLeave={() => setRefreshTrigger((prev) => !prev)}
                 />
               ) : (
                 <JoinParty
