@@ -19,9 +19,7 @@ export default function CategoryMenu({
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get(
-          "http://15.164.139.247:8080/product/admin/category"
-        );
+        const response = await axios.get("/api/product/admin/category");
 
         setCategories(response.data.data);
       } catch (error) {
