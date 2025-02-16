@@ -31,10 +31,12 @@ export default function SearchBar({
       setSearchParams(Object.fromEntries(newParams.entries())); // ✅ URL 파라미터 업데이트
 
       const response = await axios.get(
+
         `http://15.164.139.247:8080/product/search`,
         {
           params: { keyword, page: 0 },
         }
+
       );
 
       console.log("전체 페이지 수:", response.data.data.totalPages);

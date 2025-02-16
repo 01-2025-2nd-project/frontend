@@ -24,6 +24,43 @@ export default function useSignup() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+
+  // 이메일 중복 확인 API 호출
+  const isEmailDuplicate = async (email) => {
+    try {
+      const res = await axios.post("/api/auth/email", {
+        email,
+      });
+      console.log("이메일 중복 확인 응답:", res.data); // 응답 확인
+
+      if (!res.data || !res.data.message) {
+        throw new Error("응답 데이터가 올바르지 않습니다.");
+      }
+
+      return res.data.code !== 200; // 200이면 사용 가능(false), 그 외는 중복(true)
+    } catch (err) {
+      console.error("이메일 중복 확인 오류:", err);
+      return true; // 오류 발생 시 기본적으로 중복된 것으로 처리
+    }
+  };
+
+  // 닉네임 중복 확인 API 호출
+
+  const isNicknameDuplicate = async (nickname) => {
+    try {
+      const res = await axios.post("/api/auth/nickname", {
+        nickname,
+      });
+
+      console.log("닉네임 중복 확인 응답:", res.data); // 응답 확인
+      return res.data.code !== 200; // 200이면 사용 가능(false), 그 외는 중복(true)
+    } catch (err) {
+      console.error("닉네임 중복 확인 오류:", err);
+      return true;
+    }
+  };
+
+
   // 유효성 검사 함수
   const validationForm = () => {
     const { email, password, confirmPassword, address } = formData;
@@ -90,7 +127,7 @@ export default function useSignup() {
       console.log("보내는 데이터 (이메일 중복 확인):", {
         email: formData.email,
       });
-      const res = await axios.post("http://15.164.139.247:8080/auth/email", {
+      const res = await axios.post("/api/auth/email", {
         email: formData.email,
       });
 
@@ -115,7 +152,7 @@ export default function useSignup() {
       console.log("보내는 데이터 (닉네임 중복 확인):", {
         nickname: formData.nickname,
       });
-      const res = await axios.post("http://15.164.139.247:8080/auth/nickname", {
+      const res = await axios.post("/api/auth/nickname", {
         nickname: formData.nickname,
       });
 
@@ -138,10 +175,7 @@ export default function useSignup() {
   const signupUser = async () => {
     try {
       console.log("보내는 데이터 (회원가입):", formData);
-      const response = await axios.post(
-        "http://15.164.139.247:8080/auth/sign-up",
-        formData
-      );
+      const response = await axios.post("/api/auth/sign-up", formData);
       console.log("받은 데이터 (회원가입 응답):", response.data);
       alert("회원가입 성공!");
       navigate("/login");

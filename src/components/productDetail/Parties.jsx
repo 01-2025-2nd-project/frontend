@@ -24,12 +24,14 @@ export default function Parties() {
   useEffect(() => {
     const fetchParties = async () => {
       try {
-        // ✅ 1. 해당 상품의 모든 파티 가져오기
+
+        //  1. 해당 상품의 모든 파티 가져오기
         const response = await axios.get(
           `http://15.164.139.247:8080/product/${productId}/party`
         );
 
-        // ✅ 2. 내가 참여한 모든 파티 가져오기 (페이지네이션 해결)
+
+        //  2. 내가 참여한 모든 파티 가져오기 (페이지네이션 해결)
         const fetchAllUserParties = async () => {
           let allUserParties = [];
           let page = 0;

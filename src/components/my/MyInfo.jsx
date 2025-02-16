@@ -120,7 +120,7 @@ export default function MyInfo() {
       if (!token) return;
 
       try {
-        const response = await axios.get("http://15.164.139.247:8080/mypage", {
+        const response = await axios.get("/api/mypage", {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -156,12 +156,9 @@ export default function MyInfo() {
     try {
       console.log("닉네임 중복 확인 요청:", formData.nickname);
 
-      const checkResponse = await axios.post(
-        "http://15.164.139.247:8080/auth/nickname",
-        {
-          nickname: formData.nickname,
-        }
-      );
+      const checkResponse = await axios.post("/api/auth/nickname", {
+        nickname: formData.nickname,
+      });
 
       console.log("중복 확인 응답:", checkResponse.data);
 
@@ -193,7 +190,7 @@ export default function MyInfo() {
       });
 
       const saveResponse = await axios.put(
-        "http://15.164.139.247:8080/mypage",
+        "/api/mypage",
         {
           nickname: formData.nickname,
           address: formData.address,
