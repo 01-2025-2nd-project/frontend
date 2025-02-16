@@ -122,11 +122,7 @@ export default function LoginPage() {
         </InputContainer>
 
         <Typo>{errors.allField}</Typo>
-        <SubmitButton
-          type="button"
-          onClick={handleLogin}
-          onKeyDown={handleKeyDown}
-        >
+        <SubmitButton type="button" onClick={handleLogin}>
           로그인하기
         </SubmitButton>
         <SignupButton onClick={handleGoToSignup}>회원가입하기</SignupButton>

@@ -24,6 +24,7 @@ export default function useSignup() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+
   // 이메일 중복 확인 API 호출
   const isEmailDuplicate = async (email) => {
     try {
@@ -58,6 +59,7 @@ export default function useSignup() {
       return true;
     }
   };
+
 
   // 유효성 검사 함수
   const validationForm = () => {
@@ -189,6 +191,7 @@ export default function useSignup() {
     checkEmailDuplicate,
     checkNicknameDuplicate,
     handleSignup, // 회원가입 함수 반환
+
     isEmailValid,
     isNicknameValid,
     errors, // 오류 메시지도 반환

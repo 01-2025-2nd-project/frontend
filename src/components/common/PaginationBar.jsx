@@ -7,6 +7,7 @@ export default function PaginationBar({
   itemsPerPage,
   totalItems,
   handlePageChange,
+  totalPages,
 }) {
   return (
     <Pagination
@@ -15,6 +16,7 @@ export default function PaginationBar({
       totalItemsCount={totalItems} // 전체 데이터 개수
       pageRangeDisplayed={5} // 표시할 페이지 버튼 개수
       onChange={handlePageChange} // 페이지 변경 시 실행되는 함수
+      totalPages={totalPages}
       prevPageText={"‹"} // 이전 버튼
       nextPageText={"›"} // 다음 버튼
     />

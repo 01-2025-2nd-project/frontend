@@ -78,7 +78,7 @@ export default function SignupPage() {
     handleInputChange,
     checkEmailDuplicate,
     checkNicknameDuplicate,
-    signupUser,
+    handleSignup,
     isEmailValid,
     isNicknameValid,
     errors,
@@ -184,7 +184,7 @@ export default function SignupPage() {
       <ErrorText>{errors.allField}</ErrorText>
       <SubmitButton
         type="button"
-        onClick={signupUser}
+        onClick={handleSignup}
         disabled={!isEmailValid || !isNicknameValid}
       >
         회원가입 하기

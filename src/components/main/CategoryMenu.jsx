@@ -1,7 +1,124 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
-import mockData from "../../data/mockData"; // 🔹 Mock 데이터 가져오기
+import mockData from "../../data/mockData";
+import { useSearchParams } from "react-router-dom";
+
+export default function CategoryMenu({
+  setProducts,
+  setSearchParams,
+  setTotalItems,
+}) {
+  const [categories, setCategories] = useState([]);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [selectedSort, setSelectedSort] = useState("정렬");
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [totalPages, setTotalPages] = useState();
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get(
+          "http://15.164.139.247:8080/product/admin/category"
+        );
+
+        setCategories(response.data.data);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  const mapMockImages = (products) => {
+    const mockDataMap = mockData.reduce((acc, item) => {
+      acc[item.productId] = item.image;
+      return acc;
+    }, {});
+
+    return products.map((item) => ({
+      ...item,
+      image: mockDataMap[item.productId] || "/images/default.jpg",
+    }));
+  };
+
+  const fetchProducts = async ({ sort, category, page }) => {
+    try {
+      const response = await axios.get("/api/product", {
+        params: {
+          sort: sort || selectedSort,
+          category: category || selectedCategory,
+          page: page || 0,
+        },
+      });
+
+      if (response.data.data && response.data.data.content) {
+        const mappedProducts = mapMockImages(response.data.data.content);
+        setProducts(mappedProducts);
+        setTotalItems(response.data.data.totalElements);
+        setTotalPages(response.data.data.totalPages);
+        console.log("Filtered Products with Images:", mappedProducts);
+      }
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  };
+
+  const handleCategoryChange = (category) => {
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set("category", category);
+    newParams.set("page", 1); // ✅ React는 1부터 시작
+    setSearchParams(newParams);
+  };
+
+  const handleSortChange = (sortOption, apiSortValue) => {
+    setDropdownOpen(false);
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set("sort", apiSortValue);
+    newParams.set("page", 1); // ✅ React는 1부터 시작
+    setSearchParams(newParams);
+  };
+
+  const sortOptions = [
+    { label: "구매순(많은)", value: "purchaseCount" },
+    { label: "가격순(높은)", value: "priceDescending" },
+    { label: "가격순(낮은)", value: "priceAscending" },
+    { label: "등록순(기본)", value: "createAt" },
+  ];
+
+  return (
+    <Container>
+      <CategoryBar>
+        {categories?.map((category, index) => (
+          <CategoryItem
+            key={index}
+            onClick={() => handleCategoryChange(category.name)}
+          >
+            {category.name}
+          </CategoryItem>
+        ))}
+      </CategoryBar>
+
+      <Dropdown>
+        <DropdownButton onClick={() => setDropdownOpen(!dropdownOpen)}>
+          {selectedSort} ▾
+        </DropdownButton>
+        <DropdownContent show={dropdownOpen}>
+          {sortOptions.map((option, index) => (
+            <DropdownItem
+              key={index}
+              onClick={() => handleSortChange(option.label, option.value)}
+            >
+              {option.label}
+            </DropdownItem>
+          ))}
+        </DropdownContent>
+      </Dropdown>
+    </Container>
+  );
+}
 
 const Container = styled.div`
   background-color: #6bae45;
@@ -63,114 +180,3 @@ const DropdownItem = styled.div`
     background-color: #f0f0f0;
   }
 `;
-
-export default function CategoryMenu({ setProducts, setSearchParams }) {
-  const [categories, setCategories] = useState([]);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [selectedSort, setSelectedSort] = useState("정렬");
-  const [selectedCategory, setSelectedCategory] = useState(null);
-
-  useEffect(() => {
-    // 카테고리 데이터를 백엔드에서 가져오기
-    const fetchCategories = async () => {
-      try {
-        const response = await axios.get("/api/product/admin/category");
-
-        setCategories(response.data.data);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-      }
-    };
-
-    fetchCategories();
-  }, []);
-
-  // 🔹 MockData와 실제 데이터 매핑하는 함수
-  const mapMockImages = (products) => {
-    const mockDataMap = mockData.reduce((acc, item) => {
-      acc[item.productId] = item.image; // productId를 키로 매핑
-      return acc;
-    }, {});
-
-    return products.map((item) => ({
-      ...item,
-      image: mockDataMap[item.productId] || "/images/default.jpg", // 이미지 없으면 기본 이미지
-    }));
-  };
-
-  // 🔹 상품 데이터 가져오기 (정렬, 카테고리 변경 시)
-  const fetchProducts = async ({ sort, category, page }) => {
-    try {
-      const response = await axios.get("/api/product", {
-        params: {
-          sort: sort || selectedSort,
-          category: category || selectedCategory,
-          page: page || 1,
-        },
-      });
-
-      if (response.data.data && response.data.data.content) {
-        const mappedProducts = mapMockImages(response.data.data.content); // 🔹 이미지 매핑
-        setProducts(mappedProducts); // 부모 컴포넌트로 데이터 전달
-        console.log("Filtered Products with Images:", mappedProducts);
-      }
-    } catch (error) {
-      console.error("Error fetching products:", error);
-    }
-  };
-
-  // 🔹 카테고리 변경 시 실행
-  const handleCategoryChange = async (category) => {
-    setSelectedCategory(category);
-    fetchProducts({ category });
-    setSearchParams({ category });
-  };
-
-  // 🔹 정렬 변경 시 실행
-  const handleSortChange = async (sortOption, apiSortValue) => {
-    setSelectedSort(sortOption);
-    setDropdownOpen(false);
-    fetchProducts({ sort: apiSortValue });
-    setSearchParams({
-      sort: apiSortValue,
-    });
-  };
-
-  const sortOptions = [
-    { label: "구매순(많은)", value: "purchaseCount" },
-    { label: "가격순(높은)", value: "priceDescending" },
-    { label: "가격순(낮은)", value: "priceAscending" },
-    { label: "등록순(기본)", value: "createAt" },
-  ];
-
-  return (
-    <Container>
-      <CategoryBar>
-        {categories?.map((category, index) => (
-          <CategoryItem
-            key={index}
-            onClick={() => handleCategoryChange(category.name)}
-          >
-            {category.name}
-          </CategoryItem>
-        ))}
-      </CategoryBar>
-
-      <Dropdown>
-        <DropdownButton onClick={() => setDropdownOpen(!dropdownOpen)}>
-          {selectedSort} ▾
-        </DropdownButton>
-        <DropdownContent show={dropdownOpen}>
-          {sortOptions.map((option, index) => (
-            <DropdownItem
-              key={index}
-              onClick={() => handleSortChange(option.label, option.value)}
-            >
-              {option.label}
-            </DropdownItem>
-          ))}
-        </DropdownContent>
-      </Dropdown>
-    </Container>
-  );
-}

@@ -95,14 +95,17 @@ export default function MyPage() {
 }
 
 const Wrapper = styled.div`
+  width: 100%;
+  height: 100%;
   display: flex;
-  height: 100vh;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
+  margin: 0;
 `;
 
 const Header = styled.div`
-  width: 100%;
+  width: 100vw;
   height: 80px;
   background: var(--light-green);
   display: flex;
