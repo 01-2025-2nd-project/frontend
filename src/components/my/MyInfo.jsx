@@ -21,16 +21,17 @@ const ContentContainer = styled.div`
 `;
 
 const Label = styled.label`
-  font-size: 1em;
+  font-size: 20px;
 `;
 
 const Input = styled.input`
   border: white;
   border-bottom: 1px solid #d9d9d7;
-  width: 400px;
+  width: 500px;
   height: 20px;
   outline: none;
   background: none;
+  font-size: 15px;
 `;
 
 const InputBox = styled.div`
@@ -43,6 +44,7 @@ const InputBox = styled.div`
 const InputContainer = styled.div`
   display: flex;
   flex-direction: column;
+  gap: 10px;
 `;
 
 const ButtonContainer = styled.div`
@@ -73,11 +75,11 @@ const CancelButton = styled.button`
 `;
 
 const CheckButton = styled.button`
-  width: 100px;
+  width: 80px;
   height: 25px;
-  background: var(--blue);
+  background: var(--main);
   border: none;
-  border-radius: 5px;
+  border-radius: 10px;
   cursor: pointer;
   margin-left: 10px;
 `;
@@ -231,16 +233,16 @@ export default function MyInfo() {
           </InputContainer>
 
           <InputContainer>
-            <Label>닉네임</Label>
             <InputRow>
-              <Input
-                type="text"
-                name="nickname"
-                value={formData.nickname}
-                onChange={handleChange}
-              />
+              <Label>닉네임</Label>
               <CheckButton onClick={handleCheckNickname}>중복 확인</CheckButton>
             </InputRow>
+            <Input
+              type="text"
+              name="nickname"
+              value={formData.nickname}
+              onChange={handleChange}
+            />
           </InputContainer>
 
           <InputContainer>

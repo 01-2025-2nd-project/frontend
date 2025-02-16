@@ -55,7 +55,7 @@ body {
 @media screen and (min-width: 1025px) {
   body {
     font-size: 18px;
-    padding: 20px;
+    /* padding: 20px; */
   }
   /* PC에 특화된 스타일 */
   .container {
