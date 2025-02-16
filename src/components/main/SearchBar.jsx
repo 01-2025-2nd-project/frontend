@@ -30,14 +30,9 @@ export default function SearchBar({
       newParams.set("page", 0); // ✅ 항상 첫 페이지로 이동
       setSearchParams(Object.fromEntries(newParams.entries())); // ✅ URL 파라미터 업데이트
 
-      const response = await axios.get(
-
-        `http://15.164.139.247:8080/product/search`,
-        {
-          params: { keyword, page: 0 },
-        }
-
-      );
+      const response = await axios.get(`/api/product/search`, {
+        params: { keyword, page: 0 },
+      });
 
       console.log("전체 페이지 수:", response.data.data.totalPages);
 

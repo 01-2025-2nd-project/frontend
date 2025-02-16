@@ -15,7 +15,7 @@ export default function LeaveParty({ partyId, onLeave }) {
     }
 
     try {
-      await axios.delete(`http://15.164.139.247:8080/party/${partyId}/join`, {
+      await axios.delete(`/api/party/${partyId}/join`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
